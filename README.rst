@@ -1,17 +1,18 @@
 Delorean: Time Travel Made Easy
 ============================
 
-``delorean`` is a library for clearing up the confusion that is the ``datetime`` module. It will provide natural language improvements for manipulating time. 
+``delorean`` is a library for clearing up the confusion that is the ``datetime`` module. It will provide natural language improvements for manipulating time, as well as datetime and time abstractions for easy use. 
 
-.. image:: https://github.com/
+Pretty much make you a badass, time traveller
+
+.. image:: https://github.com/myusuf3/delorean/raw/master/misc/delorean_brochure3_811.jpg
 
 Usage
 =====
 
-Note: This API is in flux still trying to soldify API.
-------------------------------------------------------
+**Note: This API is in flux still trying to soldify API.**
 
-The overall goal is to improve date and time manipulations, as well as help create a simple way for detecting timezones in various areas as well as providing standardized utc
+The overall goal is to improve date and time manipulations, as well as help create a simple way for detecting timezones in various areas as well as providing standardized time in utc.
 
 ::
 
@@ -43,12 +44,16 @@ The overall goal is to improve date and time manipulations, as well as help crea
 
 	>>> gmt = delorean.time()
 	08:06:53 (python Time Object) 
+
 	>>> us_eastern = delorean.time(east_coast) this accepts 
 	13:06:53(python Time Object) 
+
 	>>> now = delorian.datetime().now()
 	2011-09-19 08:06:53 (python DateTime Object)
+
 	>>> utc = delorian.datetime().utcnow()
 	2011-09-19 08:06:53 (python DateTime Object)
+
 	>>> local = delorian.localnow()
 	2011-09-19 13:06:53 (python DateTime Object) localized. tz set using local. all accept tz value like 'America/Montreal'
 
