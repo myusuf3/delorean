@@ -6,7 +6,6 @@ Delorean: Time Travel Made Easy
 Pretty much make you a badass, time traveller
 
 .. image:: https://github.com/myusuf3/delorean/raw/master/misc/delorean_brochure3_811.jpg
-.. image:: https://github.com/myusuf3/delorean/raw/master/misc/timedash.jpg
 
 Usage
 =====
@@ -35,7 +34,9 @@ The overall goal is to improve date and time manipulations, as well as help crea
 	2011-09-20 (python Date Object)
 
 	>>>tomorrow.datetime()
-	2011-09-20 00:00:00  (python DateTime Object) significant bits are zeroed out cause we only started with a date, but its still a datetime object.
+	2011-09-20 00:00:00  (python DateTime Object) significant bits are zeroed 
+	out cause we only started with a date, 
+	but its still a datetime object.
 
 	>>>tomorow.time()
 	00:00:00 (python Time Object) since only a date object was created with date)
