@@ -7,20 +7,20 @@ class Delorean(object):
     """
     def __init__(self):
         #:datetime object
-        self.now = datetime.utcnow()
+        self.utcdatetime = datetime.utcnow()
     
     def __repr__(self):
-        return '<Delorean[%s]>' % (self.now)
-    
-    def today(self):
-        return self.now.date()
+        return '<Delorean[%s]>' % (self.utcdatetime)
     
     def tomorrow(self):
         one_day = timedelta(days=1)
-        today = datetime.utcnow()
-        tomorow = today + one_day
-        return tomorrow
+        today = self.utcdatetime
+        tomorrow = today + one_day
+        self.utcdatetime = tomorrow
     
+    def date(self):
+        return self.utcdatetime.date()
+            
     def timetravel(self, days=0, minutes=0, 
         hours=0, seconds=0, milliseconds=0, microseconds=0, weeks=0):
         """ This accepts negative values which is cool since it kind of works like time travel.
@@ -28,14 +28,21 @@ class Delorean(object):
 
         travel = timedelta(days=days, hours=hours, 
                             minutes=minutes, seconds=seconds, milliseconds=milliseconds, microseconds=microseconds)
-        self.now = self.now + travel
-
-        return self.now
+        self.utcdatetime = self.utcdatetime + travel
+        return self.utcdatetime
 
 
 
 class DeloreanDateTime(object):
     def __init__(self):
         pass
+
+
+class DeloreanTime(object):
+    def __init__(self):
+        pass
+
+
+
 
 
