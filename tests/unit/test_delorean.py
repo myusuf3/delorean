@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+
 
 import os
 import sys
@@ -28,6 +28,13 @@ class DeloreanTests(unittest.TestCase):
 
     def test_today(self):
         pass
+
+    def test_timetravel(self, days=1, weeks=1):
+        d=Delorean()
+        current_datetime = d.date()
+        current_datetime = current_datetime + timedelta(days=1, weeks=1)
+        d.timetravel(days=1, weeks=1)
+        self.assertTrue(d, current_datetime)
 
     def test_future(self):
         pass

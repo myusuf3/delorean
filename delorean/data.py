@@ -11,6 +11,9 @@ class Delorean(object):
     
     def __repr__(self):
         return '<Delorean[%s]>' % (self.utcdatetime)
+
+    def time(self):
+        return self.utcdatetime.time()
     
     def tomorrow(self):
         one_day = timedelta(days=1)
