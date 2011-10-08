@@ -26,8 +26,10 @@ class DeloreanTests(unittest.TestCase):
         d.tomorrow()
         self.assertTrue(d, current_date+time_delta)
 
-    def test_today(self):
-        pass
+    def test_date(self):
+        d=Delorean()
+        datetimeutc = datetime.utcnow()
+        self.assertTrue(d, datetimeutc)
 
     def test_timetravel(self, days=1, weeks=1):
         d=Delorean()
@@ -39,9 +41,6 @@ class DeloreanTests(unittest.TestCase):
 
     def test_future(self):
         pass
-    
-    def test_date(self):
-    	pass
 
 
 
