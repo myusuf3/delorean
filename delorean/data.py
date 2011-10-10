@@ -6,7 +6,6 @@ class Delorean(object):
     functionality of the Delorean.
     """
     def __init__(self):
-        #:datetime object
         self.utcdatetime = datetime.utcnow()
     
     def __repr__(self):
@@ -21,6 +20,9 @@ class Delorean(object):
         tomorrow = today + one_day
         self.utcdatetime = tomorrow
     
+    def datetime(self):
+        return self.utcdatetime
+    
     def date(self):
         return self.utcdatetime.date()
             
@@ -32,6 +34,7 @@ class Delorean(object):
         travel = timedelta(days=days, hours=hours, 
                             minutes=minutes, seconds=seconds, milliseconds=milliseconds, microseconds=microseconds)
         self.utcdatetime = self.utcdatetime + travel
+        print self.utcdatetime
         return self.utcdatetime
 
 

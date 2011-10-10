@@ -29,14 +29,22 @@ class DeloreanTests(unittest.TestCase):
     def test_date(self):
         d=Delorean()
         datetimeutc = datetime.utcnow()
-        self.assertTrue(d, datetimeutc)
+        self.assertEqual(d.date(), datetimeutc.date())
+    
+    def test_time(self):
+        d=Delorean()
+        print d
+        datetimeutc = datetime.utcnow()
+        print datetimeutc
+        self.assertEqual(d.time(), datetimeutc.time())
+    
 
     def test_timetravel(self, days=1, weeks=1):
         d=Delorean()
         current_datetime = d.date()
         current_datetime = current_datetime + timedelta(days=1, weeks=1)
         d.timetravel(days=1, weeks=1)
-        self.assertTrue(d, current_datetime)
+        self.assertEqual(d.date(), current_datetime)
         
 
     def test_future(self):
