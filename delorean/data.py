@@ -32,9 +32,8 @@ class Delorean(object):
         """
 
         travel = timedelta(days=days, hours=hours, 
-                            minutes=minutes, seconds=seconds, milliseconds=milliseconds, microseconds=microseconds)
+                            minutes=minutes, seconds=seconds, milliseconds=milliseconds, microseconds=microseconds, weeks=weeks)
         self.utcdatetime = self.utcdatetime + travel
-        print self.utcdatetime
         return self.utcdatetime
 
 
