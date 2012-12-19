@@ -5,7 +5,7 @@ except ImportError:
 
 from delorean import __version__
 
-dependencies = ['pytz']
+dependencies = ['pytz', 'dateutil']
 
 setup(
     name='Delorean',
