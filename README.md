@@ -5,7 +5,7 @@
 
 Pretty much make you a badass, time traveller
 
-[delorean](https://github.com/myusuf3/delorean/raw/master/misc/delorean_brochure3_811.jpg)
+![delorean](https://github.com/myusuf3/delorean/raw/master/misc/delorean_brochure3_811.jpg)
 
 # Installation
 
