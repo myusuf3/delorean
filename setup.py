@@ -5,7 +5,7 @@ except ImportError:
 
 from delorean import __version__
 
-dependencies = ['pytz', 'dateutil']
+dependencies = ['pytz', 'python-dateutil==2.1']
 
 setup(
     name='Delorean',
@@ -19,7 +19,7 @@ setup(
     ],
     license='MIT license',
     install_requires=dependencies,
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     classifiers=(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
