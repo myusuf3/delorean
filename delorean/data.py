@@ -1,5 +1,14 @@
-from datetime import datetime, date, time
+from datetime import datetime
 from pytz import timezone
+
+
+def utc_with_timezone():
+    """
+    This method returns utcnow with appropriate timezone
+    """
+    utc = timezone("UTC")
+    utc_datetime = datetime.utcnow()
+    return utc.localize(utc_datetime)
 
 
 class Delorean(object):
@@ -8,30 +17,26 @@ class Delorean(object):
     """
     def __init__(self,
         dt=None,
-        dte=None,
-        tm=None,
+        tz=None,
         ):
         # maybe set timezone on the way in here. if here set it if not
         # use UTC
-        if tm is None:
-            tm = "UTC"
-        self._date = DeloreanDate(dt)
-        self._datetime = DeloreanDatetime(dt=dte, tm=tm)
-        self._time = DeloreanTime(tm)
-        self._tm = tm
-        pass
+        self._tz = tz
+        self._dt = dt
+        if tz is None:
+            self._tz = "UTC"
+        if dt is None:
+            self._dt = utc_with_timezone()
 
-        # if timezone is passed in check to see if it is contained
-        # in the pytz timezones except if not.
 
     def __repr__(self):
-        return '<Delorean[%s]>' % (self._tm)
+        return '<Delorean[%s]>' % (self._tz)
 
     def date(self):
         """
         This method returns the actual date object associated with class
         """
-        return self._date.date
+        return self._datetime.date()
 
     def datetime(self):
         """
@@ -88,12 +93,6 @@ class DeloreanDate(object):
     # functions to move dates up and down
     # dateutils
 
-class DeloreanTime(object):
-    """
-    This class encapulates the data associated with times
-    """
-    def __init__(self, tm):
-        return None
 
 
 class DeloreanDatetime(object):
