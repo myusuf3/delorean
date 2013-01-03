@@ -21,3 +21,4 @@ Usage
 The overall goal is to improve date and time manipulations, as well as help create a simple way for detecting timezones in various areas as well as providing standardized time in utc.
 
 More to come.
+
