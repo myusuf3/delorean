@@ -10,6 +10,7 @@ def utc_with_timezone(tz="UTC"):
     utc_datetime = datetime.utcnow()
     return utc.localize(utc_datetime)
 
+
 def localize(dt, tz):
     """
     Given a datetime object this method will return a datetime object
@@ -17,6 +18,7 @@ def localize(dt, tz):
     utc = timezone(tz)
     utc_datetime = datetime.utcnow()
     return utc.localize(utc_datetime)
+
 
 def normalize(self, tz):
     """
@@ -47,20 +49,16 @@ class Delorean(object):
             self._dt = utc_with_timezone()
 
     def __repr__(self):
-        return '<Delorean[%s]>' % (self._tz)
+        return '<Delorean[%s]>' % (self._dt)
 
     def date(self):
         """
         This method returns the actual date object associated with class
         """
-        return self._datetime.date()
+        return self._dt.date()
 
     def datetime(self):
         """
-        This method returns the actual date object associated with class
+        This method returns the actual datetime object associated with class
         """
-        return self._datetime.get_datetime()
-
-
-
-
+        return self._dt.get_datetime()
