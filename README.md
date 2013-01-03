@@ -1,3 +1,5 @@
+![travis](https://travis-ci.org/myusuf3/delorean.png?branch=master)
+
 # Delorean: Time Travel Made Easy
 
 
