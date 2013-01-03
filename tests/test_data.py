@@ -12,9 +12,3 @@ class Delorean(unittest.TestCase):
         Tests that 1 + 1 always equals 2.
         """
         self.assertEqual(1 + 1, 2)
-
-class DeloreanDatetimeTest(unittest.TestCase):
-    pass
-
-class DeloreanDate(unittest.TestCase):
-    pass
