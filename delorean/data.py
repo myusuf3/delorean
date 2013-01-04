@@ -76,6 +76,9 @@ class Delorean(object):
     def __repr__(self):
         return '<Delorean[%s]>' % (self._dt)
 
+    def __eq__(self):
+        pass
+
     def __getattr__(self, name):
         """
         Implement __getattr__ to call `last` or `first` when function does not
@@ -111,9 +114,39 @@ class Delorean(object):
 
     def truncate(self, s):
         """
-        Truncate the delorian object by s (hour, day, week, month, etc)
+        Truncate the delorian object to the nearest s
+        (second, minute, hour, day, month, year)
         """
-        pass
+        if s is 'second':
+            self._dt = self._dt.replace(microsecond=0)
+        elif s is 'minute':
+            self._dt = self._dt.replace(second=0, microsecond=0)
+        elif s is 'hour':
+            self._dt = self._dt.replace(minute=0, second=0, microsecond=0)
+        elif s is 'day':
+            self._dt = self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif s is 'month':
+            self._dt = self._dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        elif s is 'year':
+            self._dt = self._dt.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+        else:
+            # raise some error
+            pass
+
+        return self
+
+    def naive(self):
+        """
+        Returns a naive datetime object from the delorean object, this
+        method simply removes tzinfo doesn't not cause a shift in time.
+        """
+        self._dt = self._dt.replace(tzinfo=None)
+
+    def midnight(self, s):
+        """
+        return the particular midnight of the particular delorean object
+        """
+        self._dt = self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
     @property
     def date(self):
@@ -127,4 +160,4 @@ class Delorean(object):
         """
         This method returns the actual datetime object associated with class
         """
-        return self._dt.get_datetime()
+        return self._dt

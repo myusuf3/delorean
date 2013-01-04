@@ -1,0 +1,4 @@
+distribute==0.6.27
+python-dateutil==2.1
+pytz==2012h
+six==1.2.0
