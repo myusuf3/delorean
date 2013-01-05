@@ -4,7 +4,7 @@
 Test for testing the data model for delorean.
 """
 from delorean import Delorean
-from datetime import datetime
+from datetime import datetime, date
 from unittest import TestCase, main
 
 
@@ -55,6 +55,13 @@ class DeloreanTests(TestCase):
         """
         self.do.truncate('year')
         self.assertEqual(self.do.datetime, datetime(2013, 1, 1, 0, 0, 0, 0))
+
+    def test_date(self):
+        self.do.date()
+        self.assertEqual(self.do.date(), date(2013, 1, 3))
+
+    def test_datetime(self):
+        self.assertEqual(self.do.datetime, datetime(2013, 1, 3, 4, 31, 14, 148546))
 
     def test_naive(self):
         dt1 = Delorean()
