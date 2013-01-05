@@ -153,7 +153,7 @@ class Delorean(object):
         """
         This method returns the actual date object associated with class
         """
-        return self._dt.date()
+        return self._dt.date
 
     @property
     def datetime(self):
