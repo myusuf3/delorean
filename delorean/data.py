@@ -29,7 +29,8 @@ def now():
 
 def datetime_timezone(tz=UTC):
     """
-    This method returns utcnow with appropriate timezone
+    This method returns utcnow with appropriate timezone, or normalized
+    to the correct timezone if provided.
     """
     utc_datetime_naive = datetime.utcnow()
     # return a localized datetime to utc
