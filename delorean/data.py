@@ -1,48 +1,34 @@
 from datetime import datetime
+
+import pytz
 from pytz import timezone
 
-
-def parse(s, tz=None):
-    """
-    Parse a string with a datetime in it and return a delorean object
-    Optionally accept a TZ
-    """
-    pass
+UTC = "UTC"
 
 
-def utcnow():
+def datetime_timezone(tz=UTC):
     """
-    Return a delorean object, with utcnow as the datetime
+    This method returns utcnow with appropriate timezone, or normalized
+    to the correct timezone if provided.
     """
-    pass
-
-
-def now():
-    """
-    Return a delorean object, with utcnow as the datetime
-    """
-    return utcnow()
-
-
-def utc_with_timezone(tz="UTC"):
-    """
-    This method returns utcnow with appropriate timezone
-    """
-    utc = timezone(tz)
-    utc_datetime = datetime.utcnow()
-    return utc.localize(utc_datetime)
+    utc_datetime_naive = datetime.utcnow()
+    # return a localized datetime to utc
+    utc_localized_datetime = localize(utc_datetime_naive, UTC)
+    # normalize the datetime to given timezone
+    normalized_datetime = normalize(utc_localized_datetime, tz)
+    return normalized_datetime
 
 
 def localize(dt, tz):
     """
-    Given a datetime object this method will return a datetime object
+    Given a naive datetime object this method will return a localized
+    datetime object
     """
-    utc = timezone(tz)
-    utc_datetime = datetime.utcnow()
-    return utc.localize(utc_datetime)
+    tz = timezone(tz)
+    return tz.localize(dt)
 
 
-def normalize(self, tz):
+def normalize(dt, tz):
     """
     Given a object with a timezone return a datetime object
     normalized to the proper timezone.
@@ -51,9 +37,21 @@ def normalize(self, tz):
     to match the specificed timezone.
     """
     tz = timezone(tz)
-    self._datetime = tz.normalize(self.datetime)
-    self._date.set_date(self._datetime.date())
-    return self
+    dt = tz.normalize(dt)
+    return dt
+
+
+def is_datetime_naive(dt):
+    """
+    Return true if the datetime is naive else returns false
+    """
+    if dt is None:
+        return True
+
+    if dt.tzinfo is None:
+        return True
+    else:
+        return False
 
 
 class Delorean(object):
@@ -63,18 +61,36 @@ class Delorean(object):
     _VALID_SHIFTS = ('day', 'week', 'month', 'year', 'monday', 'tuesday',
                      'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
 
-    def __init__(self, dt=None, tz=None):
+    def __init__(self, datetime=None, timezone=None):
         # maybe set timezone on the way in here. if here set it if not
         # use UTC
-        self._tz = tz
-        self._dt = dt
-        if tz is None:
-            self._tz = "UTC"
-        if dt is None:
-            self._dt = utc_with_timezone()
+        self._tz = timezone
+        self._dt = datetime
+
+        if is_datetime_naive(datetime):
+            pass
+        else:
+            # raise a value error since you are passing a localized
+            # datetime
+            raise ValueError
+
+        if timezone is None and datetime is None:
+            self._tz = UTC
+            self._dt = datetime_timezone()
+        elif timezone is not None and datetime is None:
+            # create utctime then normalize to tz
+            self._tz = timezone
+            self._dt = datetime_timezone(tz=timezone)
+        elif timezone is None and datetime is not None:
+            raise ValueError
+        else:
+            # passed in naive datetime and timezone
+            # that correspond accordingly
+            self._tz = timezone
+            self._dt = localize(datetime, timezone)
 
     def __repr__(self):
-        return '<Delorean[%s]>' % (self._dt)
+        return '<Delorean[ %s  %s ]>' % (self._dt, self._tz)
 
     def __eq__(self):
         pass
@@ -112,6 +128,18 @@ class Delorean(object):
         """
         pass
 
+    def timezone(self):
+        """
+        Return a valid pytz timezone object or raises some error
+        """
+        if self._tz is None:
+            return None
+        try:
+            return timezone(self._tz)
+        except pytz.exceptions.UnknownTimeZoneError:
+            # raise some delorean error
+            pass
+
     def truncate(self, s):
         """
         Truncate the delorian object to the nearest s
@@ -140,7 +168,7 @@ class Delorean(object):
         Returns a naive datetime object from the delorean object, this
         method simply removes tzinfo doesn't not cause a shift in time.
         """
-        self._dt = self._dt.replace(tzinfo=None)
+        return self._dt.replace(tzinfo=None)
 
     def midnight(self, s):
         """
@@ -153,7 +181,7 @@ class Delorean(object):
         """
         This method returns the actual date object associated with class
         """
-        return self._dt.date()
+        return self._dt.date
 
     @property
     def datetime(self):
