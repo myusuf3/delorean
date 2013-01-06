@@ -114,5 +114,17 @@ class DeloreanTests(TestCase):
         dt1 = utc.localize(datetime(2003, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
+    def test_parse_with_utc_year_fill(self):
+        do = capture('Thu Sep 25 10:36:28')
+        dt1 = utc.localize(datetime(2013, 9, 25, 10, 36, 28))
+        self.assertEqual(do.datetime, dt1)
+
+    def test_parse_with_timezeon_year_fill(self):
+        do = capture('Thu Sep 25 10:36:28', timezone="US/Eastern")
+        est = timezone("US/Eastern")
+        dt1 = est.localize(datetime(2013, 9, 25, 10, 36, 28))
+        self.assertEqual(do.datetime, dt1)
+        self.assertEqual(do._tz, "US/Eastern")
+
 if __name__ == '__main__':
     main()
