@@ -1,5 +1,8 @@
+import pytz
 from datetime import datetime
 from pytz import timezone
+
+UTC = 'UTC'
 
 
 def parse(s, tz=None):
@@ -24,13 +27,16 @@ def now():
     return utcnow()
 
 
-def utc_with_timezone(tz="UTC"):
+def datetime_timezone(tz=UTC):
     """
     This method returns utcnow with appropriate timezone
     """
-    utc = timezone(tz)
-    utc_datetime = datetime.utcnow()
-    return utc.localize(utc_datetime)
+    utc_datetime_naive = datetime.utcnow()
+    # return a localized datetime to utc
+    utc_localized_datetime = localize(utc_datetime_naive, UTC)
+    # normalize the datetime to given timezone
+    normalized_datetime = normalize(utc_localized_datetime, tz)
+    return normalized_datetime
 
 
 def localize(dt, tz):
@@ -42,7 +48,7 @@ def localize(dt, tz):
     return utc.localize(utc_datetime)
 
 
-def normalize(self, tz):
+def normalize(dt, tz):
     """
     Given a object with a timezone return a datetime object
     normalized to the proper timezone.
@@ -51,9 +57,8 @@ def normalize(self, tz):
     to match the specificed timezone.
     """
     tz = timezone(tz)
-    self._datetime = tz.normalize(self.datetime)
-    self._date.set_date(self._datetime.date())
-    return self
+    dt = tz.normalize(dt)
+    return dt
 
 
 class Delorean(object):
@@ -68,10 +73,13 @@ class Delorean(object):
         # use UTC
         self._tz = tz
         self._dt = dt
+        if tz:
+            # create utctime then localize to tz
+            self._dt = datetime_timezone(tz=tz)
         if tz is None:
-            self._tz = "UTC"
+            self._tz = tz
         if dt is None:
-            self._dt = utc_with_timezone()
+            self._dt = datetime_timezone()
 
     def __repr__(self):
         return '<Delorean[%s]>' % (self._dt)
@@ -111,6 +119,18 @@ class Delorean(object):
         by some multiple, defined by shift_by_multiple
         """
         pass
+
+    def timezone(self):
+        """
+        Return a valid pytz timezone object or raises some error
+        """
+        if self._tz is None:
+            return None
+        try:
+            return timezone(self._tz)
+        except pytz.exceptions.UnknownTimeZoneError:
+            # raise some delorean error
+            pass
 
     def truncate(self, s):
         """
