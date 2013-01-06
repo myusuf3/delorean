@@ -41,11 +41,11 @@ def datetime_timezone(tz=UTC):
 
 def localize(dt, tz):
     """
-    Given a datetime object this method will return a datetime object
+    Given a naive datetime object this method will return a localized
+    datetime object
     """
     utc = timezone(tz)
-    utc_datetime = datetime.utcnow()
-    return utc.localize(utc_datetime)
+    return utc.localize(dt)
 
 
 def normalize(dt, tz):
@@ -76,10 +76,11 @@ class Delorean(object):
         if tz:
             # create utctime then localize to tz
             self._dt = datetime_timezone(tz=tz)
-        if tz is None:
-            self._tz = tz
-        if dt is None:
-            self._dt = datetime_timezone()
+        else:
+            if tz is None:
+                self._tz = UTC
+            if dt is None:
+                self._dt = datetime_timezone()
 
     def __repr__(self):
         return '<Delorean[%s]>' % (self._dt)
