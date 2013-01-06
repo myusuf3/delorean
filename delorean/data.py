@@ -10,6 +10,9 @@ UTC = "UTC"
 
 
 def _move_datetime(dt, direction, delta):
+    """
+    Move datetime given delta by given direction
+    """
     if direction == 'next':
         dt = dt + delta
     elif direction == 'last':
@@ -20,7 +23,7 @@ def _move_datetime(dt, direction, delta):
     return dt
 
 
-def move_datetime_day(dt, direction, unit=None):
+def move_datetime_day(dt, direction, unit):
     """
     """
     TOTAL_DAYS = 7
@@ -52,24 +55,27 @@ def move_datetime_day(dt, direction, unit=None):
     return _move_datetime(dt, direction, delta)
 
 
-def move_datetime_month(dt, direction, unit=None):
+def move_datetime_month(dt, direction, *args):
     """
+    Move datetime 1 month in the chosen direction.
     unit is a no-op, to keep the api the same as the day case
     """
     delta = relativedelta(months=+1)
     return _move_datetime(dt, direction, delta)
 
 
-def move_datetime_week(dt, direction, unit=None):
+def move_datetime_week(dt, direction, *args):
     """
+    Move datetime 1 week in the chosen direction.
     unit is a no-op, to keep the api the same as the day case
     """
     delta = relativedelta(weeks=+1)
     return _move_datetime(dt, direction, delta)
 
 
-def move_datetime_year(dt, direction, unit=None):
+def move_datetime_year(dt, direction, *args):
     """
+    Move datetime 1 year in the chosen direction.
     unit is a no-op, to keep the api the same as the day case
     """
     if direction == "next":
@@ -194,10 +200,12 @@ class Delorean(object):
 
     def _shift_date(self, direction, unit, *args):
         """
-        Shift datetime in `direction` by some unit in _VALID_SHIFTS and shift
-        that amount by some multiple, defined by by args[0] if it exists
+        Shift datetime in `direction` in _VALID_SHIFT_DIRECTIONS and by some
+        unit in _VALID_SHIFTS and shift that amount by some multiple,
+        defined by by args[0] if it exists
         """
         this_module = sys.modules[__name__]
+
         num_shifts = 0
         if len(args) > 0:
             num_shifts = int(args[0])
@@ -208,13 +216,13 @@ class Delorean(object):
         else:
             shift_func = getattr(this_module, 'move_datetime_%s' % unit)
 
-        dt = shift_func(self._dt, direction, unit=unit)
+        dt = shift_func(self._dt, direction, unit)
 
         if num_shifts > 1:
             for n in range(num_shifts - 1):
-                dt = shift_func(dt, direction, unit=unit)
+                dt = shift_func(dt, direction, unit)
 
-        return dt
+        return Delorean(datetime=dt, timezone=self._tz)
 
     def timezone(self):
         """

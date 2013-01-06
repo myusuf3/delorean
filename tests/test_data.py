@@ -126,5 +126,33 @@ class DeloreanTests(TestCase):
         self.assertEqual(do.datetime, dt1)
         self.assertEqual(do._tz, "US/Eastern")
 
+    def test_move_day(self):
+        pass
+
+    def test_move_day_function(self):
+        pass
+
+    def test_move_week(self):
+        pass
+
+    def test_move_week_function(self):
+        pass
+
+    def test_move_month(self):
+        pass
+
+    def test_move_month_function(self):
+        pass
+
+    def test_move_year(self):
+        pass
+
+    def test_move_year_function(self):
+        pass
+
+    def test_move_bad_function(self):
+        pass
+
+
 if __name__ == '__main__':
     main()
