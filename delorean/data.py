@@ -1,30 +1,9 @@
-import pytz
 from datetime import datetime
+
+import pytz
 from pytz import timezone
 
-UTC = 'UTC'
-
-
-def parse(s, tz=None):
-    """
-    Parse a string with a datetime in it and return a delorean object
-    Optionally accept a TZ
-    """
-    pass
-
-
-def utcnow():
-    """
-    Return a delorean object, with utcnow as the datetime
-    """
-    pass
-
-
-def now():
-    """
-    Return a delorean object, with utcnow as the datetime
-    """
-    return utcnow()
+UTC = "UTC"
 
 
 def datetime_timezone(tz=UTC):
@@ -45,8 +24,8 @@ def localize(dt, tz):
     Given a naive datetime object this method will return a localized
     datetime object
     """
-    utc = timezone(tz)
-    return utc.localize(dt)
+    tz = timezone(tz)
+    return tz.localize(dt)
 
 
 def normalize(dt, tz):
@@ -62,6 +41,19 @@ def normalize(dt, tz):
     return dt
 
 
+def is_datetime_naive(dt):
+    """
+    Return true if the datetime is naive else returns false
+    """
+    if dt is None:
+        return True
+
+    if dt.tzinfo is None:
+        return True
+    else:
+        return False
+
+
 class Delorean(object):
     """ The :class" `Delorean <Delorean>` object. It carries out all
     functionality of the Delorean.
@@ -74,17 +66,31 @@ class Delorean(object):
         # use UTC
         self._tz = timezone
         self._dt = datetime
-        if timezone:
-            # create utctime then localize to tz
-            self._dt = datetime_timezone(tz=timezone)
+
+        if is_datetime_naive(datetime):
+            pass
         else:
-            if timezone is None:
-                self._tz = UTC
-            if datetime is None:
-                self._dt = datetime_timezone()
+            # raise a value error since you are passing a localized
+            # datetime
+            raise ValueError
+
+        if timezone is None and datetime is None:
+            self._tz = UTC
+            self._dt = datetime_timezone()
+        elif timezone is not None and datetime is None:
+            # create utctime then normalize to tz
+            self._tz = timezone
+            self._dt = datetime_timezone(tz=timezone)
+        elif timezone is None and datetime is not None:
+            raise ValueError
+        else:
+            # passed in naive datetime and timezone
+            # that correspond accordingly
+            self._tz = timezone
+            self._dt = localize(datetime, timezone)
 
     def __repr__(self):
-        return '<Delorean[%s]>' % (self._dt)
+        return '<Delorean[ %s  %s ]>' % (self._dt, self._tz)
 
     def __eq__(self):
         pass
@@ -162,7 +168,7 @@ class Delorean(object):
         Returns a naive datetime object from the delorean object, this
         method simply removes tzinfo doesn't not cause a shift in time.
         """
-        self._dt = self._dt.replace(tzinfo=None)
+        return self._dt.replace(tzinfo=None)
 
     def midnight(self, s):
         """
