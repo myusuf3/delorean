@@ -13,7 +13,7 @@ class DeloreanTests(TestCase):
 
     def setUp(self):
         date1 = datetime(2013, 1, 3, 4, 31, 14, 148546)
-        self.do = Delorean(dt=date1)
+        self.do = Delorean(datetime=date1)
 
     def test_truncation_hour(self):
         """
@@ -77,7 +77,7 @@ class DeloreanTests(TestCase):
 
     def test_normalize(self):
         dt1 = Delorean()
-        dt2 = Delorean(tz="US/Eastern")
+        dt2 = Delorean(timezone="US/Eastern")
         dt1.truncate('minute')
         dt2.truncate('minute')
         dt_normalized = normalize(dt1.datetime, "US/Eastern")
@@ -103,7 +103,7 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
 
     def test_datetime_timezone(self):
-        do = Delorean(tz="US/Eastern")
+        do = Delorean(timezone="US/Eastern")
         do.truncate("minute")
         dt1 = datetime_timezone(tz="US/Eastern")
         self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)

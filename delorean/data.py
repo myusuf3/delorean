@@ -69,18 +69,18 @@ class Delorean(object):
     _VALID_SHIFTS = ('day', 'week', 'month', 'year', 'monday', 'tuesday',
                      'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
 
-    def __init__(self, dt=None, tz=None):
+    def __init__(self, datetime=None, timezone=None):
         # maybe set timezone on the way in here. if here set it if not
         # use UTC
-        self._tz = tz
-        self._dt = dt
-        if tz:
+        self._tz = timezone
+        self._dt = datetime
+        if timezone:
             # create utctime then localize to tz
-            self._dt = datetime_timezone(tz=tz)
+            self._dt = datetime_timezone(tz=timezone)
         else:
-            if tz is None:
+            if timezone is None:
                 self._tz = UTC
-            if dt is None:
+            if datetime is None:
                 self._dt = datetime_timezone()
 
     def __repr__(self):
