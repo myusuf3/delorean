@@ -3,9 +3,10 @@
 """
 Test for testing the data model for delorean.
 """
-from delorean import Delorean
+from delorean import Delorean, datetime_timezone, localize, normalize
 from datetime import datetime, date
 from unittest import TestCase, main
+from pytz import timezone
 
 
 class DeloreanTests(TestCase):
@@ -67,6 +68,30 @@ class DeloreanTests(TestCase):
         dt1 = Delorean()
         dt1.naive()
         self.assertEqual(dt1.datetime.tzinfo, None)
+
+    def test_localize(self):
+        dt = datetime.today()
+        utc = timezone("UTC")
+        dt = localize(dt, "UTC")
+        self.assertEqual(dt.tzinfo, utc)
+
+    def test_normalize(self):
+        dt1 = Delorean()
+        dt2 = Delorean(tz="US/Eastern")
+        dt1.truncate('minute')
+        dt2.truncate('minute')
+        dt_normalized = normalize(dt1.datetime, "US/Eastern")
+        self.assertEqual(dt2.datetime, dt_normalized)
+
+    def test_normalize_failure(self):
+        naive_datetime = datetime.today()
+        self.assertRaises(ValueError, normalize, naive_datetime, "US/Eastern")
+
+    def test_timezone(self):
+        utc = timezone('UTC')
+        do_timezone = Delorean().timezone()
+        self.assertEqual(utc, do_timezone)
+
 
 
 if __name__ == '__main__':
