@@ -87,11 +87,26 @@ class DeloreanTests(TestCase):
         naive_datetime = datetime.today()
         self.assertRaises(ValueError, normalize, naive_datetime, "US/Eastern")
 
+    def test_localize_failure(self):
+        dt1 = localize(datetime.utcnow(), "UTC")
+        self.assertRaises(ValueError, localize, dt1, "UTC")
+
     def test_timezone(self):
         utc = timezone('UTC')
         do_timezone = Delorean().timezone()
         self.assertEqual(utc, do_timezone)
 
+    def test_datetime_timezone_default(self):
+        do = Delorean()
+        do.truncate('minute')
+        dt1 = datetime_timezone()
+        self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
+
+    def test_datetime_timezone(self):
+        do = Delorean(tz="US/Eastern")
+        do.truncate("minute")
+        dt1 = datetime_timezone(tz="US/Eastern")
+        self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
 
 
 if __name__ == '__main__':
