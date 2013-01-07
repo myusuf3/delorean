@@ -79,12 +79,8 @@ def move_datetime_year(dt, direction, *args):
     Move datetime 1 year in the chosen direction.
     unit is a no-op, to keep the api the same as the day case
     """
-    if direction == "next":
-        new_year = dt.year + 1
-    else:
-        new_year = dt.year - 1
-
-    return dt.replace(year=new_year)
+    delta = relativedelta(years=+1)
+    return _move_datetime(dt, direction, delta)
 
 
 def datetime_timezone(tz=UTC):
