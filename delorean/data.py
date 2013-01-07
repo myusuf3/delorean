@@ -1,12 +1,26 @@
 import sys
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from .exceptions import DeloreanInvalidTimezone, DeloreanInvalidDatetime
 from functools import partial, update_wrapper
 
 import pytz
 from pytz import timezone
 
 UTC = "UTC"
+
+
+def is_datetime_naive(dt):
+    """
+    Return true if the datetime is naive else returns false
+    """
+    if dt is None:
+        return True
+
+    if dt.tzinfo is None:
+        return True
+    else:
+        return False
 
 
 def _move_datetime(dt, direction, delta):
@@ -118,18 +132,6 @@ def normalize(dt, tz):
     return dt
 
 
-def is_datetime_naive(dt):
-    """
-    Return true if the datetime is naive else returns false
-    """
-    if dt is None:
-        return True
-
-    if dt.tzinfo is None:
-        return True
-    else:
-        return False
-
 
 class Delorean(object):
     """ The :class" `Delorean <Delorean>` object. It carries out all
@@ -152,7 +154,7 @@ class Delorean(object):
             pass
             # raise a value error since you are passing a localized
             # datetime
-            raise ValueError
+            raise DeloreanInvalidDatetime('Provide a naive datetime object')
 
         if timezone is None and datetime is None:
             self._tz = UTC
@@ -162,7 +164,7 @@ class Delorean(object):
             self._tz = timezone
             self._dt = datetime_timezone(tz=timezone)
         elif timezone is None and datetime is not None:
-            raise ValueError
+            raise DeloreanInvalidTimezone('Provide a valid timezone')
         else:
             # passed in naive datetime and timezone
             # that correspond accordingly
