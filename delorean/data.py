@@ -132,7 +132,6 @@ def normalize(dt, tz):
     return dt
 
 
-
 class Delorean(object):
     """ The :class" `Delorean <Delorean>` object. It carries out all
     functionality of the Delorean.

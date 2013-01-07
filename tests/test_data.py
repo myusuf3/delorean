@@ -234,6 +234,24 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
 
+    def test_range_count(self):
+        """
+        tests the range method with count used
+        """
+        pass
+
+    def test_range_with_start(self):
+        pass
+
+    def test_range_with_start_and_stop(self):
+        pass
+
+    def test_range_with_interval(self):
+        pass
+
+    def test_delorean(self):
+        pass
+
 
 if __name__ == '__main__':
     main()
