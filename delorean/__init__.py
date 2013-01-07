@@ -1,4 +1,7 @@
 __version__ = (0, 1, 0)
 
+from .utils import capture, stops
 from .data import Delorean, datetime_timezone, localize, normalize
-from .utils import capture
+from dateutil.rrule import (YEARLY,
+    MONTHLY, WEEKLY, DAILY, HOURLY,
+    MINUTELY, SECONDLY, MO, TU, WE, TH, FR, SA, SU)
