@@ -3,12 +3,14 @@
 """
 Test for testing the data model for delorean.
 """
-from delorean import Delorean, datetime_timezone, localize, normalize, capture
-from datetime import datetime, date
 from unittest import TestCase, main
+from datetime import datetime, date
+
 from pytz import timezone
+from delorean import Delorean, datetime_timezone, localize, normalize, capture
 
 utc = timezone("UTC")
+
 
 class DeloreanTests(TestCase):
 
@@ -127,31 +129,128 @@ class DeloreanTests(TestCase):
         self.assertEqual(do._tz, "US/Eastern")
 
     def test_move_day(self):
-        pass
+        tz = timezone('UTC')
+
+        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=tz)
+        dt_next_2 = datetime(2013, 1, 11, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 12, 28, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last_2 = datetime(2012, 12, 21, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = self.do.next_friday()
+        d_obj_next_2 = self.do.next_friday(2)
+        d_obj_last = self.do.last_friday()
+        d_obj_last_2 = self.do.last_friday(2)
+
+        self.assertEqual(dt_next, d_obj_next.datetime)
+        self.assertEqual(dt_last, d_obj_last.datetime)
+        self.assertEqual(dt_next_2, d_obj_next_2.datetime)
+        self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_day_function(self):
-        pass
+        from delorean.data import move_datetime_day
+        tz = timezone('UTC')
+
+        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 12, 28, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = move_datetime_day(self.do.datetime, 'next', 'friday')
+        d_obj_last = move_datetime_day(self.do.datetime, 'last', 'friday')
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
 
     def test_move_week(self):
-        pass
+        tz = timezone('UTC')
+
+        dt_next = datetime(2013, 1, 10, 4, 31, 14, 148546, tzinfo=tz)
+        dt_next_2 = datetime(2013, 1, 17, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 12, 27, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last_2 = datetime(2012, 12, 20, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = self.do.next_week()
+        d_obj_next_2 = self.do.next_week(2)
+        d_obj_last = self.do.last_week()
+        d_obj_last_2 = self.do.last_week(2)
+
+        self.assertEqual(dt_next, d_obj_next.datetime)
+        self.assertEqual(dt_last, d_obj_last.datetime)
+        self.assertEqual(dt_next_2, d_obj_next_2.datetime)
+        self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_week_function(self):
-        pass
+        from delorean.data import move_datetime_week
+        tz = timezone('UTC')
+
+        dt_next = datetime(2013, 1, 10, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 12, 27, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = move_datetime_week(self.do.datetime, 'next')
+        d_obj_last = move_datetime_week(self.do.datetime, 'last')
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
 
     def test_move_month(self):
-        pass
+        tz = timezone('UTC')
+
+        dt_next = datetime(2013, 2, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_next_2 = datetime(2013, 3, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 12, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last_2 = datetime(2012, 11, 3, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = self.do.next_month()
+        d_obj_next_2 = self.do.next_month(2)
+        d_obj_last = self.do.last_month()
+        d_obj_last_2 = self.do.last_month(2)
+
+        self.assertEqual(dt_next, d_obj_next.datetime)
+        self.assertEqual(dt_last, d_obj_last.datetime)
+        self.assertEqual(dt_next_2, d_obj_next_2.datetime)
+        self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_month_function(self):
-        pass
+        from delorean.data import move_datetime_month
+        tz = timezone('UTC')
+
+        dt_next = datetime(2013, 2, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 12, 3, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = move_datetime_month(self.do.datetime, 'next')
+        d_obj_last = move_datetime_month(self.do.datetime, 'last')
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
 
     def test_move_year(self):
-        pass
+        tz = timezone('UTC')
+
+        dt_next = datetime(2014, 1, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_next_2 = datetime(2015, 1, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 1, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last_2 = datetime(2011, 1, 3, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = self.do.next_year()
+        d_obj_next_2 = self.do.next_year(2)
+        d_obj_last = self.do.last_year()
+        d_obj_last_2 = self.do.last_year(2)
+
+        self.assertEqual(dt_next, d_obj_next.datetime)
+        self.assertEqual(dt_last, d_obj_last.datetime)
+        self.assertEqual(dt_next_2, d_obj_next_2.datetime)
+        self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_year_function(self):
-        pass
+        from delorean.data import move_datetime_year
+        tz = timezone('UTC')
 
-    def test_move_bad_function(self):
-        pass
+        dt_next = datetime(2014, 1, 3, 4, 31, 14, 148546, tzinfo=tz)
+        dt_last = datetime(2012, 1, 3, 4, 31, 14, 148546, tzinfo=tz)
+
+        d_obj_next = move_datetime_year(self.do.datetime, 'next')
+        d_obj_last = move_datetime_year(self.do.datetime, 'last')
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
 
 
 if __name__ == '__main__':

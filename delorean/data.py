@@ -46,10 +46,11 @@ def move_datetime_day(dt, direction, unit):
         else:
             delta_days = (target_day - current_day) + TOTAL_DAYS
     elif direction == 'last':
-        if current_day > target_day:
-            delta_days = (target_day - current_day) + TOTAL_DAYS
+
+        if current_day <= target_day:
+            delta_days = (current_day - target_day) + TOTAL_DAYS
         else:
-            delta_days = target_day - current_day
+            delta_days = current_day - target_day
 
     delta = timedelta(days=delta_days)
     return _move_datetime(dt, direction, delta)
@@ -152,6 +153,7 @@ class Delorean(object):
         if is_datetime_naive(datetime):
             pass
         else:
+            pass
             # raise a value error since you are passing a localized
             # datetime
             raise ValueError
@@ -222,7 +224,7 @@ class Delorean(object):
             for n in range(num_shifts - 1):
                 dt = shift_func(dt, direction, unit)
 
-        return Delorean(datetime=dt, timezone=self._tz)
+        return Delorean(datetime=dt.replace(tzinfo=None), timezone=self._tz)
 
     def timezone(self):
         """
