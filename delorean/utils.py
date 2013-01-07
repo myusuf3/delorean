@@ -1,8 +1,9 @@
 from dateutil.parser import parse
-
+from dateutil.rrule import rrule
 from .data import Delorean
 
 UTC = "UTC"
+
 
 def capture(s, dayfirst=True, timezone=UTC):
     """
@@ -19,6 +20,14 @@ def capture(s, dayfirst=True, timezone=UTC):
     return do
 
 
+def range(freq, start, stop, interval):
+    """
+    This will create a list of delorean objects the apply to
+    setting possed in.
+    """
+    pass
+
+
 def utcnow():
     """
     Return a delorean object, with utcnow as the datetime
@@ -32,6 +41,3 @@ def now():
     """
     return utcnow()
 
-
-if __name__ == '__main__':
-    main()
