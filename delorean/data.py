@@ -173,8 +173,9 @@ class Delorean(object):
     def __repr__(self):
         return '<Delorean[ %s  %s ]>' % (self._dt, self._tz)
 
-    def __eq__(self):
-        pass
+    def __eq__(self, other):
+        # test this.
+        return self._dt == other._dt and self._tz == other._tz
 
     def __getattr__(self, name):
         """
@@ -257,6 +258,11 @@ class Delorean(object):
             pass
 
         return self
+
+    def next_day(self, days):
+        dt = self._dt + relativedelta(days=+days)
+        dt = dt.replace(tzinfo=None)
+        return Delorean(datetime=dt, timezone=self._tz)
 
     def naive(self):
         """
