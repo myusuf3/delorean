@@ -46,7 +46,7 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
     if start is None:
         start = datetime_timezone(tz)
 
-    for dt in rrule(freq, interval=1, count=count, wkst=None, bysetpos=None,
+    for dt in rrule(freq, interval=interval, count=count, wkst=None, bysetpos=None,
           bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
           byweekno=None, byweekday=None, byhour=None, byminute=None,
           bysecond=None, until=until, dtstart=start):
