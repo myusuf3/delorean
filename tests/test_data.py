@@ -4,14 +4,18 @@
 Test for testing the data model for delorean.
 """
 from unittest import TestCase, main
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from pytz import timezone
-from delorean import Delorean, datetime_timezone, localize, normalize, capture
+from delorean import (Delorean, datetime_timezone, capture,
+                      localize, normalize, stops, YEARLY,
+                      MONTHLY, WEEKLY, DAILY, HOURLY,
+                      MINUTELY, SECONDLY)
 from delorean.data import (move_datetime_day, move_datetime_week,
                            move_datetime_month, move_datetime_year)
 
-utc = timezone("UTC")
+UTC = "UTC"
+utc = timezone(UTC)
 
 
 class DeloreanTests(TestCase):
@@ -104,7 +108,7 @@ class DeloreanTests(TestCase):
     def test_datetime_timezone_default(self):
         do = Delorean()
         do.truncate('minute')
-        dt1 = datetime_timezone()
+        dt1 = datetime_timezone(UTC)
         self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
 
     def test_datetime_timezone(self):
@@ -238,16 +242,43 @@ class DeloreanTests(TestCase):
         """
         tests the range method with count used
         """
-        pass
+        count = list(stops(DAILY, count=5))
+        self.assertEqual(len(count), 5)
 
     def test_range_with_start(self):
-        pass
+        dates1 = []
+        for do in stops(DAILY, count=5, start=datetime.utcnow()):
+            do.truncate('minute')
+            dates1.append(do)
+        do = Delorean().truncate('minute')
+        dates2 = []
+        for x in range(5):
+            dates2.append(do.next_day(x))
+        self.assertEqual(dates1, dates2)
 
     def test_range_with_start_and_stop(self):
-        pass
+        dates1 = []
+        tomorrow = datetime.utcnow() + timedelta(days=1)
+        for do in stops(DAILY, start=datetime.utcnow(), until=tomorrow):
+            do.truncate('minute')
+            dates1.append(do)
+        do = Delorean().truncate('minute')
+        dates2 = []
+        for x in range(2):
+            dates2.append(do.next_day(x))
+        self.assertEqual(dates1, dates2)
 
     def test_range_with_interval(self):
-        pass
+        dates1 = []
+        for do in stops(DAILY, interval=2, count=3, start=datetime.utcnow()):
+            do.truncate('minute')
+            dates1.append(do)
+        do = Delorean().truncate('minute')
+        dates2 = []
+        for x in range(6):
+            if (x % 2) == 0:
+                dates2.append(do.next_day(x))
+        self.assertEqual(dates1, dates2)
 
     def test_delorean(self):
         pass
