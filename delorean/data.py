@@ -97,7 +97,7 @@ def move_datetime_year(dt, direction, *args):
     return _move_datetime(dt, direction, delta)
 
 
-def datetime_timezone(tz=UTC):
+def datetime_timezone(tz):
     """
     This method returns utcnow with appropriate timezone, or normalized
     to the correct timezone if provided.
@@ -157,11 +157,11 @@ class Delorean(object):
 
         if timezone is None and datetime is None:
             self._tz = UTC
-            self._dt = datetime_timezone()
+            self._dt = datetime_timezone(UTC)
         elif timezone is not None and datetime is None:
             # create utctime then normalize to tz
             self._tz = timezone
-            self._dt = datetime_timezone(tz=timezone)
+            self._dt = datetime_timezone(timezone)
         elif timezone is None and datetime is not None:
             raise DeloreanInvalidTimezone('Provide a valid timezone')
         else:
