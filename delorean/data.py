@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from .exceptions import DeloreanInvalidTimezone, DeloreanInvalidDatetime
 from functools import partial, update_wrapper
@@ -37,7 +37,12 @@ def _move_datetime(dt, direction, delta):
     return dt
 
 
-def move_datetime_day(dt, direction, unit):
+def move_datetime_day(dt, direction, num_shifts):
+    delta = relativedelta(days=+num_shifts)
+    return _move_datetime(dt, direction, delta)
+
+
+def move_datetime_namedday(dt, direction, unit):
     """
     """
     TOTAL_DAYS = 7
@@ -66,34 +71,34 @@ def move_datetime_day(dt, direction, unit):
         else:
             delta_days = current_day - target_day
 
-    delta = timedelta(days=delta_days)
+    delta = relativedelta(days=+delta_days)
     return _move_datetime(dt, direction, delta)
 
 
-def move_datetime_month(dt, direction, *args):
+def move_datetime_month(dt, direction, num_shifts):
     """
     Move datetime 1 month in the chosen direction.
     unit is a no-op, to keep the api the same as the day case
     """
-    delta = relativedelta(months=+1)
+    delta = relativedelta(months=+num_shifts)
     return _move_datetime(dt, direction, delta)
 
 
-def move_datetime_week(dt, direction, *args):
+def move_datetime_week(dt, direction, num_shifts):
     """
     Move datetime 1 week in the chosen direction.
     unit is a no-op, to keep the api the same as the day case
     """
-    delta = relativedelta(weeks=+1)
+    delta = relativedelta(weeks=+num_shifts)
     return _move_datetime(dt, direction, delta)
 
 
-def move_datetime_year(dt, direction, *args):
+def move_datetime_year(dt, direction, num_shifts):
     """
     Move datetime 1 year in the chosen direction.
     unit is a no-op, to keep the api the same as the day case
     """
-    delta = relativedelta(years=+1)
+    delta = relativedelta(years=+num_shifts)
     return _move_datetime(dt, direction, delta)
 
 
@@ -206,21 +211,20 @@ class Delorean(object):
         """
         this_module = sys.modules[__name__]
 
-        num_shifts = 0
+        num_shifts = 1
         if len(args) > 0:
             num_shifts = int(args[0])
 
         if unit in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
                     'saturday', 'sunday']:
-            shift_func = move_datetime_day
+            shift_func = move_datetime_namedday
+            dt = shift_func(self._dt, direction, unit)
+            if num_shifts > 1:
+                for n in range(num_shifts - 1):
+                    dt = shift_func(dt, direction, unit)
         else:
             shift_func = getattr(this_module, 'move_datetime_%s' % unit)
-
-        dt = shift_func(self._dt, direction, unit)
-
-        if num_shifts > 1:
-            for n in range(num_shifts - 1):
-                dt = shift_func(dt, direction, unit)
+            dt = shift_func(self._dt, direction, num_shifts)
 
         return Delorean(datetime=dt.replace(tzinfo=None), timezone=self._tz)
 
