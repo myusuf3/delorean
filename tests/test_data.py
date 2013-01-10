@@ -14,7 +14,7 @@ from delorean import (Delorean, datetime_timezone, capture,
 from delorean.data import (move_datetime_day, move_datetime_week,
                            move_datetime_month, move_datetime_year,
                            move_datetime_namedday)
-from delorean.exceptions import DeloreanInvalidDatetime
+from delorean.exceptions import DeloreanInvalidDatetime, DeloreanInvalidTimezone
 
 UTC = "UTC"
 utc = timezone(UTC)
@@ -314,8 +314,9 @@ class DeloreanTests(TestCase):
         self.assertEqual(est, timezone(d._tz))
         self.assertEqual(dt, d._dt)
 
-
-
+    def test_shift_failure(self):
+        d = Delorean()
+        self.assertRaises(DeloreanInvalidTimezone, d.shift, "US/Westerrn")
 
 if __name__ == '__main__':
     main()
