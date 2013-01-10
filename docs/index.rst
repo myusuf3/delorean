@@ -14,15 +14,9 @@ Pretty much make you a badass, time traveller
 .. image:: http://i.imgur.com/fLdzD.jpg
 
 
-Installation
-^^^^^^^^^^^^
-To install simply run::
 
-    $ pip install delorean
-
-
-Usage
-^^^^^
+Getting Started
+^^^^^^^^^^^^^^^
 
 **Note: This API is in flux still trying to soldify API.**
 
@@ -30,8 +24,20 @@ The overall goal is to improve date and time manipulations, as well as help crea
 
 More to come.
 
+Guide
+=====
+
+.. toctree::
+    :maxdepth: 1
+
+    copyright
+
 .. toctree::
    :maxdepth: 2
+
+   installation/install
+   usage/quickstart
+
 
 
 
