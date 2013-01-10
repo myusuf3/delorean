@@ -14,9 +14,11 @@ from delorean import (Delorean, datetime_timezone, capture,
 from delorean.data import (move_datetime_day, move_datetime_week,
                            move_datetime_month, move_datetime_year,
                            move_datetime_namedday)
+from delorean.exceptions import DeloreanInvalidDatetime
 
 UTC = "UTC"
 utc = timezone(UTC)
+est = timezone("US/Eastern")
 
 
 class DeloreanTests(TestCase):
@@ -281,8 +283,38 @@ class DeloreanTests(TestCase):
                 dates2.append(do.next_day(x))
         self.assertEqual(dates1, dates2)
 
-    def test_delorean(self):
-        pass
+    def test_delorean_failure(self):
+        dt = datetime.utcnow()
+        dt = utc.localize(dt)
+        self.assertRaises(DeloreanInvalidDatetime, Delorean, datetime=dt)
+
+    def test_delorean_with_datetime(self):
+        dt = datetime.utcnow()
+        d = Delorean(datetime=dt, timezone=UTC)
+        dt = utc.localize(dt)
+        self.assertEqual(dt, d._dt)
+        self.assertEqual(UTC, d._tz)
+
+    def test_delorean_with_timezone(self):
+        dt = datetime.utcnow()
+        d = Delorean(datetime=dt, timezone=UTC)
+        d = d.shift("US/Eastern")
+        dt = utc.localize(dt)
+        dt = est.normalize(dt)
+        self.assertEqual(dt, d._dt)
+        self.assertEqual(est, timezone(d._tz))
+
+    def test_delorean_with_only_timezone(self):
+        dt = datetime.utcnow()
+        dt = utc.localize(dt)
+        dt = est.normalize(dt)
+        dt = dt.replace(second=0, microsecond=0)
+        d = Delorean(timezone="US/Eastern")
+        d.truncate('minute')
+        self.assertEqual(est, timezone(d._tz))
+        self.assertEqual(dt, d._dt)
+
+
 
 
 if __name__ == '__main__':
