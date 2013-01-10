@@ -238,7 +238,7 @@ class Delorean(object):
             return timezone(self._tz)
         except pytz.exceptions.UnknownTimeZoneError:
             # raise some delorean error
-            pass
+            raise DeloreanInvalidTimezone('Provide a valid timezone')
 
     def truncate(self, s):
         """
@@ -275,11 +275,24 @@ class Delorean(object):
         """
         return self._dt.replace(tzinfo=None)
 
-    def midnight(self, s):
+    def midnight(self):
         """
         return the particular midnight of the particular delorean object
         """
-        self._dt = self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    def shift(self, tz):
+        """
+        This method shifts the timezone from the current timezone to the
+        specificed timezone
+        """
+        try:
+            zone = timezone(tz)
+        except pytz.UnknownTimeZoneError:
+            raise DeloreanInvalidTimezone('Provide a valid timezone')
+        self._tz = tz
+        self._dt = zone.normalize(self._dt)
+        return self
 
     @property
     def date(self):
