@@ -10,7 +10,7 @@ from pytz import timezone
 from delorean import (Delorean, datetime_timezone, capture,
                       localize, normalize, stops, YEARLY,
                       MONTHLY, WEEKLY, DAILY, HOURLY,
-                      MINUTELY, SECONDLY)
+                      MINUTELY, SECONDLY, epoch)
 from delorean.data import (move_datetime_day, move_datetime_week,
                            move_datetime_month, move_datetime_year,
                            move_datetime_namedday)
@@ -315,8 +315,16 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt, d._dt)
 
     def test_shift_failure(self):
-        d = Delorean()
-        self.assertRaises(DeloreanInvalidTimezone, d.shift, "US/Westerrn")
+        self.assertRaises(DeloreanInvalidTimezone, self.do.shift, "US/Westerrn")
+
+    def test_epoch(self):
+        unix_time = self.do.epoch()
+        self.assertEqual(unix_time, 1357187474.148546)
+
+    def test_epoch_creation(self):
+        do = epoch(1357187474.148546)
+        self.assertEqual(self.do, do)
+
 
 if __name__ == '__main__':
     main()
