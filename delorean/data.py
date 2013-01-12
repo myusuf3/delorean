@@ -294,6 +294,13 @@ class Delorean(object):
         self._dt = zone.normalize(self._dt)
         return self
 
+    def epoch(self):
+        utc = timezone(UTC)
+        epoch = utc.localize(datetime.utcfromtimestamp(0))
+        dt = utc.normalize(self._dt)
+        delta = dt - epoch
+        return delta.total_seconds()
+
     @property
     def date(self):
         """
