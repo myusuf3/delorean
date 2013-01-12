@@ -58,6 +58,15 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
         yield d
 
 
+def epoch(s):
+    dt = datetime.utcfromtimestamp(s)
+    return Delorean(datetime=dt, timezone=UTC)
+
+
+def flux():
+    print "If you put your mind to it, you can accomplish anything."
+
+
 def utcnow():
     """
     Return a delorean object, with utcnow as the datetime
