@@ -28,15 +28,13 @@ Guide
 =====
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     copyright
+    install
+    quickstart
+    contribution
 
-.. toctree::
-   :maxdepth: 2
-
-   installation/install
-   usage/quickstart
 
 
 
