@@ -1,5 +1,5 @@
-Quickstart
-===========
+Usage
+=====
 `Delorean` aims to provide you with convient ways to get significant dates and times and easy ways to move dates from state to state.
 
 In order to get the most of the documentation we will define some terminology.
@@ -23,12 +23,12 @@ Now lets create a create `datetime` with the current datetime and UTC timezone::
 
     >>> d = Delorean()
     >>> d
-    <Delorean[ 2013-01-12 06:10:33.110674+00:00  UTC ]>
+    Delorean(datetime=2013-01-12 06:10:33.110674+00:00,  timezone=UTC)
 
 Do you want to normalize this timezone to another timezone? Simply do the following::
 
    >>> d.shift("US/Eastern")
-   <Delorean[ 2013-01-12 01:10:38.102223-05:00  US/Eastern ]>
+   Delorean(datetime=2013-01-12 01:10:38.102223-05:00, timezone=US/Eastern)
 
 
 
