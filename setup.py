@@ -9,7 +9,7 @@ dependencies = ['pytz', 'python-dateutil==2.1']
 
 setup(
     name='Delorean',
-    version=".".join(str(x) for x in __version__),
+    version='.'.join(str(x) for x in __version__),
     description='library for manipulating datetimes with ease and clarity',
     url='https://github.com/myusuf3/delorean',
     author='Mahdi Yusuf',
