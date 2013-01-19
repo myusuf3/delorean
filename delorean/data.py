@@ -176,7 +176,7 @@ class Delorean(object):
             self._dt = localize(datetime, timezone)
 
     def __repr__(self):
-        return '<Delorean[ %s  %s ]>' % (self._dt, self._tz)
+        return 'Delorean(datetime=%s, timezone=%s)' % (self._dt, self._tz)
 
     def __eq__(self, other):
         # test this.
