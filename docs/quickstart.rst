@@ -45,6 +45,13 @@ For the purists out there you can do things like so::
     >>> d.epoch()
     1357971038.102223
 
+You can also create Delorean object using unix timestamps.::
+
+    from delorean import epoch
+    >>> epoch(1357971038.102223).shift("US/Eastern")
+    Delorean(datetime=2013-01-12 01:10:38.102223-05:00, timezone=US/Eastern)
+
+As you can see `delorean` return a Delorean object which you can shift to appropriate timezone to get back your original datetime object from above.
 
 Natural Language
 ^^^^^^^^^^^^^^^^
@@ -63,21 +70,59 @@ Last Tuesday? Two Tuesdays ago at midnight? No problem.::
     >>> d.last_tuesday()
     Delorean(datetime=2013-01-15 19:41:06.207481+00:00, timezone=UTC)
     >>> d.last_tuesday(2).midnight()
-    Delorean(datetime=2013-01-08 19:41:06.207481+00:00, timezone=UTC)
+    datetime.datetime(2013, 1, 8, 0, 0, tzinfo=<UTC>)
 
 Truncation
 ^^^^^^^^^^
-Often times we dont care how many milliseconds or even seconds that present in our datetime object. It often becomes a nuisance to compare `datetimes` that for example occur in the same day or even in the same month.
+Often times we dont care how many milliseconds or even seconds that present in our datetime object. It often becomes a nuisance to retrieve `datetimes` that for example occur in the same minute. You would have to through the annoying process of replacing zero for the units you don't care for then doing a comparison.
 
+`Delorean` comes with a method that allows you to easily truncate to different unit of time milliseconds, second, minute, hour, etc.::
 
+    >>> d = Delorean()
+    >>> d
+    Delorean(datetime=2013-01-21 03:34:30.418069+00:00, timezone=UTC)
+    >>> d.truncate('second')
+    Delorean(datetime=2013-01-21 03:34:30+00:00, timezone=UTC)
+    >>> d.truncate('hour')
+    Delorean(datetime=2013-01-21 03:00:00+00:00, timezone=UTC)
 
+Those might seem obvious `delorean` also provides truncation to the month and year levels as well.::
 
-Timezones
-^^^^^^^^^
+    >>> d = Delorean(datetime=datetime(2012, 05, 15, 03, 50, 00, 555555), timezone="US/Eastern")
+    >>> d
+    Delorean(datetime=2012-05-15 03:50:00.555555-04:00, timezone=US/Eastern)
+    >>> d.truncate('month')
+    Delorean(datetime=2012-05-01 00:00:00-04:00, timezone=US/Eastern)
+    >>> d.truncate('year')
+    Delorean(datetime=2012-01-01 00:00:00-04:00, timezone=US/Eastern)
 
-
-Datetimes and Dates
+Strings and Parsing
 ^^^^^^^^^^^^^^^^^^^
+Another pain dealing with strings of datetimes. `Delorean` can help you parse all those annoying strings you get from various APIs.::
 
-Exceptions
-^^^^^^^^^^
+    >>> from delorean import parse
+    >>> parse("2011/01/01 00:00:00 -0700")
+    Delorean(datetime=2011-01-01 07:00:00+00:00, timezone=UTC)
+
+As shown above if the string passed has offset data `delorean` will convert the resulting object to UTC, if there is no timezone information passed in UTC is assumed.
+
+Making A Few Stops
+^^^^^^^^^^^^^^^^^^
+Delorean wouldn't be complete without making a few stop in all the right places.::
+
+    >>> from delorean import stops
+    >>> from delorean import HOURLY
+    >>> for x in stops(freq=HOURLY, count=10):    print x
+    ...
+    Delorean(datetime=2013-01-21 06:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 07:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 08:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 09:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 10:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 11:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 12:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 13:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 14:25:33+00:00, timezone=UTC)
+    Delorean(datetime=2013-01-21 15:25:33+00:00, timezone=UTC)
+
+This allows you to do clever composition like daily, hourly, etc. This method is a generator that produces `Delorean` objects. Excellent for things like getting every Tuesday for the next 10 weeks, or every other hour for the next three months.
