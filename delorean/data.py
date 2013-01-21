@@ -8,6 +8,7 @@ import pytz
 from pytz import timezone
 
 UTC = "UTC"
+utc = timezone("UTC")
 
 
 def is_datetime_naive(dt):
@@ -258,8 +259,7 @@ class Delorean(object):
         elif s is 'year':
             self._dt = self._dt.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
         else:
-            # raise some error
-            pass
+            raise ValueError("Invalid truncation level")
 
         return self
 
@@ -271,9 +271,10 @@ class Delorean(object):
     def naive(self):
         """
         Returns a naive datetime object from the delorean object, this
-        method simply removes tzinfo doesn't not cause a shift in time.
+        method simply converts localize datetime to utc and removes
+        the tzinfo that is associated with it.
         """
-        return self._dt.replace(tzinfo=None)
+        return utc.normalize(self._dt).replace(tzinfo=None)
 
     def midnight(self):
         """
