@@ -7,7 +7,7 @@ from unittest import TestCase, main
 from datetime import datetime, date, timedelta
 
 from pytz import timezone
-from delorean import (Delorean, datetime_timezone, capture,
+from delorean import (Delorean, datetime_timezone, parse,
                       localize, normalize, stops, YEARLY,
                       MONTHLY, WEEKLY, DAILY, HOURLY,
                       MINUTELY, SECONDLY, epoch)
@@ -70,8 +70,7 @@ class DeloreanTests(TestCase):
         self.assertEqual(self.do.naive(), datetime(2013, 1, 1, 0, 0, 0, 0))
 
     def test_date(self):
-        self.do.date()
-        self.assertEqual(self.do.date(), date(2013, 1, 3))
+        self.assertEqual(self.do.date, date(2013, 1, 3))
 
     def test_datetime(self):
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 148546))
@@ -81,11 +80,20 @@ class DeloreanTests(TestCase):
         dt_naive = dt1.naive()
         self.assertEqual(dt_naive.tzinfo, None)
 
+    def test_naive_timezone(self):
+        dt1 = Delorean(timezone="US/Eastern").truncate('second').naive()
+        dt2 = Delorean().truncate('second').naive()
+        self.assertEqual(dt2, dt1)
+        self.assertEqual(dt1.tzinfo, None)
+
     def test_localize(self):
         dt = datetime.today()
         utc = timezone("UTC")
         dt = localize(dt, "UTC")
         self.assertEqual(dt.tzinfo, utc)
+
+    def test_failure_truncation(self):
+        self.assertRaises(ValueError, self.do.truncate, "century")
 
     def test_normalize(self):
         dt1 = Delorean()
@@ -121,21 +129,20 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
 
     def test_parse(self):
-        do = capture('Thu Sep 25 10:36:28 BRST 2003')
+        do = parse('Thu Sep 25 10:36:28 BRST 2003')
         dt1 = utc.localize(datetime(2003, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
     def test_parse_with_utc_year_fill(self):
-        do = capture('Thu Sep 25 10:36:28')
+        do = parse('Thu Sep 25 10:36:28')
         dt1 = utc.localize(datetime(2013, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
-    def test_parse_with_timezeon_year_fill(self):
-        do = capture('Thu Sep 25 10:36:28', timezone="US/Eastern")
-        est = timezone("US/Eastern")
-        dt1 = est.localize(datetime(2013, 9, 25, 10, 36, 28))
+    def test_parse_with_timezone_year_fill(self):
+        do = parse('Thu Sep 25 10:36:28')
+        dt1 = utc.localize(datetime(2013, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
-        self.assertEqual(do._tz, "US/Eastern")
+        self.assertEqual(do._tz, "UTC")
 
     def test_move_namedday(self):
         dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=utc)
@@ -313,6 +320,13 @@ class DeloreanTests(TestCase):
         d.truncate('minute')
         self.assertEqual(est, timezone(d._tz))
         self.assertEqual(dt, d._dt)
+
+    def testparse_with_timezone(self):
+        d1 = parse("2011/01/01 00:00:00 -0700")
+        d2 = datetime(2011, 1, 1, 7, 0)
+        d2 = utc.localize(d2)
+        self.assertEqual(d2, d1.datetime)
+        self.assertEqual(utc, timezone(d1._tz))
 
     def test_shift_failure(self):
         self.assertRaises(DeloreanInvalidTimezone, self.do.shift, "US/Westerrn")
