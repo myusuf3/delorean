@@ -55,6 +55,7 @@ Guide
     copyright
     install
     quickstart
+    interface
     contribution
     philosophy
 
