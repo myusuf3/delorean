@@ -112,7 +112,7 @@ Delorean wouldn't be complete without making a few stop in all the right places.
 
     >>> from delorean import stops
     >>> from delorean import HOURLY
-    >>> for x in stops(freq=HOURLY, count=10):    print x
+    >>> for stop in stops(freq=HOURLY, count=10):    print stop
     ...
     Delorean(datetime=2013-01-21 06:25:33+00:00, timezone=UTC)
     Delorean(datetime=2013-01-21 07:25:33+00:00, timezone=UTC)
