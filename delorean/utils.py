@@ -1,26 +1,39 @@
 from datetime import datetime
+
 from pytz import timezone
-from dateutil.parser import parse
+from dateutil.parser import parse as capture
 from dateutil.rrule import rrule
 from .exceptions import DeloreanInvalidDatetime
 
 from .data import Delorean, is_datetime_naive, datetime_timezone
 
 UTC = "UTC"
+utc = timezone("utc")
 
 
-def capture(s, dayfirst=True, timezone=UTC):
+def parse(s, dayfirst=True):
     """
     Parse a string with a datetime in it and return a delorean object
-    Optionally accept a TZ if not specificed all times will be assumed
-    to be UTC
+
+    If a timezone is detected in the parse it will converted to UTC,
+    and a Delorean object with that datetime and timezone will be
+    returned.
     """
     try:
-        dt = parse(s, dayfirst=dayfirst, ignoretz=True)
+        dt = capture(s, dayfirst=dayfirst)
     except:
         # raise a parsing error.
-        pass
-    do = Delorean(datetime=dt, timezone=timezone)
+        raise ValueError("Unknown string format")
+    if dt.tzinfo is None:
+        # assuming datetime object passed in is UTC
+        do = Delorean(datetime=dt, timezone=UTC)
+    else:
+        dt = utc.normalize(dt)
+        # makeing dt naive so we can pass it to Delorean
+        dt = dt.replace(tzinfo=None)
+        # if parse string has tzinfo we return a normalized utc
+        # delorean object that represents the time.
+        do = Delorean(datetime=dt, timezone=UTC)
     return do
 
 
