@@ -13,7 +13,7 @@ utc = timezone("UTC")
 
 def is_datetime_naive(dt):
     """
-    Return true if the datetime is naive else returns false
+    This method returns true if the datetime is naive else returns false
     """
     if dt is None:
         return True
@@ -231,7 +231,8 @@ class Delorean(object):
 
     def timezone(self):
         """
-        Return a valid pytz timezone object or raises some error
+        This method return a valid pytz timezone object or raises Invalid timezone
+        error.
         """
         if self._tz is None:
             return None
@@ -270,7 +271,7 @@ class Delorean(object):
 
     def naive(self):
         """
-        Returns a naive datetime object from the delorean object, this
+        Returns a naive datetime object from the Delorean object, this
         method simply converts localize datetime to utc and removes
         the tzinfo that is associated with it.
         """
@@ -278,7 +279,7 @@ class Delorean(object):
 
     def midnight(self):
         """
-        return the particular midnight of the particular delorean object
+        This method returns midnight of the particular Delorean object
         """
         return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -296,6 +297,14 @@ class Delorean(object):
         return self
 
     def epoch(self):
+        """
+        This method returns the total seconds since epoch.
+
+        Usage::
+
+            d = Delorean()
+            d.epoch()
+        """
         utc = timezone(UTC)
         epoch = utc.localize(datetime.utcfromtimestamp(0))
         dt = utc.normalize(self._dt)
@@ -305,13 +314,15 @@ class Delorean(object):
     @property
     def date(self):
         """
-        This method returns the actual date object associated with class
+        This method returns the actual date object associated with
+        the Delorean object
         """
         return self._dt.date()
 
     @property
     def datetime(self):
         """
-        This method returns the actual datetime object associated with class
+        This method returns the actual datetime object associated with
+        the Delorean object
         """
         return self._dt
