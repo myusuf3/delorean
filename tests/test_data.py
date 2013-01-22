@@ -1,20 +1,16 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
-Test for testing the data model for delorean.
+Testing for Delorean
 """
+
 from unittest import TestCase, main
 from datetime import datetime, date, timedelta
 
 from pytz import timezone
-from delorean import (Delorean, datetime_timezone, parse,
-                      localize, normalize, stops, YEARLY,
-                      MONTHLY, WEEKLY, DAILY, HOURLY,
-                      MINUTELY, SECONDLY, epoch)
-from delorean.data import (move_datetime_day, move_datetime_week,
-                           move_datetime_month, move_datetime_year,
-                           move_datetime_namedday)
-from delorean.exceptions import DeloreanInvalidDatetime, DeloreanInvalidTimezone
+
+import delorean
 
 UTC = "UTC"
 utc = timezone(UTC)
@@ -25,47 +21,29 @@ class DeloreanTests(TestCase):
 
     def setUp(self):
         date1 = datetime(2013, 1, 3, 4, 31, 14, 148546)
-        self.do = Delorean(datetime=date1, timezone="UTC")
+        self.do = delorean.Delorean(datetime=date1, timezone="UTC")
 
     def test_truncation_hour(self):
-        """
-        Tests that truncate always works
-        """
         self.do.truncate('hour')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 0))
 
     def test_truncation_second(self):
-        """
-        Tests that truncate always works
-        """
         self.do.truncate('second')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 0))
 
     def test_truncation_minute(self):
-        """
-        Tests that truncate always works
-        """
         self.do.truncate('minute')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 0, 0))
 
     def test_truncation_day(self):
-        """
-        Tests that truncate always works
-        """
         self.do.truncate('day')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 0, 0, 0, 0))
 
     def test_truncation_month(self):
-        """
-        Tests that truncate always works
-        """
         self.do.truncate('month')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 1, 0, 0, 0, 0))
 
     def test_truncation_year(self):
-        """
-        Tests that truncate always works
-        """
         self.do.truncate('year')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 1, 0, 0, 0, 0))
 
@@ -76,70 +54,70 @@ class DeloreanTests(TestCase):
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 148546))
 
     def test_naive(self):
-        dt1 = Delorean()
+        dt1 = delorean.Delorean()
         dt_naive = dt1.naive()
         self.assertEqual(dt_naive.tzinfo, None)
 
     def test_naive_timezone(self):
-        dt1 = Delorean(timezone="US/Eastern").truncate('second').naive()
-        dt2 = Delorean().truncate('second').naive()
+        dt1 = delorean.Delorean(timezone="US/Eastern").truncate('second').naive()
+        dt2 = delorean.Delorean().truncate('second').naive()
         self.assertEqual(dt2, dt1)
         self.assertEqual(dt1.tzinfo, None)
 
     def test_localize(self):
         dt = datetime.today()
         utc = timezone("UTC")
-        dt = localize(dt, "UTC")
+        dt = delorean.localize(dt, "UTC")
         self.assertEqual(dt.tzinfo, utc)
 
     def test_failure_truncation(self):
         self.assertRaises(ValueError, self.do.truncate, "century")
 
     def test_normalize(self):
-        dt1 = Delorean()
-        dt2 = Delorean(timezone="US/Eastern")
+        dt1 = delorean.Delorean()
+        dt2 = delorean.Delorean(timezone="US/Eastern")
         dt1.truncate('minute')
         dt2.truncate('minute')
-        dt_normalized = normalize(dt1.datetime, "US/Eastern")
+        dt_normalized = delorean.normalize(dt1.datetime, "US/Eastern")
         self.assertEqual(dt2.datetime, dt_normalized)
 
     def test_normalize_failure(self):
         naive_datetime = datetime.today()
-        self.assertRaises(ValueError, normalize, naive_datetime, "US/Eastern")
+        self.assertRaises(ValueError, delorean.normalize, naive_datetime, "US/Eastern")
 
     def test_localize_failure(self):
-        dt1 = localize(datetime.utcnow(), "UTC")
-        self.assertRaises(ValueError, localize, dt1, "UTC")
+        dt1 = delorean.localize(datetime.utcnow(), "UTC")
+        self.assertRaises(ValueError, delorean.localize, dt1, "UTC")
 
     def test_timezone(self):
         utc = timezone('UTC')
-        do_timezone = Delorean().timezone()
+        do_timezone = delorean.Delorean().timezone()
         self.assertEqual(utc, do_timezone)
 
     def test_datetime_timezone_default(self):
-        do = Delorean()
+        do = delorean.Delorean()
         do.truncate('minute')
-        dt1 = datetime_timezone(UTC)
+        dt1 = delorean.datetime_timezone(UTC)
         self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
 
     def test_datetime_timezone(self):
-        do = Delorean(timezone="US/Eastern")
+        do = delorean.Delorean(timezone="US/Eastern")
         do.truncate("minute")
-        dt1 = datetime_timezone(tz="US/Eastern")
+        dt1 = delorean.datetime_timezone(tz="US/Eastern")
         self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
 
     def test_parse(self):
-        do = parse('Thu Sep 25 10:36:28 BRST 2003')
+        do = delorean.parse('Thu Sep 25 10:36:28 BRST 2003')
         dt1 = utc.localize(datetime(2003, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
     def test_parse_with_utc_year_fill(self):
-        do = parse('Thu Sep 25 10:36:28')
+        do = delorean.parse('Thu Sep 25 10:36:28')
         dt1 = utc.localize(datetime(2013, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
     def test_parse_with_timezone_year_fill(self):
-        do = parse('Thu Sep 25 10:36:28')
+        do = delorean.parse('Thu Sep 25 10:36:28')
         dt1 = utc.localize(datetime(2013, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
         self.assertEqual(do._tz, "UTC")
@@ -164,8 +142,8 @@ class DeloreanTests(TestCase):
         dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=utc)
         dt_last = datetime(2012, 12, 28, 4, 31, 14, 148546, tzinfo=utc)
 
-        d_obj_next = move_datetime_namedday(self.do.datetime, 'next', 'friday')
-        d_obj_last = move_datetime_namedday(self.do.datetime, 'last', 'friday')
+        d_obj_next = delorean.move_datetime_namedday(self.do.datetime, 'next', 'friday')
+        d_obj_last = delorean.move_datetime_namedday(self.do.datetime, 'last', 'friday')
 
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
@@ -190,8 +168,8 @@ class DeloreanTests(TestCase):
         dt_next = datetime(2013, 1, 10, 4, 31, 14, 148546, tzinfo=utc)
         dt_last = datetime(2012, 12, 27, 4, 31, 14, 148546, tzinfo=utc)
 
-        d_obj_next = move_datetime_week(self.do.datetime, 'next', 1)
-        d_obj_last = move_datetime_week(self.do.datetime, 'last', 1)
+        d_obj_next = delorean.move_datetime_week(self.do.datetime, 'next', 1)
+        d_obj_last = delorean.move_datetime_week(self.do.datetime, 'last', 1)
 
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
@@ -216,8 +194,18 @@ class DeloreanTests(TestCase):
         dt_next = datetime(2013, 2, 3, 4, 31, 14, 148546, tzinfo=utc)
         dt_last = datetime(2012, 12, 3, 4, 31, 14, 148546, tzinfo=utc)
 
-        d_obj_next = move_datetime_month(self.do.datetime, 'next', 1)
-        d_obj_last = move_datetime_month(self.do.datetime, 'last', 1)
+        d_obj_next = delorean.move_datetime_month(self.do.datetime, 'next', 1)
+        d_obj_last = delorean.move_datetime_month(self.do.datetime, 'last', 1)
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
+
+    def test_move_day_function(self):
+        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=utc)
+        dt_last = datetime(2013, 1, 2, 4, 31, 14, 148546, tzinfo=utc)
+
+        d_obj_next = delorean.move_datetime_day(self.do.datetime, 'next', 1)
+        d_obj_last = delorean.move_datetime_day(self.do.datetime, 'last', 1)
 
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
@@ -242,8 +230,8 @@ class DeloreanTests(TestCase):
         dt_next = datetime(2014, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
         dt_last = datetime(2012, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
 
-        d_obj_next = move_datetime_year(self.do.datetime, 'next', 1)
-        d_obj_last = move_datetime_year(self.do.datetime, 'last', 1)
+        d_obj_next = delorean.move_datetime_year(self.do.datetime, 'next', 1)
+        d_obj_last = delorean.move_datetime_year(self.do.datetime, 'last', 1)
 
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
@@ -252,15 +240,15 @@ class DeloreanTests(TestCase):
         """
         tests the range method with count used
         """
-        count = list(stops(DAILY, count=5))
+        count = list(delorean.stops(delorean.DAILY, count=5))
         self.assertEqual(len(count), 5)
 
     def test_range_with_start(self):
         dates1 = []
-        for do in stops(DAILY, count=5, start=datetime.utcnow()):
+        for do in delorean.stops(delorean.DAILY, count=5, start=datetime.utcnow()):
             do.truncate('minute')
             dates1.append(do)
-        do = Delorean().truncate('minute')
+        do = delorean.Delorean().truncate('minute')
         dates2 = []
         for x in range(5):
             dates2.append(do.next_day(x))
@@ -269,10 +257,10 @@ class DeloreanTests(TestCase):
     def test_range_with_start_and_stop(self):
         dates1 = []
         tomorrow = datetime.utcnow() + timedelta(days=1)
-        for do in stops(DAILY, start=datetime.utcnow(), until=tomorrow):
+        for do in delorean.stops(delorean.DAILY, start=datetime.utcnow(), stop=tomorrow):
             do.truncate('minute')
             dates1.append(do)
-        do = Delorean().truncate('minute')
+        do = delorean.Delorean().truncate('minute')
         dates2 = []
         for x in range(2):
             dates2.append(do.next_day(x))
@@ -280,10 +268,10 @@ class DeloreanTests(TestCase):
 
     def test_range_with_interval(self):
         dates1 = []
-        for do in stops(DAILY, interval=2, count=3, start=datetime.utcnow()):
+        for do in delorean.stops(delorean.DAILY, interval=2, count=3, start=datetime.utcnow()):
             do.truncate('minute')
             dates1.append(do)
-        do = Delorean().truncate('minute')
+        do = delorean.Delorean().truncate('minute')
         dates2 = []
         for x in range(6):
             if (x % 2) == 0:
@@ -293,18 +281,18 @@ class DeloreanTests(TestCase):
     def test_delorean_failure(self):
         dt = datetime.utcnow()
         dt = utc.localize(dt)
-        self.assertRaises(DeloreanInvalidDatetime, Delorean, datetime=dt)
+        self.assertRaises(delorean.DeloreanInvalidDatetime, delorean.Delorean, datetime=dt)
 
     def test_delorean_with_datetime(self):
         dt = datetime.utcnow()
-        d = Delorean(datetime=dt, timezone=UTC)
+        d = delorean.Delorean(datetime=dt, timezone=UTC)
         dt = utc.localize(dt)
         self.assertEqual(dt, d._dt)
         self.assertEqual(UTC, d._tz)
 
     def test_delorean_with_timezone(self):
         dt = datetime.utcnow()
-        d = Delorean(datetime=dt, timezone=UTC)
+        d = delorean.Delorean(datetime=dt, timezone=UTC)
         d = d.shift("US/Eastern")
         dt = utc.localize(dt)
         dt = est.normalize(dt)
@@ -316,27 +304,31 @@ class DeloreanTests(TestCase):
         dt = utc.localize(dt)
         dt = est.normalize(dt)
         dt = dt.replace(second=0, microsecond=0)
-        d = Delorean(timezone="US/Eastern")
+        d = delorean.Delorean(timezone="US/Eastern")
         d.truncate('minute')
         self.assertEqual(est, timezone(d._tz))
         self.assertEqual(dt, d._dt)
 
     def testparse_with_timezone(self):
-        d1 = parse("2011/01/01 00:00:00 -0700")
+        d1 = delorean.parse("2011/01/01 00:00:00 -0700")
         d2 = datetime(2011, 1, 1, 7, 0)
         d2 = utc.localize(d2)
         self.assertEqual(d2, d1.datetime)
         self.assertEqual(utc, timezone(d1._tz))
 
     def test_shift_failure(self):
-        self.assertRaises(DeloreanInvalidTimezone, self.do.shift, "US/Westerrn")
+        self.assertRaises(delorean.DeloreanInvalidTimezone, self.do.shift, "US/Westerrn")
+
+    def test_datetime_failure(self):
+        dt = utc.localize(datetime.utcnow())
+        self.assertRaises(delorean.DeloreanInvalidDatetime, delorean.Delorean, datetime=dt)
 
     def test_epoch(self):
         unix_time = self.do.epoch()
         self.assertEqual(unix_time, 1357187474.148546)
 
     def test_epoch_creation(self):
-        do = epoch(1357187474.148546)
+        do = delorean.epoch(1357187474.148546)
         self.assertEqual(self.do, do)
 
 
