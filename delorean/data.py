@@ -79,7 +79,7 @@ def move_datetime_namedday(dt, direction, unit):
 def move_datetime_month(dt, direction, num_shifts):
     """
     Move datetime 1 month in the chosen direction.
-    unit is a no-op, to keep the api the same as the day case
+    unit is a no-op, to keep the API the same as the day case
     """
     delta = relativedelta(months=+num_shifts)
     return _move_datetime(dt, direction, delta)
@@ -88,7 +88,7 @@ def move_datetime_month(dt, direction, num_shifts):
 def move_datetime_week(dt, direction, num_shifts):
     """
     Move datetime 1 week in the chosen direction.
-    unit is a no-op, to keep the api the same as the day case
+    unit is a no-op, to keep the API the same as the day case
     """
     delta = relativedelta(weeks=+num_shifts)
     return _move_datetime(dt, direction, delta)
@@ -97,7 +97,7 @@ def move_datetime_week(dt, direction, num_shifts):
 def move_datetime_year(dt, direction, num_shifts):
     """
     Move datetime 1 year in the chosen direction.
-    unit is a no-op, to keep the api the same as the day case
+    unit is a no-op, to keep the API the same as the day case
     """
     delta = relativedelta(years=+num_shifts)
     return _move_datetime(dt, direction, delta)
@@ -109,7 +109,7 @@ def datetime_timezone(tz):
     to the correct timezone if provided.
     """
     utc_datetime_naive = datetime.utcnow()
-    # return a localized datetime to utc
+    # return a localized datetime to UTC
     utc_localized_datetime = localize(utc_datetime_naive, UTC)
     # normalize the datetime to given timezone
     normalized_datetime = normalize(utc_localized_datetime, tz)
@@ -272,7 +272,7 @@ class Delorean(object):
     def naive(self):
         """
         Returns a naive datetime object from the Delorean object, this
-        method simply converts localize datetime to utc and removes
+        method simply converts localize datetime to UTC and removes
         the tzinfo that is associated with it.
         """
         return utc.normalize(self._dt).replace(tzinfo=None)
@@ -286,7 +286,7 @@ class Delorean(object):
     def shift(self, tz):
         """
         This method shifts the timezone from the current timezone to the
-        specificed timezone
+        specified timezone
         """
         try:
             zone = timezone(tz)
