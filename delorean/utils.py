@@ -31,7 +31,7 @@ def parse(s, dayfirst=True):
         dt = utc.normalize(dt)
         # makeing dt naive so we can pass it to Delorean
         dt = dt.replace(tzinfo=None)
-        # if parse string has tzinfo we return a normalized utc
+        # if parse string has tzinfo we return a normalized UTC
         # delorean object that represents the time.
         do = Delorean(datetime=dt, timezone=UTC)
     return do
@@ -65,7 +65,7 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
           bysecond=None, until=until, dtstart=start):
         # make the delorean object
         # yield it.
-        # doing this to make sure delorean recieves a naive datetime.
+        # doing this to make sure delorean receives a naive datetime.
         dt = dt.replace(tzinfo=None)
         d = Delorean(datetime=dt, timezone=tz)
         yield d
