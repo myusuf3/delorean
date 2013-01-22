@@ -228,7 +228,7 @@ Now in the case where a naive stop value is provided you can see why the follow 
         bysecond=None, until=until, dtstart=start):
     TypeError: can't compare offset-naive and offset-aware datetimes
 
-You will be better off in scenarios of this nate to skip using either and use count to limit the range of the values returned.
+You will be better off in scenarios of this nature to skip using either and use count to limit the range of the values returned.
 
 >>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print stop
 ...
