@@ -106,13 +106,54 @@ Another pain dealing with strings of datetimes. `Delorean` can help you parse al
 
 As shown above if the string passed has offset data `delorean` will convert the resulting object to UTC, if there is no timezone information passed in UTC is assumed.
 
+
+Ambiguous cases
+"""""""""""""""
+
+There might be cases where the string passed to parse is a bit ambiguous for example. In the case where `2013-05-06` is passed is this May 6th, 2013 or is June 5th, 2013?
+
+`Delorean` makes the assumptions that ``dayfirst=True`` and ``yearfirst=True`` this will lead to the following precedence.
+
+
+    If dayfirst is True and yearfirst is True:
+
+    - YY-MM-DD
+    - DD-MM-YY
+    - MM-DD-YY
+
+So for example with default parameters `Delorean` will return '2013-05-06' May 6th, 2013::
+
+    >>> parse("2013-05-06")
+    Delorean(datetime=2013-05-06 00:00:00+00:00, timezone=UTC)
+
+Here are the predecene for the remaining combinations of ``dayfirst`` and ``yearfirst``.
+
+    If dayfirst is False and yearfirst is False:
+
+    - MM-DD-YY
+    - DD-MM-YY
+    - YY-MM-DD
+
+    If dayfirst is True and yearfirst is False:
+
+    - DD-MM-YY
+    - MM-DD-YY
+    - YY-MM-DD
+
+    If dayfirst is False and yearfirst is True:
+
+    - YY-MM-DD
+    - MM-DD-YY
+    - DD-MM-YY
+
+
 Making A Few Stops
 ^^^^^^^^^^^^^^^^^^
 Delorean wouldn't be complete without making a few stop in all the right places.::
 
+    >>> import delorean
     >>> from delorean import stops
-    >>> from delorean import HOURLY
-    >>> for stop in stops(freq=HOURLY, count=10):    print stop
+    >>> for stop in stops(freq=delorean.HOURLY, count=10):    print stop
     ...
     Delorean(datetime=2013-01-21 06:25:33+00:00, timezone=UTC)
     Delorean(datetime=2013-01-21 07:25:33+00:00, timezone=UTC)
@@ -126,3 +167,56 @@ Delorean wouldn't be complete without making a few stop in all the right places.
     Delorean(datetime=2013-01-21 15:25:33+00:00, timezone=UTC)
 
 This allows you to do clever composition like daily, hourly, etc. This method is a generator that produces `Delorean` objects. Excellent for things like getting every Tuesday for the next 10 weeks, or every other hour for the next three months.
+
+With Power Comes
+""""""""""""""""
+
+Now that you can do this you can also specify ``timezones`` as well ``start`` and ``stop`` dates for iteration.::
+
+    >>> import delorean
+    >>> from delorean import stops
+    >>> from datetime import datetime
+    >>> d1 = datetime(2012, 05, 06)
+    >>> d2 = datetime(2013, 05, 06)
+
+.. note::
+
+   The ``stops`` method only accepts naive datetime ``start`` and ``stop`` values.
+
+Now in the case where you provide `timezone`, `start`, and `stop` all is good in the world!::
+
+    >>> for stop in stops(freq=delorean.DAILY, count=10, timezone="US/Eastern", start=d1, stop=d2):    print stop
+    ...
+    Delorean(datetime=2012-05-06 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-07 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-08 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-09 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-10 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-11 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-12 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-13 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-14 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-05-15 00:00:00-04:00, timezone=US/Eastern)
+
+
+.. note::
+
+   if no ``start`` or ``timezone`` value is specified start is assumed to be localized UTC object. If timezone is provided
+   a normalized UTC to the correct timezone.
+
+Now in the case where a timezone is provided and a naive stop value is provided you can see why the follow error occurs if you take into account the above note.
+
+    >>> for stop in stops(freq=delorean.DAILY, timezone="US/Eastern", stop=d2):    print stop
+    ...
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "delorean/interface.py", line 63, in stops
+        bysecond=None, until=until, dtstart=start):
+    TypeError: can't compare offset-naive and offset-aware datetimes
+
+
+>>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print stop
+...
+Delorean(datetime=2013-01-22 00:10:10-05:00, timezone=US/Eastern)
+Delorean(datetime=2013-01-23 00:10:10-05:00, timezone=US/Eastern)
+
