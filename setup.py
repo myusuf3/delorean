@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 try:
     from setuptools import setup
 except ImportError:
@@ -5,7 +8,7 @@ except ImportError:
 
 from delorean import __version__
 
-dependencies = ['pytz', 'python-dateutil==2.1']
+dependencies = ['pytz>=2012h', 'python-dateutil==2.1']
 
 setup(
     name='Delorean',
