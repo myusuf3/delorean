@@ -18,7 +18,7 @@ $ pip install delorean
 Usage
 =====
 
-**Note: This API is in flux still trying to soldify API.**
+**Note: This API is in flux still trying to solidify API.**
 
 The overall goal is to improve date and time manipulations, as well as help create a simple way for detecting timezones in various areas as well as providing standardized time in utc.
 
