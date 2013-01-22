@@ -1,26 +1,26 @@
 from datetime import datetime
 
 from pytz import timezone
-from dateutil.parser import parse as capture
 from dateutil.rrule import rrule
-from .exceptions import DeloreanInvalidDatetime
+from dateutil.parser import parse as capture
 
-from .data import Delorean, is_datetime_naive, datetime_timezone
+from .exceptions import DeloreanInvalidDatetime
+from .dates import Delorean, is_datetime_naive, datetime_timezone
 
 UTC = "UTC"
 utc = timezone("utc")
 
 
-def parse(s, dayfirst=True):
+def parse(s, dayfirst=True, yearfirst=True):
     """
-    Parse a string with a datetime in it and return a delorean object
+    Parses a datetime string in it and returns a `Delorean` object.
 
-    If a timezone is detected in the parse it will converted to UTC,
-    and a Delorean object with that datetime and timezone will be
-    returned.
+    If a timezone is detected in the datetime string it will be
+    normalized to UTC, and a Delorean object with that datetime and
+    timezone will be returned.
     """
     try:
-        dt = capture(s, dayfirst=dayfirst)
+        dt = capture(s, dayfirst=dayfirst, yearfirst=yearfirst)
     except:
         # raise a parsing error.
         raise ValueError("Unknown string format")
@@ -40,16 +40,14 @@ def parse(s, dayfirst=True):
 def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
           bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
           byweekno=None, byweekday=None, byhour=None, byminute=None,
-          bysecond=None, tz=UTC, start=None, until=None):
+          bysecond=None, timezone=UTC, start=None, stop=None):
     """
     This will create a list of delorean objects the apply to
     setting possed in.
     """
     # check to see if datetimees passed in are naive if so process them
     # with given timezone.
-    if is_datetime_naive(start) and is_datetime_naive(until):
-        # start = tz.localize(start)
-        # until = tz.localize(until)
+    if is_datetime_naive(start) and is_datetime_naive(stop):
         pass
     else:
         raise DeloreanInvalidDatetime('Provide a naive datetime object')
@@ -57,17 +55,17 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
     # if no datetimes are passed in create a proper datetime object for
     # start default because default in dateutil is datetime.now() :(
     if start is None:
-        start = datetime_timezone(tz)
+        start = datetime_timezone(timezone)
 
     for dt in rrule(freq, interval=interval, count=count, wkst=None, bysetpos=None,
           bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
           byweekno=None, byweekday=None, byhour=None, byminute=None,
-          bysecond=None, until=until, dtstart=start):
+          bysecond=None, until=stop, dtstart=start):
         # make the delorean object
         # yield it.
         # doing this to make sure delorean receives a naive datetime.
         dt = dt.replace(tzinfo=None)
-        d = Delorean(datetime=dt, timezone=tz)
+        d = Delorean(datetime=dt, timezone=timezone)
         yield d
 
 
@@ -92,4 +90,3 @@ def now():
     Return a delorean object, with utcnow as the datetime
     """
     return utcnow()
-

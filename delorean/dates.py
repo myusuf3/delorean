@@ -1,11 +1,12 @@
 import sys
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from .exceptions import DeloreanInvalidTimezone, DeloreanInvalidDatetime
 from functools import partial, update_wrapper
 
 import pytz
 from pytz import timezone
+from dateutil.relativedelta import relativedelta
+
+from .exceptions import DeloreanInvalidTimezone, DeloreanInvalidDatetime
 
 UTC = "UTC"
 utc = timezone("UTC")
@@ -106,7 +107,7 @@ def move_datetime_year(dt, direction, num_shifts):
 def datetime_timezone(tz):
     """
     This method returns utcnow with appropriate timezone, or normalized
-    to the correct timezone if provided.
+    UTC to the correct timezone if provided.
     """
     utc_datetime_naive = datetime.utcnow()
     # return a localized datetime to UTC
