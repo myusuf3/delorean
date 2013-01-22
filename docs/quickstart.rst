@@ -19,33 +19,38 @@ Start with importing delorean::
 
     >>> from delorean import Delorean
 
-Now lets create a create `datetime` with the current datetime and UTC timezone::
+Now lets create a create `datetime` with the current datetime and UTC timezone
+::
 
     >>> d = Delorean()
     >>> d
     Delorean(datetime=2013-01-12 06:10:33.110674+00:00,  timezone=UTC)
 
-Do you want to normalize this timezone to another timezone? Simply do the following::
+Do you want to normalize this timezone to another timezone? Simply do the following
+::
 
    >>> d = d.shift("US/Eastern")
    >>> d
    Delorean(datetime=2013-01-12 01:10:38.102223-05:00, timezone=US/Eastern)
 
-Now that you have successfully shifted the timezone you can easily return a localized datetime object or date with ease.::
+Now that you have successfully shifted the timezone you can easily return a localized datetime object or date with ease.
+::
 
     >>> d.datetime
     datetime.datetime(2013, 1, 12, 01, 10, 38, 102223, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
     >>> d.date
     datetime.date(2013, 1, 12)
 
-For the purists out there you can do things like so::
+For the purists out there you can do things like so.
+::
 
     >>> d.naive()
     datetime.datetime(2013, 1, 12, 1, 10, 38, 102223)
     >>> d.epoch()
     1357971038.102223
 
-You can also create Delorean object using unix timestamps.::
+You can also create Delorean object using unix timestamps.
+::
 
     from delorean import epoch
     >>> epoch(1357971038.102223).shift("US/Eastern")
@@ -57,7 +62,8 @@ Natural Language
 ^^^^^^^^^^^^^^^^
 `Delorean` provides many ways to get certain date relative to one another, often time to get something simple a next year or the next thursday can be quite troublesome.
 
-`Delorean` provides several conveniences for this type of behaviour. For example if you wanted to get next Tuesday from today you would simple do the following::
+`Delorean` provides several conveniences for this type of behaviour. For example if you wanted to get next Tuesday from today you would simple do the following
+::
 
     >>> d = Delorean()
     >>> d
@@ -65,7 +71,8 @@ Natural Language
     >>> d.next_tuesday()
     Delorean(datetime=2013-01-22 19:41:06.207481+00:00, timezone=UTC)
 
-Last Tuesday? Two Tuesdays ago at midnight? No problem.::
+Last Tuesday? Two Tuesdays ago at midnight? No problem.
+::
 
     >>> d.last_tuesday()
     Delorean(datetime=2013-01-15 19:41:06.207481+00:00, timezone=UTC)
@@ -76,7 +83,8 @@ Truncation
 ^^^^^^^^^^
 Often times we dont care how many milliseconds or even seconds that present in our datetime object. It often becomes a nuisance to retrieve `datetimes` that for example occur in the same minute. You would have to through the annoying process of replacing zero for the units you don't care for then doing a comparison.
 
-`Delorean` comes with a method that allows you to easily truncate to different unit of time milliseconds, second, minute, hour, etc.::
+`Delorean` comes with a method that allows you to easily truncate to different unit of time milliseconds, second, minute, hour, etc.
+::
 
     >>> d = Delorean()
     >>> d
@@ -86,7 +94,8 @@ Often times we dont care how many milliseconds or even seconds that present in o
     >>> d.truncate('hour')
     Delorean(datetime=2013-01-21 03:00:00+00:00, timezone=UTC)
 
-Those might seem obvious `delorean` also provides truncation to the month and year levels as well.::
+Those might seem obvious `delorean` also provides truncation to the month and year levels as well.
+::
 
     >>> d = Delorean(datetime=datetime(2012, 05, 15, 03, 50, 00, 555555), timezone="US/Eastern")
     >>> d
@@ -98,7 +107,8 @@ Those might seem obvious `delorean` also provides truncation to the month and ye
 
 Strings and Parsing
 ^^^^^^^^^^^^^^^^^^^
-Another pain dealing with strings of datetimes. `Delorean` can help you parse all those annoying strings you get from various APIs.::
+Another pain dealing with strings of datetimes. `Delorean` can help you parse all those annoying strings you get from various APIs.
+::
 
     >>> from delorean import parse
     >>> parse("2011/01/01 00:00:00 -0700")
@@ -121,7 +131,8 @@ There might be cases where the string passed to parse is a bit ambiguous for exa
     - DD-MM-YY
     - MM-DD-YY
 
-So for example with default parameters `Delorean` will return '2013-05-06' May 6th, 2013::
+So for example with default parameters `Delorean` will return '2013-05-06' May 6th, 2013.
+::
 
     >>> parse("2013-05-06")
     Delorean(datetime=2013-05-06 00:00:00+00:00, timezone=UTC)
@@ -149,7 +160,8 @@ Here are the predecene for the remaining combinations of ``dayfirst`` and ``year
 
 Making A Few Stops
 ^^^^^^^^^^^^^^^^^^
-Delorean wouldn't be complete without making a few stop in all the right places.::
+Delorean wouldn't be complete without making a few stop in all the right places.
+::
 
     >>> import delorean
     >>> from delorean import stops
@@ -171,7 +183,8 @@ This allows you to do clever composition like daily, hourly, etc. This method is
 With Power Comes
 """"""""""""""""
 
-Now that you can do this you can also specify ``timezones`` as well ``start`` and ``stop`` dates for iteration.::
+Now that you can do this you can also specify ``timezones`` as well ``start`` and ``stop`` dates for iteration.
+::
 
     >>> import delorean
     >>> from delorean import stops
@@ -183,7 +196,8 @@ Now that you can do this you can also specify ``timezones`` as well ``start`` an
 
    The ``stops`` method only accepts naive datetime ``start`` and ``stop`` values.
 
-Now in the case where you provide `timezone`, `start`, and `stop` all is good in the world!::
+Now in the case where you provide `timezone`, `start`, and `stop` all is good in the world!
+::
 
     >>> for stop in stops(freq=delorean.DAILY, count=10, timezone="US/Eastern", start=d1, stop=d2):    print stop
     ...
@@ -204,7 +218,7 @@ Now in the case where you provide `timezone`, `start`, and `stop` all is good in
    if no ``start`` or ``timezone`` value is specified start is assumed to be localized UTC object. If timezone is provided
    a normalized UTC to the correct timezone.
 
-Now in the case where a timezone is provided and a naive stop value is provided you can see why the follow error occurs if you take into account the above note.
+Now in the case where a naive stop value is provided you can see why the follow error occurs if you take into account the above note.
 
     >>> for stop in stops(freq=delorean.DAILY, timezone="US/Eastern", stop=d2):    print stop
     ...
@@ -214,9 +228,9 @@ Now in the case where a timezone is provided and a naive stop value is provided 
         bysecond=None, until=until, dtstart=start):
     TypeError: can't compare offset-naive and offset-aware datetimes
 
+You will be better off in scenarios of this nate to skip using either and use count to limit the range of the values returned.
 
 >>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print stop
 ...
 Delorean(datetime=2013-01-22 00:10:10-05:00, timezone=US/Eastern)
 Delorean(datetime=2013-01-23 00:10:10-05:00, timezone=US/Eastern)
-
