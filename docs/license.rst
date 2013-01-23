@@ -1,4 +1,4 @@
-Copyright
+License
 =========
 
 Copyright (c) 2012 Mahdi Yusuf

@@ -83,7 +83,7 @@ Truncation
 ^^^^^^^^^^
 Often times we dont care how many milliseconds or even seconds that present in our datetime object. It often becomes a nuisance to retrieve `datetimes` that for example occur in the same minute. You would have to through the annoying process of replacing zero for the units you don't care for then doing a comparison.
 
-`Delorean` comes with a method that allows you to easily truncate to different unit of time milliseconds, second, minute, hour, etc.
+`Delorean` comes with a method that allows you to easily truncate to different unit of time millisecond, second, minute, hour, etc.
 ::
 
     >>> d = Delorean()
@@ -122,7 +122,7 @@ Ambiguous cases
 
 There might be cases where the string passed to parse is a bit ambiguous for example. In the case where `2013-05-06` is passed is this May 6th, 2013 or is June 5th, 2013?
 
-`Delorean` makes the assumptions that ``dayfirst=True`` and ``yearfirst=True`` this will lead to the following precedence.
+precedence`Delorean` makes the assumptions that ``dayfirst=True`` and ``yearfirst=True`` this will lead to the following precedence.
 
 
     If dayfirst is True and yearfirst is True:
@@ -137,7 +137,7 @@ So for example with default parameters `Delorean` will return '2013-05-06' May 6
     >>> parse("2013-05-06")
     Delorean(datetime=2013-05-06 00:00:00+00:00, timezone=UTC)
 
-Here are the predecene for the remaining combinations of ``dayfirst`` and ``yearfirst``.
+Here are the precedence for the remaining combinations of ``dayfirst`` and ``yearfirst``.
 
     If dayfirst is False and yearfirst is False:
 
