@@ -39,8 +39,10 @@ Here is the world without a flux capacitor at your side.::
 Now lets warm up the `delorean`::
 
     from delorean import Delorean
+    
+    EST = "US/Eastern"
 
-    d = Delorean(timezone="US/Eastern")
+    d = Delorean(timezone=EST)
     return d
 
 Look at you looking all fly. This was just a test drive checkout out what else
