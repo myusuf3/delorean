@@ -9,7 +9,7 @@ Delorean stands on the shoulders of giants `pytz <http://pytz.sourceforge.net/>`
 
 `Delorean` will provide natural language improvements for manipulating time, as well as datetime abstractions for ease of use. The overall goal is to improve datetime manipulations, with a little bit of software and philsophy.
 
-Pretty much make you a badass, time traveller.
+Pretty much make you a badass time traveller.
 
 Getting Started
 ^^^^^^^^^^^^^^^
@@ -38,5 +38,5 @@ Now lets warm up the `delorean`::
     d = Delorean(timezone=EST)
     return d
 
-Look at you looking all fly. This was just a test drive checkout out what else
+Look at you looking all fly. This was just a test drive: check out out what else
 `delorean` can help with below.
