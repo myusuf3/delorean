@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from pytz import timezone
-from dateutil.rrule import rrule
+from dateutil.rrule import rrule, DAILY, HOURLY, MONTHLY, YEARLY
 from dateutil.parser import parse as capture
 
 from .exceptions import DeloreanInvalidDatetime
@@ -37,16 +37,36 @@ def parse(s, dayfirst=True, yearfirst=True):
     return do
 
 
-def range(step, start, stop, timezone=UTC):
+def range_daily(start=None, stop=None, timezone=UTC, count=None):
     """
-    This an alternative way to generating sets of Delorean objects
+    This an alternative way to generating sets of Delorean objects with
+    DAILY stops
     """
-    #[17:38:43] <russ__>     start + stop + step + count
-    #[17:38:48] <russ__>  start + step + count
-    #[17:39:00] <russ__>  stop + step + count
-    #[17:39:38] <russ__>  (step == interval == period)
-    # delorean.range(start = None, stop = None, step = None, timezone = "UTC", count = None)
-    pass
+    return stops(start=start, stop=stop, freq=DAILY, timezone=timezone, count=count)
+
+
+def range_hourly(start=None, stop=None, timezone=UTC, count=None):
+    """
+    This an alternative way to generating sets of Delorean objects with
+    HOURLY stops
+    """
+    return stops(start=start, stop=stop, freq=HOURLY, timezone=timezone, count=count)
+
+
+def range_monthly(start=None, stop=None, timezone=UTC, count=None):
+    """
+    This an alternative way to generating sets of Delorean objects with
+    MONTHLY stops
+    """
+    return stops(start=start, stop=stop, freq=MONTHLY, timezone=timezone, count=count)
+
+
+def range_yearly(start=None, stop=None, timezone=UTC, count=None):
+    """
+    This an alternative way to generating sets of Delorean objects with
+    YEARLY stops
+    """
+    return stops(start=start, stop=stop, freq=YEARLY, timezone=timezone, count=count)
 
 
 def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
