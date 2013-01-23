@@ -22,7 +22,7 @@ setup(
     ],
     license='MIT license',
     install_requires=dependencies,
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     classifiers=(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
