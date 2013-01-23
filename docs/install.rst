@@ -1,10 +1,10 @@
 Installation
 ============
-This software can be installed in multiple ways the ways that are recommended are as follows.
+This software can be installed in multiple ways. The ways that are recommended are as follows.
 
 Obtaining the Source
 ^^^^^^^^^^^^^^^^^^^^
-This is a library targeted specifcally to developers so you will most likely want to get your hands on the source it can be obtained as follows.::
+This is a library targeted specifcally to developers so you will most likely want to get your hands on the source. It can be obtained as follows.::
 
     $ git clone git://github.com/myusuf3/delorean.git
 
