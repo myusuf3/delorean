@@ -56,13 +56,13 @@ You can also create Delorean object using unix timestamps.
     >>> epoch(1357971038.102223).shift("US/Eastern")
     Delorean(datetime=2013-01-12 01:10:38.102223-05:00, timezone=US/Eastern)
 
-As you can see `delorean` return a Delorean object which you can shift to appropriate timezone to get back your original datetime object from above.
+As you can see `delorean` returns a Delorean object which you can shift to the appropriate timezone to get back your original datetime object from above.
 
 Natural Language
 ^^^^^^^^^^^^^^^^
-`Delorean` provides many ways to get certain date relative to one another, often time to get something simple a next year or the next thursday can be quite troublesome.
+`Delorean` provides many ways to get certain date relative to another, often getting something simple like the next year or the next thursday can be quite troublesome.
 
-`Delorean` provides several conveniences for this type of behaviour. For example if you wanted to get next Tuesday from today you would simple do the following
+`Delorean` provides several conveniences for this type of behaviour. For example if you wanted to get next Tuesday from today you would simply do the following
 ::
 
     >>> d = Delorean()
@@ -81,9 +81,10 @@ Last Tuesday? Two Tuesdays ago at midnight? No problem.
 
 Truncation
 ^^^^^^^^^^
-Often times we dont care how many milliseconds or even seconds that present in our datetime object. It often becomes a nuisance to retrieve `datetimes` that for example occur in the same minute. You would have to through the annoying process of replacing zero for the units you don't care for then doing a comparison.
+Often we dont care how many milliseconds or even seconds that are present in our datetime object. For example it is a nuisance to retrieve `datetimes` that occur in the same minute. You would have to go through the annoying process of replacing zero for the units you don't care for before doing a comparison.
 
-`Delorean` comes with a method that allows you to easily truncate to different unit of time millisecond, second, minute, hour, etc.
+
+`Delorean` comes with a method that allows you to easily truncate to different unit of time: millisecond, second, minute, hour, etc.
 ::
 
     >>> d = Delorean()
@@ -94,7 +95,7 @@ Often times we dont care how many milliseconds or even seconds that present in o
     >>> d.truncate('hour')
     Delorean(datetime=2013-01-21 03:00:00+00:00, timezone=UTC)
 
-Those might seem obvious `delorean` also provides truncation to the month and year levels as well.
+Though it might seem obvious `delorean` also provides truncation to the month and year levels as well.
 ::
 
     >>> d = Delorean(datetime=datetime(2012, 05, 15, 03, 50, 00, 555555), timezone="US/Eastern")
@@ -107,7 +108,7 @@ Those might seem obvious `delorean` also provides truncation to the month and ye
 
 Strings and Parsing
 ^^^^^^^^^^^^^^^^^^^
-Another pain dealing with strings of datetimes. `Delorean` can help you parse all those annoying strings you get from various APIs.
+Another pain is dealing with strings of datetimes. `Delorean` can help you parse all the datetime strings you get from various APIs.
 ::
 
     >>> from delorean import parse
@@ -131,7 +132,7 @@ precedence`Delorean` makes the assumptions that ``dayfirst=True`` and ``yearfirs
     - DD-MM-YY
     - MM-DD-YY
 
-So for example with default parameters `Delorean` will return '2013-05-06' May 6th, 2013.
+So for example with default parameters `Delorean` will return '2013-05-06' as May 6th, 2013.
 ::
 
     >>> parse("2013-05-06")

@@ -40,8 +40,10 @@ Now lets warm up the `delorean`::
 
     from delorean import Delorean
 
-    d = Delorean(timezone="US/Eastern")
-    return d.dateime
+    EST = "US/Eastern"
+
+    d = Delorean(timezone=EST)
+    return d
 
 Look at you looking all fly. This was just a test drive checkout out what else
 `delorean` can help with below.
