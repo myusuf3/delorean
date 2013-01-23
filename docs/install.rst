@@ -11,7 +11,7 @@ This is a library targeted specifcally to developers so you will most likely wan
 Installing from PyPi
 ^^^^^^^^^^^^^^^^^^^^
 
-I would recommend using `pip <http://www.pip-installer.org/en/latest/>`_ personally but any of the following ways should work.
+I would personally recommend using `pip <http://www.pip-installer.org/en/latest/>`_ but any of the following ways should work.
 
 To install simply run::
 
