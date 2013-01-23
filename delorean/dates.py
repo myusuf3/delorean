@@ -45,8 +45,6 @@ def move_datetime_day(dt, direction, num_shifts):
 
 
 def move_datetime_namedday(dt, direction, unit):
-    """
-    """
     TOTAL_DAYS = 7
     days = {
         'monday': 1,
@@ -106,8 +104,7 @@ def move_datetime_year(dt, direction, num_shifts):
 
 def datetime_timezone(tz):
     """
-    This method returns utcnow with appropriate timezone, or normalized
-    UTC to the correct timezone if provided.
+    This method given a timezone returns a localized datetime object.
     """
     utc_datetime_naive = datetime.utcnow()
     # return a localized datetime to UTC
@@ -131,8 +128,8 @@ def normalize(dt, tz):
     Given a object with a timezone return a datetime object
     normalized to the proper timezone.
 
-    This means take the give datetime and return the datetime shifted
-    to match the specificed timezone.
+    This means take the give localized datetime and returns the
+    datetime normalized to match the specificed timezone.
     """
     tz = timezone(tz)
     dt = tz.normalize(dt)
@@ -140,8 +137,9 @@ def normalize(dt, tz):
 
 
 class Delorean(object):
-    """ The :class" `Delorean <Delorean>` object. It carries out all
-    functionality of the Delorean.
+    """
+    The class `Delorean <Delorean>` object. This method accepts naive
+    datetime objects, with a string timezone.
     """
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
     _VALID_SHIFT_UNITS = ('day', 'week', 'month', 'year', 'monday', 'tuesday',
@@ -232,8 +230,8 @@ class Delorean(object):
 
     def timezone(self):
         """
-        This method return a valid pytz timezone object or raises Invalid timezone
-        error.
+        This method return a valid pytz timezone object associated with
+        the Delorean object or raises Invalid Timezone error.
         """
         if self._tz is None:
             return None
@@ -247,6 +245,10 @@ class Delorean(object):
         """
         Truncate the delorian object to the nearest s
         (second, minute, hour, day, month, year)
+
+        This is a destructive method, modifies the internal datetime
+        object associated with the Delorean object.
+
         """
         if s is 'second':
             self._dt = self._dt.replace(microsecond=0)
@@ -272,22 +274,23 @@ class Delorean(object):
 
     def naive(self):
         """
-        Returns a naive datetime object from the Delorean object, this
-        method simply converts localize datetime to UTC and removes
-        the tzinfo that is associated with it.
+        Returns a naive datetime object associated with the Delorean
+        object, this method simply converts the localize datetime to UTC
+        and removes the tzinfo that is associated with it.
         """
         return utc.normalize(self._dt).replace(tzinfo=None)
 
     def midnight(self):
         """
-        This method returns midnight of the particular Delorean object
+        This method returns midnight for datetime associated with
+        the Delorean object.
         """
         return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
     def shift(self, tz):
         """
         This method shifts the timezone from the current timezone to the
-        specified timezone
+        specified timezone associated with the Delorean object
         """
         try:
             zone = timezone(tz)
@@ -299,12 +302,8 @@ class Delorean(object):
 
     def epoch(self):
         """
-        This method returns the total seconds since epoch.
-
-        Usage::
-
-            d = Delorean()
-            d.epoch()
+        This method returns the total seconds since epoch associated with
+        the Delorean object.
         """
         utc = timezone(UTC)
         epoch = utc.localize(datetime.utcfromtimestamp(0))
@@ -316,7 +315,7 @@ class Delorean(object):
     def date(self):
         """
         This method returns the actual date object associated with
-        the Delorean object
+        the Delorean object.
         """
         return self._dt.date()
 
@@ -324,6 +323,6 @@ class Delorean(object):
     def datetime(self):
         """
         This method returns the actual datetime object associated with
-        the Delorean object
+        the Delorean object.
         """
         return self._dt
