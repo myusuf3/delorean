@@ -1,7 +1,7 @@
 .. image:: https://travis-ci.org/myusuf3/delorean.png?branch=master
 
 Delorean: Time Travel Made Easy
-==============================
+===============================
 
 `Delorean` is a library for clearing up the inconvenient truths that arise dealing with datetimes in Python. Understanding that timing is a delicate enough of a problem `delorean` hopes to provide a cleaner less troublesome solution to shifting, manipulating, generating `datetimes`.
 
