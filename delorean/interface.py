@@ -37,6 +37,18 @@ def parse(s, dayfirst=True, yearfirst=True):
     return do
 
 
+def range(step, start, stop, timezone=UTC):
+    """
+    This an alternative way to generating sets of Delorean objects
+    """
+    #[17:38:43] <russ__>     start + stop + step + count
+    #[17:38:48] <russ__>  start + step + count
+    #[17:39:00] <russ__>  stop + step + count
+    #[17:39:38] <russ__>  (step == interval == period)
+    # delorean.range(start = None, stop = None, step = None, timezone = "UTC", count = None)
+    pass
+
+
 def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
           bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
           byweekno=None, byweekday=None, byhour=None, byminute=None,
