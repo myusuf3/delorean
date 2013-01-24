@@ -6,7 +6,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-from delorean import __version__
+from version import __version__
 
 dependencies = ['pytz>=2012h', 'python-dateutil==2.1']
 

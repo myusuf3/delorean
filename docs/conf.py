@@ -20,7 +20,7 @@ import sys, os
 
 sys.path.insert(0, os.path.abspath('..'))
 import delorean
-from delorean import __version__
+from version import __version__
 
 # -- General configuration -----------------------------------------------------
 
