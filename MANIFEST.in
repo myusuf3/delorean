@@ -1,3 +1,4 @@
 include *.txt
 include *.rst
+include version.py
 recursive-include docs *.rst
