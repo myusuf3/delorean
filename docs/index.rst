@@ -35,7 +35,7 @@ Here is the world without a flux capacitor at your side.::
     utc = timezone(UTC)
     est = timezone(EST)
     d = utc.localize(d)
-    d = est.normalize(EST)
+    d = est.normalize(d)
     return d
 
 Now lets warm up the `delorean`::
