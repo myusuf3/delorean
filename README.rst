@@ -3,13 +3,13 @@
 Delorean: Time Travel Made Easy
 ===============================
 
-`Delorean` is a library for clearing up the inconvenient truths that arise dealing with datetimes in Python. Understanding that timing is a delicate enough of a problem `delorean` hopes to provide a cleaner less troublesome solution to shifting, manipulating, generating `datetimes`.
+`Delorean` is a library for clearing up the inconvenient truths that arise dealing with datetimes in Python. Understanding that timing is a delicate enough of a problem `delorean` hopes to provide a cleaner less troublesome solution to shifting, manipulating, and generating `datetimes`.
 
 Delorean stands on the shoulders of giants `pytz <http://pytz.sourceforge.net/>`_ and `dateutil <http://labix.org/python-dateutil>`_
 
 `Delorean` will provide natural language improvements for manipulating time, as well as datetime abstractions for ease of use. The overall goal is to improve datetime manipulations, with a little bit of software and philsophy.
 
-Pretty much make you a badass, time traveller.
+Pretty much make you a badass time traveller.
 
 Getting Started
 ^^^^^^^^^^^^^^^
@@ -38,5 +38,5 @@ Now lets warm up the `delorean`::
     d = Delorean(timezone=EST)
     return d
 
-Look at you looking all fly. This was just a test drive checkout out what else
+Look at you looking all fly. This was just a test drive: check out out what else
 `delorean` can help with below.

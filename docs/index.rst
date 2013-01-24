@@ -8,6 +8,8 @@
 Delorean: Time Travel Made Easy
 ==============================
 
+datetime?  Where we're going, we don't need datetime.
+
 This document describes Delorean v\ |version|.
 
 `Delorean` is a library for clearing up the inconvenient truths that arise dealing with datetimes in Python. Understanding that timing is a delicate enough of a problem `delorean` hopes to provide a cleaner less troublesome solution to shifting, manipulating, generating `datetimes`.
@@ -33,7 +35,7 @@ Here is the world without a flux capacitor at your side.::
     utc = timezone(UTC)
     est = timezone(EST)
     d = utc.localize(d)
-    d = est.normalize(EST)
+    d = est.normalize(d)
     return d
 
 Now lets warm up the `delorean`::
