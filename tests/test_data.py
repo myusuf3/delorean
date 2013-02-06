@@ -9,7 +9,6 @@ from unittest import TestCase, main
 from datetime import datetime, date, timedelta
 
 from pytz import timezone
-
 import delorean
 
 UTC = "UTC"

@@ -12,6 +12,8 @@ datetime?  Where we're going, we don't need datetime.
 
 This document describes Delorean v\ |version|.
 
+`Delorean` is the name of the car in the movie Back to the Future. The movie deals with a lot of time travel, hence the name Delorean as a module dealing with datetimes. 
+
 `Delorean` is a library for clearing up the inconvenient truths that arise dealing with datetimes in Python. Understanding that timing is a delicate enough of a problem `delorean` hopes to provide a cleaner less troublesome solution to shifting, manipulating, generating `datetimes`.
 
 Delorean stands on the shoulders of giants `pytz <http://pytz.sourceforge.net/>`_ and `dateutil <http://labix.org/python-dateutil>`_
