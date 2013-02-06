@@ -14,7 +14,9 @@ Pretty much make you a badass time traveller.
 Getting Started
 ^^^^^^^^^^^^^^^
 
-Here is the world without a flux capacitor at your side.::
+Here is the world without a flux capacitor at your side:
+
+.. code-block:: python
 
     from datetime import datetime
     from pytz import timezone
@@ -29,7 +31,9 @@ Here is the world without a flux capacitor at your side.::
     d = est.normalize(EST)
     return d
 
-Now lets warm up the `delorean`::
+Now lets warm up the `delorean`:
+
+.. code-block:: python
 
     from delorean import Delorean
 
