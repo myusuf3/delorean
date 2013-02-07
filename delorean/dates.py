@@ -250,17 +250,17 @@ class Delorean(object):
         object associated with the Delorean object.
 
         """
-        if s is 'second':
+        if s == 'second':
             self._dt = self._dt.replace(microsecond=0)
-        elif s is 'minute':
+        elif s == 'minute':
             self._dt = self._dt.replace(second=0, microsecond=0)
-        elif s is 'hour':
+        elif s == 'hour':
             self._dt = self._dt.replace(minute=0, second=0, microsecond=0)
-        elif s is 'day':
+        elif s == 'day':
             self._dt = self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
-        elif s is 'month':
+        elif s == 'month':
             self._dt = self._dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        elif s is 'year':
+        elif s == 'year':
             self._dt = self._dt.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
         else:
             raise ValueError("Invalid truncation level")
