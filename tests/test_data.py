@@ -330,6 +330,19 @@ class DeloreanTests(TestCase):
         do = delorean.epoch(1357187474.148546)
         self.assertEqual(self.do, do)
 
+    def test_copy(self):
+        do = self.do.copy()
+        self.assertEqual(self.do, do)
+        self.do.truncate('year')
+        self.assertNotEqual(self.do, do)
+
+    def test_copy_same_timezone(self):
+        do = self.do.copy('UTC')
+        self.assertEqual(self.do, do)
+
+    def test_copy_new_timezone(self):
+        do = self.do.copy('US/Eastern')
+        self.assertNotEqual(self.do, do)
 
 if __name__ == '__main__':
     main()

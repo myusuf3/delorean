@@ -311,6 +311,13 @@ class Delorean(object):
         delta = dt - epoch
         return delta.total_seconds()
 
+    def copy(self, tz=None):
+        """
+        This method returns a copy of the current Delorean object. It will use
+        the original timezone of the object or the value of tz if provided.
+        """
+        return Delorean(self.naive(), tz or self._tz)
+
     @property
     def date(self):
         """
