@@ -107,7 +107,7 @@ def epoch(s):
 
 
 def flux():
-    print "If you put your mind to it, you can accomplish anything."
+    print("If you put your mind to it, you can accomplish anything.")
 
 
 def utcnow():
