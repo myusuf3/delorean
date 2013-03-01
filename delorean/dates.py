@@ -188,7 +188,12 @@ class Delorean(object):
 
     def __eq__(self, other):
         # test this.
-        return self._dt == other._dt and self._tz == other._tz
+        try:
+            result = self._dt == other._dt and self._tz == other._tz
+        except AttributeError:
+            result = False
+
+        return result
 
     def __getattr__(self, name):
         """
