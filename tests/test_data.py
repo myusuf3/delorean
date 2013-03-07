@@ -332,14 +332,31 @@ class DeloreanTests(TestCase):
         self.assertEqual(self.do, do)
 
     def test_not_equal(self):
-        d = delorean.Delorean()
-        self.assertNotEqual(d, None)
+        d1 = delorean.Delorean()
+        self.assertNotEqual(d1, None)
+
+        # makes sure the overloaded comparisons work properly
+        d2 = deepcopy(d1)
+        self.assertFalse(d1 != d2, 'Overloaded __ne__ is not correct')
 
     def test_equal(self):
         d1 = delorean.Delorean()
         d2 = deepcopy(d1)
         self.assertEqual(d1, d2)
 
+    def test_copy(self):
+        do = self.do.copy()
+        self.assertEqual(self.do, do)
+        self.do.truncate('year')
+        self.assertNotEqual(self.do, do)
+
+    def test_copy_same_timezone(self):
+        do = self.do.copy('UTC')
+        self.assertEqual(self.do, do)
+
+    def test_copy_new_timezone(self):
+        do = self.do.copy('US/Eastern')
+        self.assertNotEqual(self.do, do)
 
 if __name__ == '__main__':
     main()

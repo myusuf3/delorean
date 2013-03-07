@@ -191,6 +191,9 @@ class Delorean(object):
             return self._dt == other._dt and self._tz == other._tz
         return False
 
+    def __ne__(self, other):
+        return not self == other
+
     def __getattr__(self, name):
         """
         Implement __getattr__ to call `shift_date` function when function
@@ -319,6 +322,13 @@ class Delorean(object):
         dt = utc.normalize(self._dt)
         delta = dt - epoch
         return get_total_second(delta)
+
+    def copy(self, tz=None):
+        """
+        This method returns a copy of the current Delorean object. It will use
+        the original timezone of the object or the value of tz if provided.
+        """
+        return Delorean(self.naive(), tz or self._tz)
 
     @property
     def date(self):
