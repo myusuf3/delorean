@@ -191,6 +191,9 @@ class Delorean(object):
             return self._dt == other._dt and self._tz == other._tz
         return False
 
+    def __ne__(self, other):
+        return not self == other
+
     def __getattr__(self, name):
         """
         Implement __getattr__ to call `shift_date` function when function
