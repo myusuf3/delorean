@@ -339,7 +339,7 @@ class DeloreanTests(TestCase):
         d1 = delorean.Delorean()
         d2 = deepcopy(d1)
         self.assertEqual(d1, d2)
-
+        self.assertFalse(d1 != d2, 'Overloaded __ne__ is not correct')
 
 if __name__ == '__main__':
     main()
