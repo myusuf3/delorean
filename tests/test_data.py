@@ -332,8 +332,12 @@ class DeloreanTests(TestCase):
         self.assertEqual(self.do, do)
 
     def test_not_equal(self):
-        d = delorean.Delorean()
-        self.assertNotEqual(d, None)
+        d1 = delorean.Delorean()
+        self.assertNotEqual(d1, None)
+
+        # makes sure the overloaded comparisons work properly
+        d2 = deepcopy(d1)
+        self.assertFalse(d1 != d2, 'Overloaded __ne__ is not correct')
 
     def test_equal(self):
         d1 = delorean.Delorean()
