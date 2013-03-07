@@ -330,6 +330,15 @@ class DeloreanTests(TestCase):
         do = delorean.epoch(1357187474.148546)
         self.assertEqual(self.do, do)
 
+    def test_not_equal(self):
+        d = delorean.Delorean()
+        self.assertNotEqual(d, None)
+
+    def test_equal(self):
+        d1 = delorean.Delorean()
+        d2 = deepcopy(d1)
+        self.assertEqual(d1, d2)
+
     def test_copy(self):
         do = self.do.copy()
         self.assertEqual(self.do, do)

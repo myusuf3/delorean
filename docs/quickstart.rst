@@ -98,11 +98,11 @@ Often we dont care how many milliseconds or even seconds that are present in our
 Though it might seem obvious `delorean` also provides truncation to the month and year levels as well.
 ::
 
-    >>> d = Delorean(datetime=datetime(2012, 05, 15, 03, 50, 00, 555555), timezone="US/Eastern")
+    >>> d = Delorean(datetime=datetime(2012, 5, 15, 03, 50, 00, 555555), timezone="US/Eastern")
     >>> d
-    Delorean(datetime=2012-05-15 03:50:00.555555-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-5-15 03:50:00.555555-04:00, timezone=US/Eastern)
     >>> d.truncate('month')
-    Delorean(datetime=2012-05-01 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=2012-5-01 00:00:00-04:00, timezone=US/Eastern)
     >>> d.truncate('year')
     Delorean(datetime=2012-01-01 00:00:00-04:00, timezone=US/Eastern)
 
@@ -190,8 +190,8 @@ Now that you can do this you can also specify ``timezones`` as well ``start`` an
     >>> import delorean
     >>> from delorean import stops
     >>> from datetime import datetime
-    >>> d1 = datetime(2012, 05, 06)
-    >>> d2 = datetime(2013, 05, 06)
+    >>> d1 = datetime(2012, 5, 06)
+    >>> d2 = datetime(2013, 5, 06)
 
 .. note::
 

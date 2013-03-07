@@ -12,6 +12,14 @@ UTC = "UTC"
 utc = timezone("UTC")
 
 
+def get_total_second(td):
+    """
+    This method takes a timedelta and return the number of seconds it
+    represents with the resolution of 10 **6
+    """
+    return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 1e6) / 1e6
+
+
 def is_datetime_naive(dt):
     """
     This method returns true if the datetime is naive else returns false
@@ -179,8 +187,9 @@ class Delorean(object):
         return 'Delorean(datetime=%s, timezone=%s)' % (self._dt, self._tz)
 
     def __eq__(self, other):
-        # test this.
-        return self._dt == other._dt and self._tz == other._tz
+        if isinstance(other, Delorean):
+            return self._dt == other._dt and self._tz == other._tz
+        return False
 
     def __getattr__(self, name):
         """
@@ -309,7 +318,7 @@ class Delorean(object):
         epoch = utc.localize(datetime.utcfromtimestamp(0))
         dt = utc.normalize(self._dt)
         delta = dt - epoch
-        return delta.total_seconds()
+        return get_total_second(delta)
 
     def copy(self, tz=None):
         """

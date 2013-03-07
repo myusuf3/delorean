@@ -4,7 +4,7 @@ class DeloreanError(Exception):
     """
 
     def __init__(self, msg):
-        self.msg = unicode(msg)
+        self.msg = str(msg)
         Exception.__init__(self, msg)
 
     def __str__(self):
