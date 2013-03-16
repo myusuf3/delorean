@@ -190,8 +190,12 @@ class Delorean(object):
         return 'Delorean(datetime=%s, timezone=%s)' % (self._dt, self._tz)
 
     def __eq__(self, other):
-        # test this.
-        return self._dt == other._dt and self._tz == other._tz
+        if isinstance(other, Delorean):
+            return self._dt == other._dt and self._tz == other._tz
+        return False
+
+    def __ne__(self, other):
+        return not self == other
 
     def __getattr__(self, name):
         """

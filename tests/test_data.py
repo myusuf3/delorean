@@ -7,6 +7,7 @@ Testing for Delorean
 
 from unittest import TestCase, main
 from datetime import datetime, date, timedelta
+from copy import deepcopy
 
 from pytz import timezone
 import delorean
@@ -340,6 +341,15 @@ class DeloreanTests(TestCase):
         do = delorean.epoch(1357187474.148546)
         self.assertEqual(self.do, do)
 
+    def test_not_equal(self):
+        d = delorean.Delorean()
+        self.assertNotEqual(d, None)
+
+    def test_equal(self):
+        d1 = delorean.Delorean()
+        d2 = deepcopy(d1)
+        self.assertEqual(d1, d2)
+        self.assertFalse(d1 != d2, 'Overloaded __ne__ is not correct')
 
 if __name__ == '__main__':
     main()
