@@ -50,6 +50,7 @@ For the purists out there you can do things like so.
     1357971038.102223
 
 You can also create Delorean object using unix timestamps.
+
 ::
 
     from delorean import epoch
