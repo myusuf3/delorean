@@ -59,7 +59,7 @@ You can also create Delorean object using unix timestamps.
 As you can see `delorean` returns a Delorean object which you can shift to the appropriate timezone to get back your original datetime object from above.
 
 
-Delorean also now accepts localized datetimes. This means if you had a previously localized datetime object, Delorean will now accept these values and set the associated timezone and datetime information on the internal object.
+`Delorean` also now accepts localized datetimes. This means if you had a previously localized datetime object, Delorean will now accept these values and set the associated timezone and datetime information on the Delorean object.
 
 .. note::
 
