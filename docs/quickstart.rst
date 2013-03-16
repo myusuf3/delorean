@@ -67,6 +67,7 @@ Delorean also now accepts localized datetimes. This means if you had a previousl
 
 
 ::
+
     >>> tz = timezone("US/Pacific")
     >>> dt = tz.localize(datetime.utcnow())
     datetime.datetime(2013, 3, 16, 5, 28, 11, 536818, tzinfo=<DstTzInfo 'US/Pacific' PDT-1 day, 17:00:00 DST>)
