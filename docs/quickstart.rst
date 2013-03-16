@@ -58,6 +58,26 @@ You can also create Delorean object using unix timestamps.
 
 As you can see `delorean` returns a Delorean object which you can shift to the appropriate timezone to get back your original datetime object from above.
 
+
+Delorean also now accepts localized datetimes. This means if you had a previously localized datetime object, Delorean will now accept these values and set the associated timezone and datetime information on the internal object.
+
+.. note::
+
+    If you pass in a timezone with a localized datetime the timezone will be ignored, since the datetime object you are passing already has timezone information already associated with it.
+
+
+::
+    >>> tz = timezone("US/Pacific")
+    >>> dt = tz.localize(datetime.utcnow())
+    datetime.datetime(2013, 3, 16, 5, 28, 11, 536818, tzinfo=<DstTzInfo 'US/Pacific' PDT-1 day, 17:00:00 DST>)
+    >>> d = Delorean(datetime=dt)
+    >>> d
+    Delorean(datetime=2013-03-16 05:28:11.536818-07:00, timezone=US/Pacific)
+    >>> d = Delorean(datetime=dt, timezone="US/Eastern")
+    >>> d
+    Delorean(datetime=2013-03-16 05:28:11.536818-07:00, timezone=US/Pacific)
+
+
 Natural Language
 ^^^^^^^^^^^^^^^^
 `Delorean` provides many ways to get certain date relative to another, often getting something simple like the next year or the next thursday can be quite troublesome.

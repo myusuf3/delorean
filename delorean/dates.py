@@ -157,31 +157,34 @@ class Delorean(object):
     def __init__(self, datetime=None, timezone=None):
         # maybe set timezone on the way in here. if here set it if not
         # use UTC
+        naive = True
         self._tz = timezone
         self._dt = datetime
 
-        if is_datetime_naive(datetime):
-            pass
-        else:
-            pass
-            # raise a value error since you are passing a localized
-            # datetime
-            raise DeloreanInvalidDatetime('Provide a naive datetime object')
+        if not is_datetime_naive(datetime):
+            # if already localized find the zone
+            # once zone is found set _tz and the localized datetime
+            # to _dt
+            naive = False
+            zone = datetime.tzinfo.zone
+            self._tz = zone
+            self._dt = datetime
 
-        if timezone is None and datetime is None:
-            self._tz = UTC
-            self._dt = datetime_timezone(UTC)
-        elif timezone is not None and datetime is None:
-            # create utctime then normalize to tz
-            self._tz = timezone
-            self._dt = datetime_timezone(timezone)
-        elif timezone is None and datetime is not None:
-            raise DeloreanInvalidTimezone('Provide a valid timezone')
-        else:
-            # passed in naive datetime and timezone
-            # that correspond accordingly
-            self._tz = timezone
-            self._dt = localize(datetime, timezone)
+        if naive:
+            if timezone is None and datetime is None:
+                self._tz = UTC
+                self._dt = datetime_timezone(UTC)
+            elif timezone is not None and datetime is None:
+                # create utctime then normalize to tz
+                self._tz = timezone
+                self._dt = datetime_timezone(timezone)
+            elif timezone is None and datetime is not None:
+                raise DeloreanInvalidTimezone('Provide a valid timezone')
+            else:
+                # passed in naive datetime and timezone
+                # that correspond accordingly
+                self._tz = timezone
+                self._dt = localize(datetime, timezone)
 
     def __repr__(self):
         return 'Delorean(datetime=%s, timezone=%s)' % (self._dt, self._tz)

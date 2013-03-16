@@ -277,11 +277,6 @@ class DeloreanTests(TestCase):
                 dates2.append(do.next_day(x))
         self.assertEqual(dates1, dates2)
 
-    def test_delorean_failure(self):
-        dt = datetime.utcnow()
-        dt = utc.localize(dt)
-        self.assertRaises(delorean.DeloreanInvalidDatetime, delorean.Delorean, datetime=dt)
-
     def test_delorean_with_datetime(self):
         dt = datetime.utcnow()
         d = delorean.Delorean(datetime=dt, timezone=UTC)
@@ -318,9 +313,24 @@ class DeloreanTests(TestCase):
     def test_shift_failure(self):
         self.assertRaises(delorean.DeloreanInvalidTimezone, self.do.shift, "US/Westerrn")
 
-    def test_datetime_failure(self):
-        dt = utc.localize(datetime.utcnow())
-        self.assertRaises(delorean.DeloreanInvalidDatetime, delorean.Delorean, datetime=dt)
+    def test_datetime_localization(self):
+        dt1 = self.do.datetime
+        dt2 = delorean.Delorean(dt1).datetime
+        self.assertEquals(dt1, dt2)
+
+    def test_localize_datetime(self):
+        dt = datetime.utcnow()
+        tz = timezone("US/Pacific")
+        dt = tz.localize(dt)
+        d = delorean.Delorean(dt)
+        d2 = d.shift('US/Pacific')
+
+        self.assertEquals(d._tz, "US/Pacific")
+        self.assertEquals(d.datetime, dt)
+        self.assertEqual(d.datetime, d2.datetime)
+
+
+
 
     def test_epoch(self):
         unix_time = self.do.epoch()
