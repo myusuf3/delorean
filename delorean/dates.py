@@ -1,5 +1,4 @@
 import sys
-from functools import total_ordering
 from datetime import datetime
 from functools import partial, update_wrapper
 
@@ -144,7 +143,7 @@ def normalize(dt, tz):
     dt = tz.normalize(dt)
     return dt
 
-@total_ordering
+
 class Delorean(object):
     """
     The class `Delorean <Delorean>` object. This method accepts naive
@@ -197,6 +196,15 @@ class Delorean(object):
 
     def __lt__(self, other):
         return self.epoch() < other.epoch()
+
+    def __gt__(self, other):
+        return self.epoch() > other.epoch()
+
+    def __ge__(self, other):
+        return self.epoch() >= other.epoch()
+
+    def __le__(self, other):
+        return self.epoch() <= other.epoch()
 
     def __ne__(self, other):
         return not self == other

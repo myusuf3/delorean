@@ -60,6 +60,12 @@ You can also create Delorean object using unix timestamps.
 As you can see `delorean` returns a Delorean object which you can shift to the appropriate timezone to get back your original datetime object from above.
 
 
+.. note::
+
+    If you are comparing Delorean objects the time since epoch will be used internally
+    for comparison. This allows for the greatest accuracy when comparing Delorean
+    objects from different timezones!
+
 `Delorean` also now accepts localized datetimes. This means if you had a previously localized datetime object, Delorean will now accept these values and set the associated timezone and datetime information on the Delorean object.
 
 .. note::
