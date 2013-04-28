@@ -330,8 +330,31 @@ class DeloreanTests(TestCase):
         self.assertEquals(d.datetime, dt)
         self.assertEqual(d.datetime, d2.datetime)
 
+    def test_lt(self):
+        dt1 = self.do
+        dt2 = delorean.Delorean()
+        self.assertTrue(dt1 < dt2)
 
+    def test_gt(self):
+        dt1 = self.do
+        dt2 = delorean.Delorean()
+        self.assertTrue(dt2 > dt1)
 
+    def test_ge(self):
+        dt = datetime.utcnow()
+        dt1 = delorean.Delorean(dt, timezone="UTC")
+        dt2 = delorean.Delorean(dt, timezone="UTC")
+        dt3 = self.do
+        self.assertTrue(dt2 >= dt1)
+        self.assertTrue(dt1 >= dt3)
+
+    def test_le(self):
+        dt = datetime.utcnow()
+        dt1 = delorean.Delorean(dt, timezone="UTC")
+        dt2 = delorean.Delorean(dt, timezone="UTC")
+        dt3 = self.do
+        self.assertTrue(dt2 <= dt1)
+        self.assertTrue(dt3 <= dt2)
 
     def test_epoch(self):
         unix_time = self.do.epoch()

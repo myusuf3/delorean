@@ -1,4 +1,5 @@
 import sys
+from functools import total_ordering
 from datetime import datetime
 from functools import partial, update_wrapper
 
@@ -6,7 +7,7 @@ import pytz
 from pytz import timezone
 from dateutil.relativedelta import relativedelta
 
-from .exceptions import DeloreanInvalidTimezone, DeloreanInvalidDatetime
+from .exceptions import DeloreanInvalidTimezone
 
 UTC = "UTC"
 utc = timezone("UTC")
@@ -143,7 +144,7 @@ def normalize(dt, tz):
     dt = tz.normalize(dt)
     return dt
 
-
+@total_ordering
 class Delorean(object):
     """
     The class `Delorean <Delorean>` object. This method accepts naive
@@ -193,6 +194,9 @@ class Delorean(object):
         if isinstance(other, Delorean):
             return self._dt == other._dt and self._tz == other._tz
         return False
+
+    def __lt__(self, other):
+        return self.epoch() < other.epoch()
 
     def __ne__(self, other):
         return not self == other
