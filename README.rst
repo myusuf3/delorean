@@ -1,5 +1,9 @@
 .. image:: https://travis-ci.org/myusuf3/delorean.png?branch=master
 
+.. image:: https://pypip.in/d/Delorean/badge.png
+    :target: https://crate.io/packages/Delorean/
+    :alt: Number of PyPI downloads
+
 Delorean: Time Travel Made Easy
 ===============================
 
