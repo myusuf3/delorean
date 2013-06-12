@@ -109,6 +109,17 @@ def move_datetime_year(dt, direction, num_shifts):
     delta = relativedelta(years=+num_shifts)
     return _move_datetime(dt, direction, delta)
 
+def move_datetime_hour(dt, direction, num_shifts):
+    delta = relativedelta(hours=+num_shifts)
+    return _move_datetime(dt, direction, delta)
+
+def move_datetime_minute(dt, direction, num_shifts):
+    delta = relativedelta(minutes=+num_shifts)
+    return _move_datetime(dt, direction, delta)
+
+def move_datetime_second(dt, direction, num_shifts):
+    delta = relativedelta(seconds=+num_shifts)
+    return _move_datetime(dt, direction, delta)
 
 def datetime_timezone(tz):
     """
@@ -150,9 +161,9 @@ class Delorean(object):
     datetime objects, with a string timezone.
     """
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
-    _VALID_SHIFT_UNITS = ('day', 'week', 'month', 'year', 'monday', 'tuesday',
-                          'wednesday', 'thursday', 'friday', 'saturday',
-                          'sunday')
+    _VALID_SHIFT_UNITS = ('second', 'hour', 'minute', 'day', 'week', 
+                          'month', 'year', 'monday', 'tuesday', 'wednesday',
+                          'thursday', 'friday', 'saturday','sunday')
 
     def __init__(self, datetime=None, timezone=None):
         # maybe set timezone on the way in here. if here set it if not
