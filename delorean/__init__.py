@@ -13,8 +13,9 @@ from .interface import (
 )
 
 from .dates import (
-                   move_datetime_day, move_datetime_week,
-                   move_datetime_month, move_datetime_year,
-                   move_datetime_namedday, Delorean, datetime_timezone,
-                   localize, normalize
+                   move_datetime_second, move_datetime_minute,
+                   move_datetime_hour, move_datetime_day, 
+                   move_datetime_week, move_datetime_month, 
+                   move_datetime_year, move_datetime_namedday, 
+                   Delorean, datetime_timezone, localize, normalize
 )
