@@ -161,7 +161,7 @@ class Delorean(object):
     datetime objects, with a string timezone.
     """
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
-    _VALID_SHIFT_UNITS = ('second', 'hour', 'minute', 'day', 'week', 
+    _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week', 
                           'month', 'year', 'monday', 'tuesday', 'wednesday',
                           'thursday', 'friday', 'saturday','sunday')
 
