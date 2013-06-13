@@ -236,6 +236,84 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
 
+    def test_move_hour(self):
+        dt_next   = datetime(2013, 1, 3, 5, 31, 14, 148546, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 3, 6, 31, 14, 148546, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 3, 31, 14, 148546, tzinfo=utc)
+        dt_last_2 = datetime(2013, 1, 3, 2, 31, 14, 148546, tzinfo=utc)
+
+        d_obj_next = self.do.next_hour()
+        d_obj_next_2 = self.do.next_hour(2)
+        d_obj_last = self.do.last_hour()
+        d_obj_last_2 = self.do.last_hour(2)
+
+        self.assertEqual(dt_next, d_obj_next.datetime)
+        self.assertEqual(dt_last, d_obj_last.datetime)
+        self.assertEqual(dt_next_2, d_obj_next_2.datetime)
+        self.assertEqual(dt_last_2, d_obj_last_2.datetime)
+
+    def test_move_hour_function(self):
+        dt_next = datetime(2013, 1, 3, 5, 31, 14, 148546, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 3, 31, 14, 148546, tzinfo=utc)
+
+        d_obj_next = delorean.move_datetime_hour(self.do.datetime, 'next', 1)
+        d_obj_last = delorean.move_datetime_hour(self.do.datetime, 'last', 1)
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
+
+    def test_move_minute(self):
+        dt_next   = datetime(2013, 1, 3, 4, 32, 14, 148546, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 3, 4, 33, 14, 148546, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 30, 14, 148546, tzinfo=utc)
+        dt_last_2 = datetime(2013, 1, 3, 4, 29, 14, 148546, tzinfo=utc)
+
+        d_obj_next = self.do.next_minute()
+        d_obj_next_2 = self.do.next_minute(2)
+        d_obj_last = self.do.last_minute()
+        d_obj_last_2 = self.do.last_minute(2)
+
+        self.assertEqual(dt_next, d_obj_next.datetime)
+        self.assertEqual(dt_last, d_obj_last.datetime)
+        self.assertEqual(dt_next_2, d_obj_next_2.datetime)
+        self.assertEqual(dt_last_2, d_obj_last_2.datetime)
+
+    def test_move_minute_function(self):
+        dt_next = datetime(2013, 1, 3, 4, 32, 14, 148546, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 30, 14, 148546, tzinfo=utc)
+
+        d_obj_next = delorean.move_datetime_minute(self.do.datetime, 'next', 1)
+        d_obj_last = delorean.move_datetime_minute(self.do.datetime, 'last', 1)
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
+
+    def test_move_minute(self):
+        dt_next   = datetime(2013, 1, 3, 4, 31, 15, 148546, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 3, 4, 31, 16, 148546, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 31, 13, 148546, tzinfo=utc)
+        dt_last_2 = datetime(2013, 1, 3, 4, 31, 12, 148546, tzinfo=utc)
+
+        d_obj_next = self.do.next_second()
+        d_obj_next_2 = self.do.next_second(2)
+        d_obj_last = self.do.last_second()
+        d_obj_last_2 = self.do.last_second(2)
+
+        self.assertEqual(dt_next, d_obj_next.datetime)
+        self.assertEqual(dt_last, d_obj_last.datetime)
+        self.assertEqual(dt_next_2, d_obj_next_2.datetime)
+        self.assertEqual(dt_last_2, d_obj_last_2.datetime)
+
+    def test_move_second_function(self):
+        dt_next = datetime(2013, 1, 3, 4, 31, 15, 148546, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 31, 13, 148546, tzinfo=utc)
+
+        d_obj_next = delorean.move_datetime_second(self.do.datetime, 'next', 1)
+        d_obj_last = delorean.move_datetime_second(self.do.datetime, 'last', 1)
+
+        self.assertEqual(dt_next, d_obj_next)
+        self.assertEqual(dt_last, d_obj_last)
+
     def test_range_count(self):
         """
         tests the range method with count used
