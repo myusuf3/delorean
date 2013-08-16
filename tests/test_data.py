@@ -44,12 +44,12 @@ class DeloreanTests(TestCase):
     def test_initialize_with_tzinfo_generic(self):
         self.aware_dt_generic = datetime(2013, 1, 3, 4, 31, 14, 148546, tzinfo=generic_utc)
         do = delorean.Delorean(datetime=self.aware_dt_generic)
-        self.assertIsInstance(do, delorean.Delorean)
+        self.assertTrue(type(do) is delorean.Delorean)
 
     def test_initialize_with_tzinfo_pytz(self):
         self.aware_dt_pytz = datetime(2013, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
         do = delorean.Delorean(datetime=self.aware_dt_pytz)
-        self.assertIsInstance(do, delorean.Delorean)
+        self.assertTrue(type(do) is delorean.Delorean)
 
     def test_truncation_hour(self):
         self.do.truncate('hour')
