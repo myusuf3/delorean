@@ -6,22 +6,50 @@ Testing for Delorean
 """
 
 from unittest import TestCase, main
-from datetime import datetime, date, timedelta
+from datetime import tzinfo, datetime, date, timedelta
 from copy import deepcopy
 
 from pytz import timezone
 import delorean
 
+
+class GenericUTC(tzinfo):
+    """GenericUTC"""
+    ZERO = timedelta(0)
+
+    def utcoffset(self, dt):
+        return self.ZERO
+
+    def tzname(self, dt):
+        return "GenericUTC"
+
+    def dst(self, dt):
+        return self.ZERO
+
 UTC = "UTC"
 utc = timezone(UTC)
+generic_utc = GenericUTC()
 est = timezone("US/Eastern")
 
 
 class DeloreanTests(TestCase):
 
     def setUp(self):
-        date1 = datetime(2013, 1, 3, 4, 31, 14, 148546)
-        self.do = delorean.Delorean(datetime=date1, timezone="UTC")
+        self.naive_dt = datetime(2013, 1, 3, 4, 31, 14, 148546)
+        self.do = delorean.Delorean(datetime=self.naive_dt, timezone="UTC")
+
+    def test_initialize_from_datetime_naive(self):
+        self.assertRaises(delorean.DeloreanInvalidTimezone, delorean.Delorean, datetime=self.naive_dt)
+
+    def test_initialize_with_tzinfo_generic(self):
+        self.aware_dt_generic = datetime(2013, 1, 3, 4, 31, 14, 148546, tzinfo=generic_utc)
+        do = delorean.Delorean(datetime=self.aware_dt_generic)
+        self.assertIsInstance(do, delorean.Delorean)
+
+    def test_initialize_with_tzinfo_pytz(self):
+        self.aware_dt_pytz = datetime(2013, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
+        do = delorean.Delorean(datetime=self.aware_dt_pytz)
+        self.assertIsInstance(do, delorean.Delorean)
 
     def test_truncation_hour(self):
         self.do.truncate('hour')
