@@ -29,7 +29,12 @@ from version import __version__
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx', 'releases']
+
+
+# 'releases' (changelog) settings
+releases_issue_uri = "https://github.com/myusuf3/delorean/issues/%s"
+releases_release_uri = "https://github.com/myusuf3/delorean/tree/%s"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
