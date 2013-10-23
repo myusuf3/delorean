@@ -484,12 +484,10 @@ class DeloreanTests(TestCase):
         d1 = delorean.Delorean()
         d2 = delorean.Delorean(d1.datetime)
 
-        d1.next_day(1)
-        d1.last_week()
-        d2.next_day(1)
-        d2.last_week()
-
         #these deloreans should be the same
+        self.assertEqual(d1.next_day(1), d2.next_day(1))
+        self.assertEqual(d2.last_week(), d2.last_week())
+        self.assertEqual(d1.timezone(), d2.timezone())
         self.assertEqual(d1, d2)
 
     def test_issue_36_delorean_to_datetime_to_delorean_non_utc(self):
@@ -499,12 +497,10 @@ class DeloreanTests(TestCase):
         d1 = delorean.Delorean(timezone='America/Chicago')
         d2 = delorean.Delorean(d1.datetime)
 
-        d1.next_day(1)
-        d1.last_week()
-        d2.next_day(1)
-        d2.last_week()
-
         #these deloreans should be the same
+        self.assertEqual(d1.next_day(1), d2.next_day(1))
+        self.assertEqual(d2.last_week(), d2.last_week())
+        self.assertEqual(d1.timezone(), d2.timezone())
         self.assertEqual(d1, d2)
 
 if __name__ == '__main__':
