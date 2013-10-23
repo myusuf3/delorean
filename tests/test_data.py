@@ -480,5 +480,32 @@ class DeloreanTests(TestCase):
         self.assertEqual(d1, d2)
         self.assertFalse(d1 != d2, 'Overloaded __ne__ is not correct')
 
+    def test_issue_36_delorean_to_datetime_to_delorean_utc(self):
+        d1 = delorean.Delorean()
+        d2 = delorean.Delorean(d1.datetime)
+
+        d1.next_day(1)
+        d1.last_week()
+        d2.next_day(1)
+        d2.last_week()
+
+        #these deloreans should be the same
+        self.assertEqual(d1, d2)
+
+    def test_issue_36_delorean_to_datetime_to_delorean_non_utc(self):
+        """Test if when you create Delorean object from Delorean's datetime
+        it still behaves the same
+        """
+        d1 = delorean.Delorean(timezone='America/Chicago')
+        d2 = delorean.Delorean(d1.datetime)
+
+        d1.next_day(1)
+        d1.last_week()
+        d2.next_day(1)
+        d2.last_week()
+
+        #these deloreans should be the same
+        self.assertEqual(d1, d2)
+
 if __name__ == '__main__':
     main()
