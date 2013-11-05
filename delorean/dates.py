@@ -177,7 +177,7 @@ class Delorean(object):
             # once zone is found set _tz and the localized datetime
             # to _dt
             naive = False
-            zone = datetime.tzinfo.tzname(datetime)
+            zone = datetime.tzinfo.tzname(None)
             self._tz = zone
             self._dt = datetime
 
