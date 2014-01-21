@@ -141,12 +141,12 @@ class DeloreanTests(TestCase):
 
     def test_parse_with_utc_year_fill(self):
         do = delorean.parse('Thu Sep 25 10:36:28')
-        dt1 = utc.localize(datetime(2013, 9, 25, 10, 36, 28))
+        dt1 = utc.localize(datetime(date.today().year, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
     def test_parse_with_timezone_year_fill(self):
         do = delorean.parse('Thu Sep 25 10:36:28')
-        dt1 = utc.localize(datetime(2013, 9, 25, 10, 36, 28))
+        dt1 = utc.localize(datetime(date.today().year, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
         self.assertEqual(do._tz, "UTC")
 
@@ -480,7 +480,7 @@ class DeloreanTests(TestCase):
         self.assertEqual(d1, d2)
         self.assertFalse(d1 != d2, 'Overloaded __ne__ is not correct')
 
-    def test_issue_36_delorean_to_datetime_to_delorean_utc(self):
+    def test_timezone_delorean_to_datetime_to_delorean_utc(self):
         d1 = delorean.Delorean()
         d2 = delorean.Delorean(d1.datetime)
 
@@ -490,7 +490,7 @@ class DeloreanTests(TestCase):
         self.assertEqual(d1.timezone(), d2.timezone())
         self.assertEqual(d1, d2)
 
-    def test_issue_36_delorean_to_datetime_to_delorean_non_utc(self):
+    def test_timezone_delorean_to_datetime_to_delorean_non_utc(self):
         """Test if when you create Delorean object from Delorean's datetime
         it still behaves the same
         """
