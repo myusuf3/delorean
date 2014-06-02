@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial, update_wrapper
 
 import pytz
@@ -161,7 +161,7 @@ class Delorean(object):
     datetime objects, with a string timezone.
     """
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
-    _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week', 
+    _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week',
                           'month', 'year', 'monday', 'tuesday', 'wednesday',
                           'thursday', 'friday', 'saturday','sunday')
 
@@ -219,6 +219,20 @@ class Delorean(object):
 
     def __ne__(self, other):
         return not self == other
+
+    def __add__(self, other):
+        if not isinstance(other, timedelta):
+            raise TypeError("Delorean objects can only be added with timedelta objects")
+        dt = self._dt + other
+        dt = dt.replace(tzinfo=None)
+        return Delorean(datetime=dt, timezone=self._tz)
+
+    def __sub__(self, other):
+        if not isinstance(other, timedelta):
+            raise TypeError("Delorean objects can only be subtracted with timedelta objects")
+        dt = self._dt - other
+        dt = dt.replace(tzinfo=None)
+        return Delorean(datetime=dt, timezone=self._tz)
 
     def __getattr__(self, name):
         """
