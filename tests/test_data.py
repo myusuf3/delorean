@@ -35,7 +35,7 @@ est = timezone("US/Eastern")
 class DeloreanTests(TestCase):
 
     def setUp(self):
-        self.naive_dt = datetime(2013, 1, 3, 4, 31, 14, 148546)
+        self.naive_dt = datetime(2013, 1, 3, 4, 31, 14, 148540)
         self.do = delorean.Delorean(datetime=self.naive_dt, timezone="UTC")
 
     def test_date_failure(self):
@@ -47,12 +47,12 @@ class DeloreanTests(TestCase):
         self.assertRaises(delorean.DeloreanInvalidTimezone, delorean.Delorean, datetime=self.naive_dt)
 
     def test_initialize_with_tzinfo_generic(self):
-        self.aware_dt_generic = datetime(2013, 1, 3, 4, 31, 14, 148546, tzinfo=generic_utc)
+        self.aware_dt_generic = datetime(2013, 1, 3, 4, 31, 14, 148540, tzinfo=generic_utc)
         do = delorean.Delorean(datetime=self.aware_dt_generic)
         self.assertTrue(type(do) is delorean.Delorean)
 
     def test_initialize_with_tzinfo_pytz(self):
-        self.aware_dt_pytz = datetime(2013, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
+        self.aware_dt_pytz = datetime(2013, 1, 3, 4, 31, 14, 148540, tzinfo=utc)
         do = delorean.Delorean(datetime=self.aware_dt_pytz)
         self.assertTrue(type(do) is delorean.Delorean)
 
@@ -84,7 +84,7 @@ class DeloreanTests(TestCase):
         self.assertEqual(self.do.date, date(2013, 1, 3))
 
     def test_datetime(self):
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 148546))
+        self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 148540))
 
     def test_naive(self):
         dt1 = delorean.Delorean()
@@ -156,10 +156,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(do._tz, "UTC")
 
     def test_move_namedday(self):
-        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=utc)
-        dt_next_2 = datetime(2013, 1, 11, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 12, 28, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last_2 = datetime(2012, 12, 21, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148540, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 11, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 12, 28, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last_2 = datetime(2012, 12, 21, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = self.do.next_friday()
         d_obj_next_2 = self.do.next_friday(2)
@@ -172,8 +172,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_namedday_function(self):
-        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 12, 28, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 12, 28, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_namedday(self.do.datetime, 'next', 'friday')
         d_obj_last = delorean.move_datetime_namedday(self.do.datetime, 'last', 'friday')
@@ -182,10 +182,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_week(self):
-        dt_next = datetime(2013, 1, 10, 4, 31, 14, 148546, tzinfo=utc)
-        dt_next_2 = datetime(2013, 1, 17, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 12, 27, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last_2 = datetime(2012, 12, 20, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 10, 4, 31, 14, 148540, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 17, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 12, 27, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last_2 = datetime(2012, 12, 20, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = self.do.next_week()
         d_obj_next_2 = self.do.next_week(2)
@@ -198,8 +198,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_week_function(self):
-        dt_next = datetime(2013, 1, 10, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 12, 27, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 10, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 12, 27, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_week(self.do.datetime, 'next', 1)
         d_obj_last = delorean.move_datetime_week(self.do.datetime, 'last', 1)
@@ -208,10 +208,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_month(self):
-        dt_next = datetime(2013, 2, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_next_2 = datetime(2013, 3, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 12, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last_2 = datetime(2012, 11, 3, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 2, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_next_2 = datetime(2013, 3, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 12, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last_2 = datetime(2012, 11, 3, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = self.do.next_month()
         d_obj_next_2 = self.do.next_month(2)
@@ -224,8 +224,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_month_function(self):
-        dt_next = datetime(2013, 2, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 12, 3, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 2, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 12, 3, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_month(self.do.datetime, 'next', 1)
         d_obj_last = delorean.move_datetime_month(self.do.datetime, 'last', 1)
@@ -234,8 +234,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_day_function(self):
-        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2013, 1, 2, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 4, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2013, 1, 2, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_day(self.do.datetime, 'next', 1)
         d_obj_last = delorean.move_datetime_day(self.do.datetime, 'last', 1)
@@ -244,10 +244,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_year(self):
-        dt_next = datetime(2014, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_next_2 = datetime(2015, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last_2 = datetime(2011, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2014, 1, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_next_2 = datetime(2015, 1, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 1, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last_2 = datetime(2011, 1, 3, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = self.do.next_year()
         d_obj_next_2 = self.do.next_year(2)
@@ -260,8 +260,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_year_function(self):
-        dt_next = datetime(2014, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2012, 1, 3, 4, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2014, 1, 3, 4, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2012, 1, 3, 4, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_year(self.do.datetime, 'next', 1)
         d_obj_last = delorean.move_datetime_year(self.do.datetime, 'last', 1)
@@ -270,10 +270,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_hour(self):
-        dt_next   = datetime(2013, 1, 3, 5, 31, 14, 148546, tzinfo=utc)
-        dt_next_2 = datetime(2013, 1, 3, 6, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2013, 1, 3, 3, 31, 14, 148546, tzinfo=utc)
-        dt_last_2 = datetime(2013, 1, 3, 2, 31, 14, 148546, tzinfo=utc)
+        dt_next   = datetime(2013, 1, 3, 5, 31, 14, 148540, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 3, 6, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 3, 31, 14, 148540, tzinfo=utc)
+        dt_last_2 = datetime(2013, 1, 3, 2, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = self.do.next_hour()
         d_obj_next_2 = self.do.next_hour(2)
@@ -286,8 +286,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_hour_function(self):
-        dt_next = datetime(2013, 1, 3, 5, 31, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2013, 1, 3, 3, 31, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 3, 5, 31, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 3, 31, 14, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_hour(self.do.datetime, 'next', 1)
         d_obj_last = delorean.move_datetime_hour(self.do.datetime, 'last', 1)
@@ -296,10 +296,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_minute(self):
-        dt_next   = datetime(2013, 1, 3, 4, 32, 14, 148546, tzinfo=utc)
-        dt_next_2 = datetime(2013, 1, 3, 4, 33, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2013, 1, 3, 4, 30, 14, 148546, tzinfo=utc)
-        dt_last_2 = datetime(2013, 1, 3, 4, 29, 14, 148546, tzinfo=utc)
+        dt_next   = datetime(2013, 1, 3, 4, 32, 14, 148540, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 3, 4, 33, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 30, 14, 148540, tzinfo=utc)
+        dt_last_2 = datetime(2013, 1, 3, 4, 29, 14, 148540, tzinfo=utc)
 
         d_obj_next = self.do.next_minute()
         d_obj_next_2 = self.do.next_minute(2)
@@ -312,8 +312,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_minute_function(self):
-        dt_next = datetime(2013, 1, 3, 4, 32, 14, 148546, tzinfo=utc)
-        dt_last = datetime(2013, 1, 3, 4, 30, 14, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 3, 4, 32, 14, 148540, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 30, 14, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_minute(self.do.datetime, 'next', 1)
         d_obj_last = delorean.move_datetime_minute(self.do.datetime, 'last', 1)
@@ -322,10 +322,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_minute(self):
-        dt_next   = datetime(2013, 1, 3, 4, 31, 15, 148546, tzinfo=utc)
-        dt_next_2 = datetime(2013, 1, 3, 4, 31, 16, 148546, tzinfo=utc)
-        dt_last = datetime(2013, 1, 3, 4, 31, 13, 148546, tzinfo=utc)
-        dt_last_2 = datetime(2013, 1, 3, 4, 31, 12, 148546, tzinfo=utc)
+        dt_next   = datetime(2013, 1, 3, 4, 31, 15, 148540, tzinfo=utc)
+        dt_next_2 = datetime(2013, 1, 3, 4, 31, 16, 148540, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 31, 13, 148540, tzinfo=utc)
+        dt_last_2 = datetime(2013, 1, 3, 4, 31, 12, 148540, tzinfo=utc)
 
         d_obj_next = self.do.next_second()
         d_obj_next_2 = self.do.next_second(2)
@@ -338,8 +338,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
 
     def test_move_second_function(self):
-        dt_next = datetime(2013, 1, 3, 4, 31, 15, 148546, tzinfo=utc)
-        dt_last = datetime(2013, 1, 3, 4, 31, 13, 148546, tzinfo=utc)
+        dt_next = datetime(2013, 1, 3, 4, 31, 15, 148540, tzinfo=utc)
+        dt_last = datetime(2013, 1, 3, 4, 31, 13, 148540, tzinfo=utc)
 
         d_obj_next = delorean.move_datetime_second(self.do.datetime, 'next', 1)
         d_obj_last = delorean.move_datetime_second(self.do.datetime, 'last', 1)
@@ -469,10 +469,10 @@ class DeloreanTests(TestCase):
 
     def test_epoch(self):
         unix_time = self.do.epoch()
-        self.assertEqual(unix_time, 1357187474.148546)
+        self.assertEqual(unix_time, 1357187474.148540)
 
     def test_epoch_creation(self):
-        do = delorean.epoch(1357187474.148546)
+        do = delorean.epoch(1357187474.148540)
         self.assertEqual(self.do, do)
 
     def test_not_equal(self):
