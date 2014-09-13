@@ -32,6 +32,11 @@ def is_datetime_naive(dt):
     else:
         return False
 
+def is_datetime_instance(dt):
+    if dt is None:
+        return
+    if not isinstance(dt, datetime):
+        raise ValueError('Please provide a datetime instance to Delorean')
 
 def _move_datetime(dt, direction, delta):
     """
@@ -161,13 +166,15 @@ class Delorean(object):
     datetime objects, with a string timezone.
     """
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
-    _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week', 
+    _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week',
                           'month', 'year', 'monday', 'tuesday', 'wednesday',
                           'thursday', 'friday', 'saturday','sunday')
 
     def __init__(self, datetime=None, timezone=None):
         # maybe set timezone on the way in here. if here set it if not
         # use UTC
+        is_datetime_instance(datetime)
+
         naive = True
         self._tz = timezone
         self._dt = datetime
