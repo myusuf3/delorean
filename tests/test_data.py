@@ -39,7 +39,7 @@ class DeloreanTests(TestCase):
         self.do = delorean.Delorean(datetime=self.naive_dt, timezone="UTC")
 
     def test_date_failure(self):
-        dt = date(2013, 5, 06)
+        dt = date(2013, 5, 6)
         self.assertRaises(ValueError, delorean.Delorean, dt)
 
 
