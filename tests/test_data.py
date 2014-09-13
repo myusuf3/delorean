@@ -38,6 +38,11 @@ class DeloreanTests(TestCase):
         self.naive_dt = datetime(2013, 1, 3, 4, 31, 14, 148546)
         self.do = delorean.Delorean(datetime=self.naive_dt, timezone="UTC")
 
+    def test_date_failure(self):
+        dt = date(2013, 5, 06)
+        self.assertRaises(ValueError, delorean.Delorean, dt)
+
+
     def test_initialize_from_datetime_naive(self):
         self.assertRaises(delorean.DeloreanInvalidTimezone, delorean.Delorean, datetime=self.naive_dt)
 
