@@ -21,16 +21,11 @@ Here is the world without a flux capacitor at your side:
 .. code-block:: python
 
     from datetime import datetime
-    from pytz import timezone
+    import pytz
 
-    EST = "US/Eastern"
-    UTC = "UTC"
-
-    d = datetime.utcnow()
-    utc = timezone(UTC)
-    est = timezone(EST)
-    d = utc.localize(d)
-    d = est.normalize(EST)
+    est = pytz.timezone("US/Eastern")
+    
+    d = datetime.now(est)
     return d
 
 Now lets warm up the `delorean`:
