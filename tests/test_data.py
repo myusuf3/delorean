@@ -321,7 +321,7 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
 
-    def test_move_minute(self):
+    def test_move_shift_minute(self):
         dt_next   = datetime(2013, 1, 3, 4, 31, 15, 148540, tzinfo=utc)
         dt_next_2 = datetime(2013, 1, 3, 4, 31, 16, 148540, tzinfo=utc)
         dt_last = datetime(2013, 1, 3, 4, 31, 13, 148540, tzinfo=utc)
@@ -428,7 +428,7 @@ class DeloreanTests(TestCase):
     def test_datetime_localization(self):
         dt1 = self.do.datetime
         dt2 = delorean.Delorean(dt1).datetime
-        self.assertEquals(dt1, dt2)
+        self.assertEqual(dt1, dt2)
 
     def test_localize_datetime(self):
         dt = datetime.utcnow()
@@ -437,8 +437,8 @@ class DeloreanTests(TestCase):
         d = delorean.Delorean(dt)
         d2 = d.shift('US/Pacific')
 
-        self.assertEquals(d._tz, "US/Pacific")
-        self.assertEquals(d.datetime, dt)
+        self.assertEqual(d._tz, "US/Pacific")
+        self.assertEqual(d.datetime, dt)
         self.assertEqual(d.datetime, d2.datetime)
 
     def test_lt(self):
