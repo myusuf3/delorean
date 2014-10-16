@@ -508,5 +508,13 @@ class DeloreanTests(TestCase):
         self.assertEqual(d1.timezone(), d2.timezone())
         self.assertEqual(d1, d2)
 
+    def test_timedelta_arithmetic(self):
+        hour = timedelta(hours=1)
+        d = delorean.parse("2014/06/02 10:00:00 -0700")
+        hourbefore = delorean.parse("2014/06/02 09:00:00 -0700")
+        hourafter = delorean.parse("2014/06/02 11:00:00 -0700")
+        self.assertEqual(d + hour, hourafter)
+        self.assertEqual(d - hour, hourbefore)
+
 if __name__ == '__main__':
     main()
