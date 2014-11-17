@@ -89,10 +89,10 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
     if start is None:
         start = datetime_timezone(timezone)
 
-    for dt in rrule(freq, interval=interval, count=count, wkst=None, bysetpos=None,
-          bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
-          byweekno=None, byweekday=None, byhour=None, byminute=None,
-          bysecond=None, until=stop, dtstart=start):
+    for dt in rrule(freq, interval=interval, count=count, wkst=wkst, bysetpos=bysetpos,
+          bymonth=bymonth, bymonthday=bymonthday, byyearday=byyearday, byeaster=byeaster,
+          byweekno=byweekno, byweekday=byweekday, byhour=byhour, byminute=byminute,
+          bysecond=bysecond, until=stop, dtstart=start):
         # make the delorean object
         # yield it.
         # doing this to make sure delorean receives a naive datetime.
