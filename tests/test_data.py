@@ -508,5 +508,37 @@ class DeloreanTests(TestCase):
         self.assertEqual(d1.timezone(), d2.timezone())
         self.assertEqual(d1, d2)
 
+    def test_stops_bymonth(self):
+        """Test if create stops, checks bymonth, bymonthday, count
+        and start parameters work properly
+        """
+        days = list(delorean.interface.stops(
+            delorean.MONTHLY,
+            bymonth=(1, 4, 7, 10),
+            bymonthday=15,
+            count=4,
+            start=datetime(datetime.now().year, 1, 1))
+        )
+        year = datetime.now().year
+        day = 15
+        dt1 = datetime(year, 1, day)
+        dt4 = datetime(year, 4, day)
+        dt7 = datetime(year, 7, day)
+        dt10 = datetime(year, 10, day)
+
+        self.assertTrue(len(days) == 4)
+        dl1 = delorean.Delorean(datetime=dt1, timezone='UTC')
+        self.assertEqual(days[0], dl1)
+
+        dl4 = delorean.Delorean(datetime=dt4, timezone='UTC')
+        self.assertEqual(days[1], dl4)
+
+        dl7 = delorean.Delorean(datetime=dt7, timezone='UTC')
+        self.assertEqual(days[2], dl7)
+
+        dl10 = delorean.Delorean(datetime=dt10, timezone='UTC')
+        self.assertEqual(days[3], dl10)
+
+
 if __name__ == '__main__':
     main()
