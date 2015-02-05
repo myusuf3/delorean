@@ -10,23 +10,47 @@ from .dates import Delorean, is_datetime_naive, datetime_timezone
 UTC = "UTC"
 utc = timezone("utc")
 
+NAIVEMODE_UTC = "utc"
+NAIVEMODE_NAIVE = "naive"
+NAIVEMODE_RAISE = "raise"
+NAIVE_MODES = (NAIVEMODE_UTC, NAIVEMODE_NAIVE, NAIVEMODE_RAISE)
 
-def parse(s, dayfirst=True, yearfirst=True):
+def parse(s, dayfirst=True, yearfirst=True, naivemode=NAIVEMODE_UTC):
     """
     Parses a datetime string in it and returns a `Delorean` object.
 
     If a timezone is detected in the datetime string it will be
     normalized to UTC, and a Delorean object with that datetime and
     timezone will be returned.
+
+    If a timezone is not detected, the resulting timezone (and return object)
+    depends on the value of the naivemode argument:
+        '{mode_utc}' -- UTC is assumed
+        '{mode_raise}' -- An exception is raised
+        '{mode_naive}' -- Returns a naive datetime object (NOT a `Delorean`).
+
+    Note that in the case of naivemode=='{mode_naive}' a Delorean object is
+    not returned. This is because Delorean objects should always be timezone
+    aware.
+
     """
+
+    if not naivemode in NAIVE_MODES:
+        raise ValueError("Unknown naivemode value: '%s'" % naivemode)
+
     try:
         dt = capture(s, dayfirst=dayfirst, yearfirst=yearfirst)
     except:
         # raise a parsing error.
         raise ValueError("Unknown string format")
     if dt.tzinfo is None:
-        # assuming datetime object passed in is UTC
-        do = Delorean(datetime=dt, timezone=UTC)
+        if naivemode == NAIVEMODE_UTC:
+            # assuming datetime object passed in is UTC
+            do = Delorean(datetime=dt, timezone=UTC)
+        elif naivemode == NAIVEMODE_RAISE:
+            raise DeloreanInvalidDatetime("Unable to determine timezone info")
+        elif naivemode == NAIVEMODE_NAIVE:
+            do = dt #note that we are *not* returning a Delorean here
     else:
         dt = utc.normalize(dt)
         # makeing dt naive so we can pass it to Delorean
@@ -35,7 +59,13 @@ def parse(s, dayfirst=True, yearfirst=True):
         # delorean object that represents the time.
         do = Delorean(datetime=dt, timezone=UTC)
     return do
-
+try:
+    parse.__doc__ = parse.__doc__.format(mode_utc=NAIVEMODE_UTC,
+                                         mode_raise=NAIVEMODE_RAISE,
+                                         mode_naive=NAIVEMODE_NAIVE)
+except AttributeError:
+    #must be running with -OO
+    pass
 
 def range_daily(start=None, stop=None, timezone=UTC, count=None):
     """
