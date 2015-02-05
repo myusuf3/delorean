@@ -168,7 +168,7 @@ class DeloreanTests(TestCase):
         #test naivemode=="naive" returns a datetime object
         do1 = delorean.parse(naive_str, naivemode="naive")
         dt1 = datetime(2015, 2, 4, 16, 33, 21, 247513) #naive
-        self.assertIsInstance(do1, datetime)
+        self.assert_(isinstance(do1, datetime))
         self.assertEqual(dt1, do1)
         self.assertEqual(None, do1.tzinfo)
 
