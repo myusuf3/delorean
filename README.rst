@@ -45,4 +45,4 @@ Now lets warm up the `delorean`:
     return d
 
 Look at you looking all fly. This was just a test drive: check out out what else
-`delorean` can help with below.
+`delorean` can help with in the `documentation <http://delorean.readthedocs.org/en/latest/>`_.
