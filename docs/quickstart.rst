@@ -85,7 +85,7 @@ As you can see `delorean` returns a Delorean object which you can shift to the a
     >>> d
     Delorean(datetime=2013-03-16 05:28:11.536818-07:00, timezone=US/Pacific)
 
-`Delorean` can also handle timedelta arithmetic. This arithmetic will not work if the timedelta object is on the left side of the addition or subtraction sign. Refer to the code below for a proper example.
+`Delorean` can also handle timedelta arithmetic. A timedelta may be added to or subtracted from a Delorean object. Additionally, you may subtract a Delorean object from another Delorean object to obtain the timedelta between them.
 ::
 
     >>> d = Delorean()
@@ -96,6 +96,9 @@ As you can see `delorean` returns a Delorean object which you can shift to the a
     Delorean(datetime=2014-06-03 21:22:59.289779+00:00, timezone=UTC)
     >>> d - timedelta(hours=2)
     Delorean(datetime=2014-06-03 19:22:59.289779+00:00, timezone=UTC)
+    >>> d2 = d + timedelta(hours=2)
+    >>> d2 - d
+    datetime.timedelta(0, 7200)
 
 
 Natural Language
