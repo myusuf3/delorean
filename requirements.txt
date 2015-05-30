@@ -1,4 +1,4 @@
 distribute
 python-dateutil==2.1
-pytz>=2012h
+pytz>=2015.4
 six==1.2.0
