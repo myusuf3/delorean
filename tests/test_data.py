@@ -539,6 +539,14 @@ class DeloreanTests(TestCase):
         dl10 = delorean.Delorean(datetime=dt10, timezone='UTC')
         self.assertEqual(days[3], dl10)
 
+    def test_timedelta_arithmetic(self):
+        hour = timedelta(hours=1)
+        d = delorean.parse("2014/06/02 10:00:00 -0700")
+        hour_before = delorean.parse("2014/06/02 09:00:00 -0700")
+        hour_after = delorean.parse("2014/06/02 11:00:00 -0700")
+        self.assertEqual(d + hour, hour_after)
+        self.assertEqual(d - hour, hour_before)
+        self.assertEqual(hour_after - d, hour)
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,5 @@
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial, update_wrapper
 
 import pytz
@@ -226,6 +226,23 @@ class Delorean(object):
 
     def __ne__(self, other):
         return not self == other
+
+    def __add__(self, other):
+        if not isinstance(other, timedelta):
+            raise TypeError("Delorean objects can only be added with timedelta objects")
+        dt = self._dt + other
+        dt = dt.replace(tzinfo=None)
+        return Delorean(datetime=dt, timezone=self._tz)
+
+    def __sub__(self, other):
+        if isinstance(other, timedelta):
+            dt = self._dt - other
+            dt = dt.replace(tzinfo=None)
+            return Delorean(datetime=dt, timezone=self._tz)
+        elif isinstance(other, Delorean):
+            return self._dt - other._dt
+        else:
+            raise TypeError("Delorean objects can only be subtracted with timedelta or other Delorean objects")
 
     def __getattr__(self, name):
         """

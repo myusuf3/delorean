@@ -22,6 +22,7 @@ setup(
     ],
     license='MIT license',
     install_requires=dependencies,
+    test_suite = 'tests.test_data',
     long_description=open('README.rst').read(),
     classifiers=(
         'Development Status :: 4 - Beta',
