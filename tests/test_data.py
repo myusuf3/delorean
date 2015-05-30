@@ -92,8 +92,8 @@ class DeloreanTests(TestCase):
         self.assertEqual(dt_naive.tzinfo, None)
 
     def test_naive_timezone(self):
-        dt1 = delorean.Delorean(timezone="US/Eastern").truncate('second').naive()
-        dt2 = delorean.Delorean().truncate('second').naive()
+        dt1 = delorean.Delorean(timezone="US/Eastern").truncate('minute').naive()
+        dt2 = delorean.Delorean().truncate('minute').naive()
         self.assertEqual(dt2, dt1)
         self.assertEqual(dt1.tzinfo, None)
 
