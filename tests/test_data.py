@@ -155,6 +155,42 @@ class DeloreanTests(TestCase):
         self.assertEqual(do.datetime, dt1)
         self.assertEqual(do._tz, "UTC")
 
+    def test_parse_with_iso8601(self):
+        iso_date = "2015-02-04T16:33:21.247513-05:00"
+        do = delorean.parse(iso_date)
+        #tz offset should get normalized to UTC (5 hr shift here)
+        dt1 = datetime(2015, 2, 4, 21, 33, 21, 247513, tzinfo=utc)
+        self.assertEqual(do.datetime, dt1)
+
+    def test_parse_with_naive(self):
+        naive_str = "2015-02-04T16:33:21.247513"
+
+        #test naivemode=="naive" returns a datetime object
+        do1 = delorean.parse(naive_str, naivemode="naive")
+        dt1 = datetime(2015, 2, 4, 16, 33, 21, 247513) #naive
+        self.assert_(isinstance(do1, datetime))
+        self.assertEqual(dt1, do1)
+        self.assertEqual(None, do1.tzinfo)
+
+        #test naivemode=="utc" returns a Delorean with tz=UTC
+        do2 = delorean.parse(naive_str, naivemode="utc")
+        dt2 = utc.localize(dt1)
+        self.assertEqual(do2.datetime, dt2)
+        self.assertEqual(do2._tz, "UTC")
+
+        #ensure that the default mode is "utc"
+        do3 = delorean.parse(naive_str)
+        self.assertEqual(do3.datetime, dt2)
+        self.assertEqual(do3._tz, "UTC")
+
+        #ensure that "raise" mode raises an error
+        self.assertRaises(delorean.DeloreanInvalidDatetime,
+                          delorean.parse, naive_str, naivemode="raise")
+
+        #unrecognized modes should also fail
+        self.assertRaises(ValueError,
+                          delorean.parse, naive_str, naivemode="foo")
+
     def test_move_namedday(self):
         dt_next = datetime(2013, 1, 4, 4, 31, 14, 148540, tzinfo=utc)
         dt_next_2 = datetime(2013, 1, 11, 4, 31, 14, 148540, tzinfo=utc)
