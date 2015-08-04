@@ -85,6 +85,9 @@ As you can see `delorean` returns a Delorean object which you can shift to the a
     >>> d
     Delorean(datetime=2013-03-16 05:28:11.536818-07:00, timezone=US/Pacific)
 
+Time Arithmetic
+^^^^^^^^^^^^^^^
+
 `Delorean` can also handle timedelta arithmetic. A timedelta may be added to or subtracted from a Delorean object. Additionally, you may subtract a Delorean object from another Delorean object to obtain the timedelta between them.
 ::
 
