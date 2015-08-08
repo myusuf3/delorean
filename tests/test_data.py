@@ -485,6 +485,10 @@ class DeloreanTests(TestCase):
         self.assertEqual(d1, d2)
         self.assertFalse(d1 != d2, 'Overloaded __ne__ is not correct')
 
+        d1 = delorean.Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+        d2 = delorean.Delorean(datetime(2015, 1, 1, 8), timezone='UTC')
+        self.assertEqual(d1, d2)
+
     def test_timezone_delorean_to_datetime_to_delorean_utc(self):
         d1 = delorean.Delorean()
         d2 = delorean.Delorean(d1.datetime)

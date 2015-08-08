@@ -180,12 +180,8 @@ class Delorean(object):
         self._dt = datetime
 
         if not is_datetime_naive(datetime):
-            # if already localized find the zone
-            # once zone is found set _tz and the localized datetime
-            # to _dt
             naive = False
-            zone = datetime.tzinfo.tzname(None)
-            self._tz = zone
+            self._tz = datetime.tzinfo.tzname(None)
             self._dt = datetime
 
         if naive:
@@ -209,7 +205,7 @@ class Delorean(object):
 
     def __eq__(self, other):
         if isinstance(other, Delorean):
-            return self._dt == other._dt and self._tz == other._tz
+            return self.epoch() == other.epoch()
         return False
 
     def __lt__(self, other):
