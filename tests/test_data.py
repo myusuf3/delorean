@@ -60,6 +60,18 @@ class DeloreanTests(TestCase):
         self.do.truncate('hour')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 0))
 
+    def test_midnight(self):
+        dt = self.do.midnight()
+        self.assertEqual(dt, datetime(2013, 1, 3, 0, 0, 0, tzinfo=utc))
+
+    def test_start_of_day(self):
+        dt = self.do.start_of_day()
+        self.assertEqual(dt, datetime(2013, 1, 3, 0, 0, 0, 0, tzinfo=utc))
+
+    def test_end_of_day(self):
+        dt = self.do.end_of_day()
+        self.assertEqual(dt, datetime(2013, 1, 3, 11, 59, 59, 999999, tzinfo=utc))
+
     def test_truncation_second(self):
         self.do.truncate('second')
         self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 0))
