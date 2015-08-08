@@ -15,7 +15,7 @@ utc = timezone("UTC")
 def get_total_second(td):
     """
     This method takes a timedelta and return the number of seconds it
-    represents with the resolution of 10 **6
+    represents with the resolution of 10**6
     """
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 1e6) / 1e6
 
@@ -180,12 +180,8 @@ class Delorean(object):
         self._dt = datetime
 
         if not is_datetime_naive(datetime):
-            # if already localized find the zone
-            # once zone is found set _tz and the localized datetime
-            # to _dt
             naive = False
-            zone = datetime.tzinfo.tzname(None)
-            self._tz = zone
+            self._tz = datetime.tzinfo.tzname(None)
             self._dt = datetime
 
         if naive:
@@ -209,7 +205,7 @@ class Delorean(object):
 
     def __eq__(self, other):
         if isinstance(other, Delorean):
-            return self._dt == other._dt and self._tz == other._tz
+            return self.epoch() == other.epoch()
         return False
 
     def __lt__(self, other):
@@ -348,6 +344,23 @@ class Delorean(object):
         the Delorean object.
         """
         return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
+
+
+    def start_of_day(self):
+        """
+        This method returns the start of the day for datetime assoicated
+        with the Delorean object
+        """
+        return self.midnight()
+
+
+    def end_of_day(self):
+        """
+        This method returns the end of the day for the datetime
+        assocaited with the Delorean object
+        """
+        return self._dt.replace(hour=11, minute=59, second=59, microsecond=999999)
+
 
     def shift(self, tz):
         """
