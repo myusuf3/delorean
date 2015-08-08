@@ -1,0 +1,6 @@
+nose
+ipython
+coverage
+pylint
+pep8
+pip-tools
