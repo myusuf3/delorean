@@ -345,6 +345,23 @@ class Delorean(object):
         """
         return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
+
+    def start_of_day(self):
+        """
+        This method returns the start of the day for datetime assoicated
+        with the Delorean object
+        """
+        return self.midnight()
+
+
+    def end_of_day(self):
+        """
+        This method returns the end of the day for the datetime
+        assocaited with the Delorean object
+        """
+        return self._dt.replace(hour=11, minute=59, second=59, microsecond=999999)
+
+
     def shift(self, tz):
         """
         This method shifts the timezone from the current timezone to the
