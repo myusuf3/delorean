@@ -15,7 +15,7 @@ utc = timezone("UTC")
 def get_total_second(td):
     """
     This method takes a timedelta and return the number of seconds it
-    represents with the resolution of 10 **6
+    represents with the resolution of 10**6
     """
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 1e6) / 1e6
 
