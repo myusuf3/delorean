@@ -88,7 +88,9 @@ As you can see `delorean` returns a Delorean object which you can shift to the a
 Time Arithmetic
 ^^^^^^^^^^^^^^^
 
-`Delorean` can also handle timedelta arithmetic. A timedelta may be added to or subtracted from a Delorean object. Additionally, you may subtract a Delorean object from another Delorean object to obtain the timedelta between them.
+`Delorean` can also handle timedelta arithmetic. A timedelta may be added to or subtracted from a `Delorean` object.
+Additionally, you may subtract a `Delorean` object from another Delorean object to obtain the timedelta between them.
+
 ::
 
     >>> d = Delorean()
@@ -103,6 +105,14 @@ Time Arithmetic
     >>> d2 - d
     datetime.timedelta(0, 7200)
 
+`Delorean` objects are considered equal if they represent the same time in UTC.
+
+::
+
+    >>> d1 = Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+    >>> d2 = Delorean(datetime(2015, 1, 1, 8), timezone='UTC')
+    >>> d1 == d2
+    True
 
 Natural Language
 ^^^^^^^^^^^^^^^^
