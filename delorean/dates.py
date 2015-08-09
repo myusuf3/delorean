@@ -359,7 +359,7 @@ class Delorean(object):
         This method returns the end of the day for the datetime
         assocaited with the Delorean object
         """
-        return self._dt.replace(hour=11, minute=59, second=59, microsecond=999999)
+        return self._dt.replace(hour=23, minute=59, second=59, microsecond=999999)
 
 
     def shift(self, tz):

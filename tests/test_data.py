@@ -70,7 +70,7 @@ class DeloreanTests(TestCase):
 
     def test_end_of_day(self):
         dt = self.do.end_of_day()
-        self.assertEqual(dt, datetime(2013, 1, 3, 11, 59, 59, 999999, tzinfo=utc))
+        self.assertEqual(dt, datetime(2013, 1, 3, 23, 59, 59, 999999, tzinfo=utc))
 
     def test_truncation_second(self):
         self.do.truncate('second')
