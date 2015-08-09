@@ -501,6 +501,20 @@ class DeloreanTests(TestCase):
         d2 = delorean.Delorean(datetime(2015, 1, 1, 8), timezone='UTC')
         self.assertEqual(d1, d2)
 
+    def test_repr(self):
+        import datetime
+        from delorean import Delorean
+
+        d1 = Delorean(datetime.datetime(2015, 1, 1), timezone='US/Pacific')
+        d2 = eval(repr(d1))
+
+        self.assertEqual(d1, d2)
+
+        d3 = Delorean(d1.datetime, timezone='UTC')
+        d4 = eval(repr(d3))
+
+        self.assertEqual(d1, d4)
+
     def test_timezone_delorean_to_datetime_to_delorean_utc(self):
         d1 = delorean.Delorean()
         d2 = delorean.Delorean(d1.datetime)
