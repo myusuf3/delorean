@@ -91,6 +91,7 @@ class DeloreanTests(unittest.TestCase):
         tz_str = 'US/Pacific'
         tz = pytz.timezone(tz_str)
         do = delorean.Delorean(dt, timezone=tz_str)
+        tz = tz.localize(datetime(2015, 1, 1)).tzinfo
 
         dt = tz.localize(dt)
         self.assertEqual(do.datetime, dt)
@@ -276,14 +277,19 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(do.datetime, dt)
         self.assertEqual(do.timezone, tz)
 
-    @unittest.skip('Functionality not yet implemented')
-    def test_parse_with_tzlocal_timezone(self):
+    @mock.patch('delorean.interface.get_localzone')
+    def test_parse_with_tzlocal_timezone(self, mock_get_local_zone):
+        tz = pytz.timezone('US/Eastern')
+        mock_get_local_zone.return_value = tz
         dt = datetime(2015, 1, 1, tzinfo=tzlocal())
         dt_str = '{:%Y-%m-%d %H:%M:%S %Z}'.format(dt)
+        dt = dt.replace(tzinfo=None)
+        dt = tz.localize(dt)
+        tz = dt.tzinfo
 
         do = delorean.parse(dt_str)
         self.assertEqual(do.datetime, dt)
-        self.assertEqual(do.timezone, pytz.utc)
+        self.assertEqual(do.timezone, tz)
 
     def test_parse_with_tzutc_timezone(self):
         dt = pytz.utc.localize(datetime(2015, 1, 1))

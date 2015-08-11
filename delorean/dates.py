@@ -187,6 +187,7 @@ class Delorean(object):
                     else:
                         self._tzinfo = pytz.timezone(timezone)
                     self._dt = localize(datetime, self._tzinfo)
+                    self._tzinfo = self._dt.tzinfo
                 else:
                     #TODO(mlew, 2015-08-09):
                     # Should we really throw an error here, or should this 

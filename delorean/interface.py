@@ -7,6 +7,7 @@ from dateutil.rrule import rrule, DAILY, HOURLY, MONTHLY, YEARLY
 from dateutil.parser import parse as capture
 from dateutil.tz import tzlocal
 from dateutil.tz import tzoffset
+from tzlocal import get_localzone
 
 from .exceptions import DeloreanInvalidDatetime
 from .dates import Delorean, is_datetime_naive, datetime_timezone
@@ -33,13 +34,12 @@ def parse(s, dayfirst=True, yearfirst=True):
         do = Delorean(datetime=dt, timezone=UTC)
     elif isinstance(dt.tzinfo, tzoffset):
         tz = pytz.FixedOffset(dt.tzinfo.utcoffset(None).total_seconds() / 60)
-        dt = tz.normalize(dt)
-        do = Delorean(dt)
-    # TODO(mlew, 2015-08-09): special case tzlocal
-    #elif isinstance(dt.tzinfo, tzlocal):
-        #tz = pytz.FixedOffset(dt.tzinfo.utcoffset(dt).total_seconds() / 60)
-        #dt = tz.normalize(dt)
-        #do = Delorean(dt)
+        dt = dt.replace(tzinfo=None)
+        do = Delorean(dt, timezone=tz)
+    elif isinstance(dt.tzinfo, tzlocal):
+        tz = get_localzone()
+        dt = dt.replace(tzinfo=None)
+        do = Delorean(dt, timezone=tz)
     else:
         dt = utc.normalize(dt)
         # makeing dt naive so we can pass it to Delorean
