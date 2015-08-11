@@ -1,5 +1,5 @@
 test:
-	python tests/test_data.py
+	nosetests --with-coverage --cover-package=delorean
 
 doc:
 	make -C docs html

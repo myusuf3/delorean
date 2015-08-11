@@ -1,15 +1,17 @@
 import sys
-from datetime import datetime, timedelta
-from functools import partial, update_wrapper
+
+from datetime import datetime
+from datetime import timedelta
+from datetime import tzinfo
+from functools import partial
+from functools import update_wrapper
 
 import pytz
-from pytz import timezone
+
+from dateutil.tz import tzoffset
 from dateutil.relativedelta import relativedelta
 
 from .exceptions import DeloreanInvalidTimezone
-
-UTC = "UTC"
-utc = timezone("UTC")
 
 
 def get_total_second(td):
@@ -24,9 +26,6 @@ def is_datetime_naive(dt):
     """
     This method returns true if the datetime is naive else returns false
     """
-    if dt is None:
-        return True
-
     if dt.tzinfo is None:
         return True
     else:
@@ -132,7 +131,7 @@ def datetime_timezone(tz):
     """
     utc_datetime_naive = datetime.utcnow()
     # return a localized datetime to UTC
-    utc_localized_datetime = localize(utc_datetime_naive, UTC)
+    utc_localized_datetime = localize(utc_datetime_naive, 'UTC')
     # normalize the datetime to given timezone
     normalized_datetime = normalize(utc_localized_datetime, tz)
     return normalized_datetime
@@ -143,7 +142,9 @@ def localize(dt, tz):
     Given a naive datetime object this method will return a localized
     datetime object
     """
-    tz = timezone(tz)
+    if not isinstance(tz, tzinfo):
+        tz = pytz.timezone(tz)
+
     return tz.localize(dt)
 
 
@@ -155,7 +156,8 @@ def normalize(dt, tz):
     This means take the give localized datetime and returns the
     datetime normalized to match the specificed timezone.
     """
-    tz = timezone(tz)
+    if not isinstance(tz, tzinfo):
+        tz = pytz.timezone(tz)
     dt = tz.normalize(dt)
     return dt
 
@@ -175,34 +177,48 @@ class Delorean(object):
         # use UTC
         is_datetime_instance(datetime)
 
-        naive = True
-        self._tz = timezone
-        self._dt = datetime
-
-        if not is_datetime_naive(datetime):
-            naive = False
-            self._tz = datetime.tzinfo.tzname(None)
-            self._dt = datetime
-
-        if naive:
-            if timezone is None and datetime is None:
-                self._tz = UTC
-                self._dt = datetime_timezone(UTC)
-            elif timezone is not None and datetime is None:
-                # create utctime then normalize to tz
-                self._tz = timezone
-                self._dt = datetime_timezone(timezone)
-            elif timezone is None and datetime is not None:
-                raise DeloreanInvalidTimezone('Provide a valid timezone')
+        if datetime:
+            if is_datetime_naive(datetime):
+                if timezone:
+                    if isinstance(timezone, tzoffset):
+                        self._tzinfo = pytz.FixedOffset(timezone.utcoffset(None).total_seconds() / 60)
+                    elif isinstance(timezone, tzinfo):
+                        self._tzinfo = timezone
+                    else:
+                        self._tzinfo = pytz.timezone(timezone)
+                    self._dt = localize(datetime, self._tzinfo)
+                else:
+                    #TODO(mlew, 2015-08-09):
+                    # Should we really throw an error here, or should this 
+                    # default to UTC?)
+                    raise DeloreanInvalidTimezone('Provide a valid timezone')
             else:
-                # passed in naive datetime and timezone
-                # that correspond accordingly
-                self._tz = timezone
-                self._dt = localize(datetime, timezone)
+                self._tzinfo = datetime.tzinfo
+                self._dt = datetime
+        else:
+            if timezone:
+                if isinstance(timezone, tzoffset):
+                    self._tzinfo = pytz.FixedOffset(timezone.utcoffset(None).total_seconds() / 60)
+                elif isinstance(timezone, tzinfo):
+                    self._tzinfo = timezone
+                else:
+                    self._tzinfo = pytz.timezone(timezone)
+
+                self._dt = datetime_timezone(self._tzinfo)
+                self._tzinfo = self._dt.tzinfo
+            else:
+                self._tzinfo = pytz.utc
+                self._dt = datetime_timezone('UTC')
 
     def __repr__(self):
         dt = self.datetime.replace(tzinfo=None)
-        return 'Delorean(datetime=%r, timezone=\'%s\')' % (dt, self._tz)
+        # TODO(mlew, 2015-08-10): Can I move this block to Delorean.timezone()?)
+        if isinstance(self.timezone, pytz._FixedOffset):
+            tz = self.timezone
+        else:
+            tz = self.timezone.tzname(None)
+
+        return 'Delorean(datetime=%r, timezone=%r)' % (dt, tz)
 
     def __eq__(self, other):
         if isinstance(other, Delorean):
@@ -228,14 +244,12 @@ class Delorean(object):
         if not isinstance(other, timedelta):
             raise TypeError("Delorean objects can only be added with timedelta objects")
         dt = self._dt + other
-        dt = dt.replace(tzinfo=None)
-        return Delorean(datetime=dt, timezone=self._tz)
+        return Delorean(datetime=dt, timezone=self.timezone)
 
     def __sub__(self, other):
         if isinstance(other, timedelta):
             dt = self._dt - other
-            dt = dt.replace(tzinfo=None)
-            return Delorean(datetime=dt, timezone=self._tz)
+            return Delorean(datetime=dt, timezone=self.timezone)
         elif isinstance(other, Delorean):
             return self._dt - other._dt
         else:
@@ -285,20 +299,15 @@ class Delorean(object):
             shift_func = getattr(this_module, 'move_datetime_%s' % unit)
             dt = shift_func(self._dt, direction, num_shifts)
 
-        return Delorean(datetime=dt.replace(tzinfo=None), timezone=self._tz)
+        return Delorean(datetime=dt.replace(tzinfo=None), timezone=self.timezone)
 
+    @property
     def timezone(self):
         """
-        This method return a valid pytz timezone object associated with
-        the Delorean object or raises Invalid Timezone error.
+        This method return a valid tzinfo object associated with
+        the Delorean object.
         """
-        if self._tz is None:
-            return None
-        try:
-            return timezone(self._tz)
-        except pytz.exceptions.UnknownTimeZoneError:
-            # raise some delorean error
-            raise DeloreanInvalidTimezone('Provide a valid timezone')
+        return self._tzinfo
 
     def truncate(self, s):
         """
@@ -329,7 +338,7 @@ class Delorean(object):
     def next_day(self, days):
         dt = self._dt + relativedelta(days=+days)
         dt = dt.replace(tzinfo=None)
-        return Delorean(datetime=dt, timezone=self._tz)
+        return Delorean(datetime=dt, timezone=self.timezone)
 
     def naive(self):
         """
@@ -337,7 +346,7 @@ class Delorean(object):
         object, this method simply converts the localize datetime to UTC
         and removes the tzinfo that is associated with it.
         """
-        return utc.normalize(self._dt).replace(tzinfo=None)
+        return pytz.utc.normalize(self._dt).replace(tzinfo=None)
 
     def midnight(self):
         """
@@ -369,11 +378,11 @@ class Delorean(object):
         specified timezone associated with the Delorean object
         """
         try:
-            zone = timezone(tz)
+            self._tzinfo = pytz.timezone(tz)
         except pytz.UnknownTimeZoneError:
             raise DeloreanInvalidTimezone('Provide a valid timezone')
-        self._tz = tz
-        self._dt = zone.normalize(self._dt)
+        self._dt = self._tzinfo.normalize(self._dt.astimezone(self._tzinfo))
+        self._tzinfo = self._dt.tzinfo
         return self
 
     def epoch(self):
@@ -381,9 +390,8 @@ class Delorean(object):
         This method returns the total seconds since epoch associated with
         the Delorean object.
         """
-        utc = timezone(UTC)
-        epoch = utc.localize(datetime.utcfromtimestamp(0))
-        dt = utc.normalize(self._dt)
+        epoch = pytz.utc.localize(datetime.utcfromtimestamp(0))
+        dt = pytz.utc.normalize(self._dt)
         delta = dt - epoch
         return get_total_second(delta)
 

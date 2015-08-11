@@ -1,8 +1,12 @@
 from datetime import datetime
 
+import pytz
+
 from pytz import timezone
 from dateutil.rrule import rrule, DAILY, HOURLY, MONTHLY, YEARLY
 from dateutil.parser import parse as capture
+from dateutil.tz import tzlocal
+from dateutil.tz import tzoffset
 
 from .exceptions import DeloreanInvalidDatetime
 from .dates import Delorean, is_datetime_naive, datetime_timezone
@@ -27,6 +31,15 @@ def parse(s, dayfirst=True, yearfirst=True):
     if dt.tzinfo is None:
         # assuming datetime object passed in is UTC
         do = Delorean(datetime=dt, timezone=UTC)
+    elif isinstance(dt.tzinfo, tzoffset):
+        tz = pytz.FixedOffset(dt.tzinfo.utcoffset(None).total_seconds() / 60)
+        dt = tz.normalize(dt)
+        do = Delorean(dt)
+    # TODO(mlew, 2015-08-09): special case tzlocal
+    #elif isinstance(dt.tzinfo, tzlocal):
+        #tz = pytz.FixedOffset(dt.tzinfo.utcoffset(dt).total_seconds() / 60)
+        #dt = tz.normalize(dt)
+        #do = Delorean(dt)
     else:
         dt = utc.normalize(dt)
         # makeing dt naive so we can pass it to Delorean
@@ -79,7 +92,8 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
     """
     # check to see if datetimees passed in are naive if so process them
     # with given timezone.
-    if is_datetime_naive(start) and is_datetime_naive(stop):
+    if all([(start is None or is_datetime_naive(start)),
+            (stop is None or is_datetime_naive(stop))]):
         pass
     else:
         raise DeloreanInvalidDatetime('Provide a naive datetime object')
