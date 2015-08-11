@@ -10,6 +10,10 @@ Pull down the source::
 .. note::
 
    All code contributions should have adequate tests. `Delorean` has high test coverage we would like to keep this way.
+   We provide an easy way to use `make` command that will run all tests with `nose` and `coverage`.  Simply run the
+   following command from the root directory::
+
+   $ make test
 
 Style
 ^^^^^

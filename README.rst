@@ -21,16 +21,11 @@ Here is the world without a flux capacitor at your side:
 .. code-block:: python
 
     from datetime import datetime
-    from pytz import timezone
+    import pytz
 
-    EST = "US/Eastern"
-    UTC = "UTC"
-
-    d = datetime.utcnow()
-    utc = timezone(UTC)
-    est = timezone(EST)
-    d = utc.localize(d)
-    d = est.normalize(EST)
+    est = pytz.timezone('US/Eastern')
+    d = datetime.now(pytz.utc)
+    d = est.normalize(d.astimezone(est))
     return d
 
 Now lets warm up the `delorean`:
@@ -39,9 +34,8 @@ Now lets warm up the `delorean`:
 
     from delorean import Delorean
 
-    EST = "US/Eastern"
-
-    d = Delorean(timezone=EST)
+    d = Delorean()
+    d = s.shift('US/Eastern')
     return d
 
 Look at you looking all fly. This was just a test drive: check out out what else
