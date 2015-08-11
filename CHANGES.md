@@ -18,5 +18,5 @@
     - renamed `tests/test_data.py` to `tests/delorean_tests.py` so nose would find it and automatically run the
       unittests
 - requirements.txt
-    - added nose, coverage and mock as requirements for development.
+    - added nose, coverage, mock and tzlocal as requirements for development.
 
