@@ -8,7 +8,7 @@ except ImportError:
 
 from version import __version__
 
-dependencies = ['pytz>=2015.4', 'python-dateutil>=2.4.2']
+dependencies = ['pytz>=2015.4', 'python-dateutil>=2.4.2', 'tzlocal']
 
 setup(
     name='Delorean',
