@@ -213,7 +213,6 @@ class DeloreanTests(unittest.TestCase):
 
     def test_localize(self):
         dt = datetime.today()
-        utc = pytz.utc
         dt = delorean.localize(dt, "UTC")
         self.assertEqual(dt.tzinfo, pytz.utc)
 
@@ -237,7 +236,6 @@ class DeloreanTests(unittest.TestCase):
         self.assertRaises(ValueError, delorean.localize, dt1, "UTC")
 
     def test_timezone(self):
-        utc = pytz.utc
         do_timezone = delorean.Delorean().timezone
         self.assertEqual(pytz.utc, do_timezone)
 
