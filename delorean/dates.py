@@ -305,7 +305,7 @@ class Delorean(object):
     @property
     def timezone(self):
         """
-        This method return a valid tzinfo object associated with
+        This property return a valid tzinfo object associated with
         the Delorean object.
         """
         return self._tzinfo
@@ -399,7 +399,7 @@ class Delorean(object):
     @property
     def date(self):
         """
-        This method returns the actual date object associated with
+        This property returns the actual date object associated with
         the Delorean object.
         """
         return self._dt.date()
@@ -407,7 +407,7 @@ class Delorean(object):
     @property
     def datetime(self):
         """
-        This method returns the actual datetime object associated with
+        This property returns the actual datetime object associated with
         the Delorean object.
         """
         return self._dt
