@@ -4,11 +4,6 @@ Interface
 Delorean
 ^^^^^^^^
 
-.. automodule:: delorean.dates
+.. automodule:: delorean
    :members:
-
-Inteface Methods
-^^^^^^^^^^^^^^^^^
-
-.. automodule:: delorean.interface
-   :members:
+   :imported-members:
