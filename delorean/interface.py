@@ -126,13 +126,14 @@ def flux():
 
 def utcnow():
     """
-    Return a delorean object, with utcnow as the datetime
+    Return a Delorean object for the current UTC date and time, setting the timezone to UTC.
     """
     return Delorean()
 
 
 def now():
     """
-    Return a delorean object, with utcnow as the datetime
+    Return a Delorean object for the current local date and time, setting the timezone to the local timezone of the
+    caller.
     """
-    return utcnow()
+    return Delorean(timezone=get_localzone())
