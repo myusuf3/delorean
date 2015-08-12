@@ -24,14 +24,14 @@ Now lets create a create `datetime` with the current datetime and UTC timezone
 
     >>> d = Delorean()
     >>> d
-    Delorean(datetime=2013-01-12 06:10:33.110674+00:00,  timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 12, 6, 10, 33, 110674),  timezone='UTC')
 
 Do you want to normalize this timezone to another timezone? Simply do the following
 ::
 
    >>> d = d.shift("US/Eastern")
    >>> d
-   Delorean(datetime=2013-01-12 01:10:38.102223-05:00, timezone=US/Eastern)
+   Delorean(datetime=datetime.datetime(2013, 1, 12, 1, 10, 38, 102223), timezone='US/Eastern')
 
 Now that you have successfully shifted the timezone you can easily return a localized datetime object or date with ease.
 ::
@@ -55,7 +55,7 @@ You can also create Delorean object using unix timestamps.
 
     from delorean import epoch
     >>> epoch(1357971038.102223).shift("US/Eastern")
-    Delorean(datetime=2013-01-12 01:10:38.102223-05:00, timezone=US/Eastern)
+    Delorean(datetime=datetime.datetime(2013, 1, 12, 1, 10, 38, 102223), timezone='US/Eastern')
 
 As you can see `delorean` returns a Delorean object which you can shift to the appropriate timezone to get back your original datetime object from above.
 
@@ -80,29 +80,39 @@ As you can see `delorean` returns a Delorean object which you can shift to the a
     datetime.datetime(2013, 3, 16, 5, 28, 11, 536818, tzinfo=<DstTzInfo 'US/Pacific' PDT-1 day, 17:00:00 DST>)
     >>> d = Delorean(datetime=dt)
     >>> d
-    Delorean(datetime=2013-03-16 05:28:11.536818-07:00, timezone=US/Pacific)
+    Delorean(datetime=datetime.datetime(2013, 3, 16, 5, 28, 11, 536818), timezone='US/Pacific')
     >>> d = Delorean(datetime=dt, timezone="US/Eastern")
     >>> d
-    Delorean(datetime=2013-03-16 05:28:11.536818-07:00, timezone=US/Pacific)
+    Delorean(datetime=datetime.datetime(2013, 3, 16, 5, 28, 11, 536818), timezone='US/Pacific')
 
 Time Arithmetic
 ^^^^^^^^^^^^^^^
 
-`Delorean` can also handle timedelta arithmetic. A timedelta may be added to or subtracted from a Delorean object. Additionally, you may subtract a Delorean object from another Delorean object to obtain the timedelta between them.
+`Delorean` can also handle timedelta arithmetic. A timedelta may be added to or subtracted from a `Delorean` object.
+Additionally, you may subtract a `Delorean` object from another Delorean object to obtain the timedelta between them.
+
 ::
 
     >>> d = Delorean()
     >>> d
-    Delorean(datetime=2014-06-03 19:22:59.289779+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2014, 6, 3, 19, 22, 59, 289779), timezone='UTC')
     >>> d += timedelta(hours=2)
     >>> d
-    Delorean(datetime=2014-06-03 21:22:59.289779+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2014, 6, 3, 21, 22, 59, 289779), timezone='UTC')
     >>> d - timedelta(hours=2)
-    Delorean(datetime=2014-06-03 19:22:59.289779+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2014, 6, 3, 19, 22, 59, 289779), timezone='UTC')
     >>> d2 = d + timedelta(hours=2)
     >>> d2 - d
     datetime.timedelta(0, 7200)
 
+`Delorean` objects are considered equal if they represent the same time in UTC.
+
+::
+
+    >>> d1 = Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+    >>> d2 = Delorean(datetime(2015, 1, 1, 8), timezone='UTC')
+    >>> d1 == d2
+    True
 
 Natural Language
 ^^^^^^^^^^^^^^^^
@@ -113,15 +123,16 @@ Natural Language
 
     >>> d = Delorean()
     >>> d
-    Delorean(datetime=2013-01-20 19:41:06.207481+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 20, 19, 41, 6, 207481), timezone='UTC')
     >>> d.next_tuesday()
-    Delorean(datetime=2013-01-22 19:41:06.207481+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 22, 19, 41, 6, 207481), timezone='UTC')
 
 Last Tuesday? Two Tuesdays ago at midnight? No problem.
+
 ::
 
     >>> d.last_tuesday()
-    Delorean(datetime=2013-01-15 19:41:06.207481+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 15, 19, 41, 6, 207481), timezone='UTC')
     >>> d.last_tuesday(2).midnight()
     datetime.datetime(2013, 1, 8, 0, 0, tzinfo=<UTC>)
 
@@ -135,22 +146,22 @@ Often we dont care how many milliseconds or even seconds that are present in our
 
     >>> d = Delorean()
     >>> d
-    Delorean(datetime=2013-01-21 03:34:30.418069+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 3, 34, 30, 418069), timezone='UTC')
     >>> d.truncate('second')
-    Delorean(datetime=2013-01-21 03:34:30+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 3, 34, 30), timezone='UTC')
     >>> d.truncate('hour')
-    Delorean(datetime=2013-01-21 03:00:00+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 3, 0), timezone='UTC')
 
 Though it might seem obvious `delorean` also provides truncation to the month and year levels as well.
 ::
 
     >>> d = Delorean(datetime=datetime(2012, 5, 15, 03, 50, 00, 555555), timezone="US/Eastern")
     >>> d
-    Delorean(datetime=2012-5-15 03:50:00.555555-04:00, timezone=US/Eastern)
+    Delorean(datetime=datetime.datetime(2012, 5, 15, 3, 50, 0, 555555), timezone='US/Eastern')
     >>> d.truncate('month')
-    Delorean(datetime=2012-5-01 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=datetime.datetime(2012, 5, 1), timezone='US/Eastern')
     >>> d.truncate('year')
-    Delorean(datetime=2012-01-01 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=datetime.datetime(2012, 1, 1), timezone='US/Eastern')
 
 Strings and Parsing
 ^^^^^^^^^^^^^^^^^^^
@@ -159,7 +170,7 @@ Another pain is dealing with strings of datetimes. `Delorean` can help you parse
 
     >>> from delorean import parse
     >>> parse("2011/01/01 00:00:00 -0700")
-    Delorean(datetime=2011-01-01 07:00:00+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2011, 1, 1, 7), timezone='UTC')
 
 As shown above if the string passed has offset data `delorean` will convert the resulting object to UTC, if there is no timezone information passed in UTC is assumed.
 
@@ -182,7 +193,7 @@ So for example with default parameters `Delorean` will return '2013-05-06' as Ma
 ::
 
     >>> parse("2013-05-06")
-    Delorean(datetime=2013-05-06 00:00:00+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 5, 6), timezone='UTC')
 
 Here are the precedence for the remaining combinations of ``dayfirst`` and ``yearfirst``.
 
@@ -214,16 +225,16 @@ Delorean wouldn't be complete without making a few stop in all the right places.
     >>> from delorean import stops
     >>> for stop in stops(freq=delorean.HOURLY, count=10):    print stop
     ...
-    Delorean(datetime=2013-01-21 06:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 07:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 08:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 09:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 10:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 11:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 12:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 13:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 14:25:33+00:00, timezone=UTC)
-    Delorean(datetime=2013-01-21 15:25:33+00:00, timezone=UTC)
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 6, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 7, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 8, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 9, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 10, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 11, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 12, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 13, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 14, 25, 33), timezone='UTC')
+    Delorean(datetime=datetime.datetime(2013, 1, 21, 15, 25, 33), timezone='UTC')
 
 This allows you to do clever composition like daily, hourly, etc. This method is a generator that produces `Delorean` objects. Excellent for things like getting every Tuesday for the next 10 weeks, or every other hour for the next three months.
 
@@ -248,16 +259,16 @@ Now in the case where you provide `timezone`, `start`, and `stop` all is good in
 
     >>> for stop in stops(freq=delorean.DAILY, count=10, timezone="US/Eastern", start=d1, stop=d2):    print stop
     ...
-    Delorean(datetime=2012-05-06 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-07 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-08 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-09 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-10 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-11 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-12 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-13 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-14 00:00:00-04:00, timezone=US/Eastern)
-    Delorean(datetime=2012-05-15 00:00:00-04:00, timezone=US/Eastern)
+    Delorean(datetime=datetime.datetime(2012, 5, 6), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 7), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 8), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 9), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 10), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 11), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 12), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 13), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 14), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2012, 5, 15), timezone='US/Eastern')
 
 
 .. note::
@@ -279,5 +290,5 @@ You will be better off in scenarios of this nature to skip using either and use 
 
 >>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print stop
 ...
-Delorean(datetime=2013-01-22 00:10:10-05:00, timezone=US/Eastern)
-Delorean(datetime=2013-01-23 00:10:10-05:00, timezone=US/Eastern)
+Delorean(datetime=datetime.datetime(2013, 1, 22, 0, 10, 10), timezone='US/Eastern')
+Delorean(datetime=datetime.datetime(2013, 1, 23, 0, 10, 10), timezone='US/Eastern')

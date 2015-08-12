@@ -201,7 +201,8 @@ class Delorean(object):
                 self._dt = localize(datetime, timezone)
 
     def __repr__(self):
-        return 'Delorean(datetime=%s, timezone=%s)' % (self._dt, self._tz)
+        dt = self.datetime.replace(tzinfo=None)
+        return 'Delorean(datetime=%r, timezone=\'%s\')' % (dt, self._tz)
 
     def __eq__(self, other):
         if isinstance(other, Delorean):
@@ -359,7 +360,7 @@ class Delorean(object):
         This method returns the end of the day for the datetime
         assocaited with the Delorean object
         """
-        return self._dt.replace(hour=11, minute=59, second=59, microsecond=999999)
+        return self._dt.replace(hour=23, minute=59, second=59, microsecond=999999)
 
 
     def shift(self, tz):
