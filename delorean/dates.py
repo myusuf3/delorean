@@ -305,7 +305,7 @@ class Delorean(object):
     @property
     def timezone(self):
         """
-        This property return a valid tzinfo object associated with
+        Returns a valid tzinfo object associated with
         the Delorean object.
         """
         return self._tzinfo
@@ -341,6 +341,7 @@ class Delorean(object):
         dt = dt.replace(tzinfo=None)
         return Delorean(datetime=dt, timezone=self.timezone)
 
+    @property
     def naive(self):
         """
         Returns a naive datetime object associated with the Delorean
@@ -349,25 +350,27 @@ class Delorean(object):
         """
         return pytz.utc.normalize(self._dt).replace(tzinfo=None)
 
+    @property
     def midnight(self):
         """
-        This method returns midnight for datetime associated with
+        Returns midnight for datetime associated with
         the Delorean object.
         """
         return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
-
+    @property
     def start_of_day(self):
         """
-        This method returns the start of the day for datetime assoicated
+        Returns the start of the day for datetime assoicated
         with the Delorean object
         """
         return self.midnight()
 
 
+    @property
     def end_of_day(self):
         """
-        This method returns the end of the day for the datetime
+        Returns the end of the day for the datetime
         assocaited with the Delorean object
         """
         return self._dt.replace(hour=23, minute=59, second=59, microsecond=999999)
@@ -375,7 +378,7 @@ class Delorean(object):
 
     def shift(self, tz):
         """
-        This method shifts the timezone from the current timezone to the
+        Shifts the timezone from the current timezone to the
         specified timezone associated with the Delorean object
         """
         try:
@@ -386,9 +389,10 @@ class Delorean(object):
         self._tzinfo = self._dt.tzinfo
         return self
 
+    @property
     def epoch(self):
         """
-        This method returns the total seconds since epoch associated with
+        Returns the total seconds since epoch associated with
         the Delorean object.
         """
         epoch = pytz.utc.localize(datetime.utcfromtimestamp(0))
@@ -399,7 +403,7 @@ class Delorean(object):
     @property
     def date(self):
         """
-        This property returns the actual date object associated with
+        Returns the actual date object associated with
         the Delorean object.
         """
         return self._dt.date()
@@ -407,7 +411,7 @@ class Delorean(object):
     @property
     def datetime(self):
         """
-        This property returns the actual datetime object associated with
+        Returns the actual datetime object associated with
         the Delorean object.
         """
         return self._dt
