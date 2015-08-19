@@ -214,7 +214,6 @@ class Delorean(object):
 
     def __repr__(self):
         dt = self.datetime.replace(tzinfo=None)
-        # TODO(mlew, 2015-08-10): Can I move this block to Delorean.timezone()?)
         if isinstance(self.timezone, pytz._FixedOffset):
             tz = self.timezone
         else:
@@ -359,11 +358,6 @@ class Delorean(object):
 
         return self
 
-    def next_day(self, days):
-        dt = self._dt + relativedelta(days=+days)
-        dt = dt.replace(tzinfo=None)
-        return Delorean(datetime=dt, timezone=self.timezone)
-
     @property
     def naive(self):
         """
@@ -432,6 +426,18 @@ class Delorean(object):
         """
         Returns the end of the day for the datetime
         assocaited with the Delorean object, modifying the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1, 12), timezone='UTC')
+            >>> d.end_of_day
+            datetime.datetime(2015, 1, 1, 23, 59, 59, 999999, tzinfo=<UTC>)
+
         """
         return self._dt.replace(hour=23, minute=59, second=59, microsecond=999999)
 
@@ -509,5 +515,16 @@ class Delorean(object):
         """
         Returns the actual datetime object associated with
         the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1, 12, 15), timezone='UTC')
+            >>> d.datetime
+            datetime.datetime(2015, 1, 1, 12, 15, tzinfo=<UTC>)
         """
         return self._dt
