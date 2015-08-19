@@ -166,6 +166,7 @@ class Delorean(object):
     """
     The class `Delorean <Delorean>` object. This method accepts naive
     datetime objects, with a string timezone.
+
     """
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
     _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week',
@@ -223,20 +224,20 @@ class Delorean(object):
 
     def __eq__(self, other):
         if isinstance(other, Delorean):
-            return self.epoch() == other.epoch()
+            return self.epoch == other.epoch
         return False
 
     def __lt__(self, other):
-        return self.epoch() < other.epoch()
+        return self.epoch < other.epoch
 
     def __gt__(self, other):
-        return self.epoch() > other.epoch()
+        return self.epoch > other.epoch
 
     def __ge__(self, other):
-        return self.epoch() >= other.epoch()
+        return self.epoch >= other.epoch
 
     def __le__(self, other):
-        return self.epoch() <= other.epoch()
+        return self.epoch <= other.epoch
 
     def __ne__(self, other):
         return not self == other
@@ -307,6 +308,17 @@ class Delorean(object):
         """
         Returns a valid tzinfo object associated with
         the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1), timezone='UTC')
+            >>> d.timezone
+            <UTC>
         """
         return self._tzinfo
 
@@ -317,6 +329,17 @@ class Delorean(object):
 
         This is a destructive method, modifies the internal datetime
         object associated with the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1, 12, 10), timezone='US/Pacific')
+            >>> d.truncate('hour')
+            Delorean(datetime=datetime.datetime(2015, 1, 1, 12, 0), timezone='US/Pacific')
 
         """
         if s == 'second':
@@ -346,15 +369,40 @@ class Delorean(object):
         """
         Returns a naive datetime object associated with the Delorean
         object, this method simply converts the localize datetime to UTC
-        and removes the tzinfo that is associated with it.
+        and removes the tzinfo that is associated with it modifying the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+            >>> d.naive
+            datetime.datetime(2015, 1, 1, 8, 0)
+
         """
-        return pytz.utc.normalize(self._dt).replace(tzinfo=None)
+        self.shift('UTC')
+        return self._dt.replace(tzinfo=None)
 
     @property
     def midnight(self):
         """
         Returns midnight for datetime associated with
-        the Delorean object.
+        the Delorean object modifying the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1, 12), timezone='UTC')
+            >>> d.midnight
+            datetime.datetime(2015, 1, 1, 0, 0, tzinfo=<UTC>)
+
         """
         return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -362,27 +410,51 @@ class Delorean(object):
     def start_of_day(self):
         """
         Returns the start of the day for datetime assoicated
-        with the Delorean object
+        with the Delorean object, modifying the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1, 12), timezone='UTC')
+            >>> d.start_of_day
+            datetime.datetime(2015, 1, 1, 0, 0, tzinfo=<UTC>)
+
         """
-        return self.midnight()
+        return self.midnight
 
 
     @property
     def end_of_day(self):
         """
         Returns the end of the day for the datetime
-        assocaited with the Delorean object
+        assocaited with the Delorean object, modifying the Delorean object.
         """
         return self._dt.replace(hour=23, minute=59, second=59, microsecond=999999)
 
 
-    def shift(self, tz):
+    def shift(self, timezone):
         """
-        Shifts the timezone from the current timezone to the
-        specified timezone associated with the Delorean object
+        Shifts the timezone from the current timezone to the specified timezone associated with the Delorean object,
+        modifying the Delorean object and returning the modified object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+            >>> d.shift('UTC')
+            Delorean(datetime=datetime.datetime(2015, 1, 1, 8, 0), timezone='UTC')
+
         """
         try:
-            self._tzinfo = pytz.timezone(tz)
+            self._tzinfo = pytz.timezone(timezone)
         except pytz.UnknownTimeZoneError:
             raise DeloreanInvalidTimezone('Provide a valid timezone')
         self._dt = self._tzinfo.normalize(self._dt.astimezone(self._tzinfo))
@@ -394,17 +466,41 @@ class Delorean(object):
         """
         Returns the total seconds since epoch associated with
         the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+            >>> d.epoch
+            1420099200.0
+
         """
-        epoch = pytz.utc.localize(datetime.utcfromtimestamp(0))
-        dt = pytz.utc.normalize(self._dt)
-        delta = dt - epoch
-        return get_total_second(delta)
+        epoch_sec = pytz.utc.localize(datetime.utcfromtimestamp(0))
+        now_sec = pytz.utc.normalize(self._dt)
+        delta_sec = now_sec - epoch_sec
+        return get_total_second(delta_sec)
 
     @property
     def date(self):
         """
         Returns the actual date object associated with
         the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1, 12, 15), timezone='US/Pacific')
+            >>> d.date
+            datetime.date(2015, 1, 1)
+
         """
         return self._dt.date()
 

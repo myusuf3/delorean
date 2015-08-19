@@ -161,54 +161,54 @@ class DeloreanTests(unittest.TestCase):
 
     def test_truncation_hour(self):
         self.do.truncate('hour')
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 0))
+        self.assertEqual(self.do.naive, datetime(2013, 1, 3, 4, 0))
 
     def test_midnight(self):
-        dt = self.do.midnight()
+        dt = self.do.midnight
         self.assertEqual(dt, datetime(2013, 1, 3, 0, 0, 0, tzinfo=pytz.utc))
 
     def test_start_of_day(self):
-        dt = self.do.start_of_day()
+        dt = self.do.start_of_day
         self.assertEqual(dt, datetime(2013, 1, 3, 0, 0, 0, 0, tzinfo=pytz.utc))
 
     def test_end_of_day(self):
-        dt = self.do.end_of_day()
+        dt = self.do.end_of_day
         self.assertEqual(dt, datetime(2013, 1, 3, 23, 59, 59, 999999, tzinfo=pytz.utc))
 
     def test_truncation_second(self):
         self.do.truncate('second')
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 0))
+        self.assertEqual(self.do.naive, datetime(2013, 1, 3, 4, 31, 14, 0))
 
     def test_truncation_minute(self):
         self.do.truncate('minute')
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 0, 0))
+        self.assertEqual(self.do.naive, datetime(2013, 1, 3, 4, 31, 0, 0))
 
     def test_truncation_day(self):
         self.do.truncate('day')
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 0, 0, 0, 0))
+        self.assertEqual(self.do.naive, datetime(2013, 1, 3, 0, 0, 0, 0))
 
     def test_truncation_month(self):
         self.do.truncate('month')
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 1, 0, 0, 0, 0))
+        self.assertEqual(self.do.naive, datetime(2013, 1, 1, 0, 0, 0, 0))
 
     def test_truncation_year(self):
         self.do.truncate('year')
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 1, 0, 0, 0, 0))
+        self.assertEqual(self.do.naive, datetime(2013, 1, 1, 0, 0, 0, 0))
 
     def test_date(self):
         self.assertEqual(self.do.date, date(2013, 1, 3))
 
     def test_datetime(self):
-        self.assertEqual(self.do.naive(), datetime(2013, 1, 3, 4, 31, 14, 148540))
+        self.assertEqual(self.do.naive, datetime(2013, 1, 3, 4, 31, 14, 148540))
 
     def test_naive(self):
         dt1 = delorean.Delorean()
-        dt_naive = dt1.naive()
+        dt_naive = dt1.naive
         self.assertEqual(dt_naive.tzinfo, None)
 
     def test_naive_timezone(self):
-        dt1 = delorean.Delorean(timezone="US/Eastern").truncate('minute').naive()
-        dt2 = delorean.Delorean().truncate('minute').naive()
+        dt1 = delorean.Delorean(timezone="US/Eastern").truncate('minute').naive
+        dt2 = delorean.Delorean().truncate('minute').naive
         self.assertEqual(dt2, dt1)
         self.assertEqual(dt1.tzinfo, None)
 
@@ -605,7 +605,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertTrue(dt3 <= dt2)
 
     def test_epoch(self):
-        unix_time = self.do.epoch()
+        unix_time = self.do.epoch
         self.assertEqual(unix_time, 1357187474.148540)
 
     def test_epoch_creation(self):
