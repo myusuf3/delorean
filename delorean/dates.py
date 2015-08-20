@@ -6,10 +6,12 @@ from datetime import tzinfo
 from functools import partial
 from functools import update_wrapper
 
+import humanize
 import pytz
 
 from dateutil.tz import tzoffset
 from dateutil.relativedelta import relativedelta
+from tzlocal import get_localzone
 
 from .exceptions import DeloreanInvalidTimezone
 
@@ -380,6 +382,17 @@ class Delorean(object):
         self.shift('UTC')
         return self._dt.replace(tzinfo=None)
 
+    @classmethod
+    def now(cls, timezone=None):
+        if timezone:
+            return cls(timezone=timezone)
+        else:
+            return cls(timezone=get_localzone())
+
+    @classmethod
+    def utcnow(cls):
+        return cls()
+
     @property
     def midnight(self):
         """
@@ -528,3 +541,23 @@ class Delorean(object):
             datetime.datetime(2015, 1, 1, 12, 15, tzinfo=<UTC>)
         """
         return self._dt
+
+    def humanize(self):
+        """
+        Humanize relative to now:
+
+        .. testsetup::
+
+            from datetime import timedelta
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> past = Delorean.utcnow() - timedelta(hours=1)
+            >>> past.humanize()
+            'an hour ago'
+
+        """
+        now = self.now(self.timezone)
+
+        return humanize.naturaltime(now - self)

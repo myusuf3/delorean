@@ -732,5 +732,19 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(d - hour, hour_before)
         self.assertEqual(hour_after - d, hour)
 
+    @mock.patch('delorean.Delorean.now')
+    def test_humanize_past(self, mock_now):
+        mock_now.return_value = delorean.Delorean(datetime(2015, 1, 2), timezone='US/Pacific')
+
+        do = delorean.Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+        self.assertEqual(do.humanize(), 'a day ago')
+
+    @mock.patch('delorean.Delorean.now')
+    def test_humanize_future(self, mock_now):
+        mock_now.return_value = delorean.Delorean(datetime(2014, 12, 31), timezone='US/Pacific')
+
+        do = delorean.Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+        self.assertEqual(do.humanize(), 'a day from now')
+
 if __name__ == '__main__':
     unittest.main()
