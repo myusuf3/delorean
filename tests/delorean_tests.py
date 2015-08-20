@@ -257,6 +257,10 @@ class DeloreanTests(unittest.TestCase):
         dt1 = pytz.utc.localize(datetime(2003, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
+    def test_parse_with_invalid_datetime_string(self):
+        with self.assertRaises(ValueError):
+            delorean.parse('asd')
+
     def test_parse_with_utc_year_fill(self):
         do = delorean.parse('Thu Sep 25 10:36:28')
         dt1 = pytz.utc.localize(datetime(date.today().year, 9, 25, 10, 36, 28))
