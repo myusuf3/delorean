@@ -9,6 +9,7 @@ from functools import update_wrapper
 import humanize
 import pytz
 
+from babel.dates import format_datetime
 from dateutil.tz import tzoffset
 from dateutil.relativedelta import relativedelta
 from tzlocal import get_localzone
@@ -561,3 +562,26 @@ class Delorean(object):
         now = self.now(self.timezone)
 
         return humanize.naturaltime(now - self)
+
+    def format_datetime(self, format='medium', locale='en_US'):
+        """
+        Return a date string formatted to the given pattern.
+
+        .. testsetup::
+
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1, 12, 30), timezone='US/Pacific')
+            >>> d.format_datetime(locale='en_US')
+            u'Jan 1, 2015, 12:30:00 PM'
+
+            >>> d.format_datetime(format='long', locale='de_DE')
+            u'1. Januar 2015 12:30:00 -0800'
+
+        :param format: one of "full", "long", "medium", "short", or a custom datetime pattern
+        :param locale: a locale identifier
+
+        """
+        return format_datetime(self._dt, format=format, locale=locale)
