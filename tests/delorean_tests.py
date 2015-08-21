@@ -303,6 +303,26 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(do.datetime, dt)
         self.assertEqual(do.timezone, pytz.utc)
 
+    def test_parse_with_timezone_parameter(self):
+        tz = pytz.timezone('US/Pacific')
+        dt = tz.localize(datetime(2015, 1, 1))
+        tz = dt.tzinfo
+        dt_str = '{:%Y-%m-%d %H:%M:%S}'.format(dt)
+
+        do = delorean.parse(dt_str, timezone='US/Pacific')
+        self.assertEqual(do.datetime, dt)
+        self.assertEqual(do.timezone, tz)
+
+    def test_parse_with_overriding_timezone_parameter(self):
+        tz = pytz.timezone('US/Pacific')
+        dt = tz.localize(datetime(2015, 1, 1))
+        tz = dt.tzinfo
+        dt_str = '{:%Y-%m-%d %H:%M:%S -0500}'.format(dt)
+
+        do = delorean.parse(dt_str, timezone='US/Pacific')
+        self.assertEqual(do.datetime, dt)
+        self.assertEqual(do.timezone, tz)
+
     def test_move_namedday(self):
         dt_next = datetime(2013, 1, 4, 4, 31, 14, 148540, tzinfo=pytz.utc)
         dt_next_2 = datetime(2013, 1, 11, 4, 31, 14, 148540, tzinfo=pytz.utc)

@@ -12,14 +12,16 @@ from .exceptions import DeloreanInvalidDatetime
 from .dates import Delorean, is_datetime_naive, datetime_timezone
 
 
-def parse(datetime_str, dayfirst=True, yearfirst=True):
+def parse(datetime_str, timezone=None, dayfirst=True, yearfirst=True):
     """
     Parses a datetime string and returns a `Delorean` object.
 
-    :param str datetime_str: The string to be interpreted into a `Delorean` object.
-    :param bool dayfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the day
+    :param datetime_str: The string to be interpreted into a `Delorean` object.
+    :param timezone: Pass this parameter and the returned Delorean object will be normalized to this timezone. Any
+        offsets passed as part of datetime_str will be ignored.
+    :param dayfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the day
         (True) or month (False). If yearfirst is set to True, this distinguishes between YDM and YMD.
-    :param bool yearfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the
+    :param yearfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the
         year. If True, the first number is taken to be the year, otherwise the last number is taken to be the year.
 
     .. testsetup::
@@ -40,6 +42,14 @@ def parse(datetime_str, dayfirst=True, yearfirst=True):
         >>> parse('2015-01-01 00:01:02 -0800')
         Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-480))
 
+    If the timezone argument is supplied, the returned Delorean object will be in the timezone supplied. Any offsets in
+    the datetime_str will be ignored.
+
+    .. doctest::
+
+        >>> parse('2015-01-01 00:01:02 -0500', timezone='US/Pacific')
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='US/Pacific')
+
     If an unambiguous timezone is detected in the datetime string, a Delorean object with that datetime and
     timezone will be returned.
 
@@ -57,7 +67,10 @@ def parse(datetime_str, dayfirst=True, yearfirst=True):
     """
     dt = capture(datetime_str, dayfirst=dayfirst, yearfirst=yearfirst)
 
-    if dt.tzinfo is None:
+    if timezone:
+        dt = dt.replace(tzinfo=None)
+        do = Delorean(datetime=dt, timezone=timezone)
+    elif dt.tzinfo is None:
         # assuming datetime object passed in is UTC
         do = Delorean(datetime=dt, timezone='UTC')
     elif isinstance(dt.tzinfo, tzoffset):
@@ -75,6 +88,7 @@ def parse(datetime_str, dayfirst=True, yearfirst=True):
         # if parse string has tzinfo we return a normalized UTC
         # delorean object that represents the time.
         do = Delorean(datetime=dt, timezone='UTC')
+
     return do
 
 
