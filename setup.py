@@ -9,7 +9,7 @@ except ImportError:
 from version import __version__
 
 dependencies = [
-    'bable>=2.0',
+    'babel>=2.0',
     'humanize>=0.5.1',
     'python-dateutil>=2.4.2',
     'pytz>=2015.4',
