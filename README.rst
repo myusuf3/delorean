@@ -35,7 +35,7 @@ Now lets warm up the `delorean`:
     from delorean import Delorean
 
     d = Delorean()
-    d = s.shift('US/Eastern')
+    d = d.shift('US/Eastern')
     return d
 
 Look at you looking all fly. This was just a test drive: check out out what else
