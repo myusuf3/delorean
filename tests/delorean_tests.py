@@ -295,7 +295,9 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(do.datetime, dt)
         self.assertEqual(do.timezone, tz)
 
-    def test_parse_with_tzutc_timezone(self):
+    @mock.patch('delorean.interface.get_localzone')
+    def test_parse_with_tzutc_timezone(self, mock_get_localzone):
+        mock_get_localzone.return_value = pytz.utc
         dt = pytz.utc.localize(datetime(2015, 1, 1))
         dt_str = '{:%Y-%m-%d %H:%M:%S %Z}'.format(dt)
 
