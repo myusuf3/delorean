@@ -74,7 +74,11 @@ def parse(datetime_str, timezone=None, dayfirst=True, yearfirst=True):
         # assuming datetime object passed in is UTC
         do = Delorean(datetime=dt, timezone='UTC')
     elif isinstance(dt.tzinfo, tzoffset):
-        tz = pytz.FixedOffset(dt.tzinfo.utcoffset(None).total_seconds() / 60)
+        utcoffset = dt.tzinfo.utcoffset(None)
+        total_seconds = (
+            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6) / 10**6)
+
+        tz = pytz.FixedOffset(total_seconds / 60)
         dt = dt.replace(tzinfo=None)
         do = Delorean(dt, timezone=tz)
     elif isinstance(dt.tzinfo, tzlocal):

@@ -185,7 +185,10 @@ class Delorean(object):
             if is_datetime_naive(datetime):
                 if timezone:
                     if isinstance(timezone, tzoffset):
-                        self._tzinfo = pytz.FixedOffset(timezone.utcoffset(None).total_seconds() / 60)
+                        utcoffset = timezone.utcoffset(None)
+                        total_seconds = (
+                            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6) / 10**6)
+                        self._tzinfo = pytz.FixedOffset(total_seconds / 60)
                     elif isinstance(timezone, tzinfo):
                         self._tzinfo = timezone
                     else:
