@@ -1,5 +1,13 @@
-0.6.0 (Draft)
--------------
+Release History
+---------------
+
+0.6.0
++++++
+
+This release cleans up a lot of older code and makes some small modifications to the `Delorean` API to make it more
+Pythonic. 0.6.0 includes support for humanizing a `Delorean` object, as well as outputing a localized string
+representing the `Delorean` object.
+
 - delorean/dates.py
     - `is_datetime_naive()` no longer returns True when dt is None
     - `localize()` works with pytz tzinfo objects
