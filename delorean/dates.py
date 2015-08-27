@@ -169,7 +169,6 @@ class Delorean(object):
     """
     The class `Delorean <Delorean>` object. This method accepts naive
     datetime objects, with a string timezone.
-
     """
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
     _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week',
