@@ -1,0 +1,8 @@
+coverage
+ipython
+mock
+nose
+pylint
+pep8
+pip-tools
+sphinx

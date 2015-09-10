@@ -278,6 +278,9 @@ Now in the case where you provide `timezone`, `start`, and `stop` all is good in
 
 Now in the case where a naive stop value is provided you can see why the follow error occurs if you take into account the above note.
 
+.. doctest::
+    :options: +SKIP
+
     >>> for stop in stops(freq=delorean.DAILY, timezone="US/Eastern", stop=d2):    print stop
     ...
     Traceback (most recent call last):
@@ -288,7 +291,11 @@ Now in the case where a naive stop value is provided you can see why the follow 
 
 You will be better off in scenarios of this nature to skip using either and use count to limit the range of the values returned.
 
->>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print stop
-...
-Delorean(datetime=datetime.datetime(2013, 1, 22, 0, 10, 10), timezone='US/Eastern')
-Delorean(datetime=datetime.datetime(2013, 1, 23, 0, 10, 10), timezone='US/Eastern')
+.. doctest::
+    :options: +SKIP
+
+    >>> from delorean import stops
+    >>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print stop
+    ...
+    Delorean(datetime=datetime.datetime(2013, 1, 22, 0, 10, 10), timezone='US/Eastern')
+    Delorean(datetime=datetime.datetime(2013, 1, 23, 0, 10, 10), timezone='US/Eastern')

@@ -7,4 +7,4 @@ python:
   - "pypy"
   - "pypy3"
 install: pip install -r requirements.txt &&  python setup.py develop
-script: python tests/test_data.py
+script:  python tests/delorean_tests.py
