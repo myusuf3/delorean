@@ -22,6 +22,16 @@ Delorean stands on the shoulders of giants `pytz <http://pytz.sourceforge.net/>`
 
 Pretty much make you a badass, time traveller.
 
+Interface Update
+^^^^^^^^^^^^^^^^
+Version 0.6.0 introduces the following breaking changes:
+    - `Delorean.epoch` is a property, not a function.
+    - `Delorean.midnight` is a property, not a function.
+    - `Delorean.naive` is a property, not a function.
+    - `Delorean.timezone` is a property, not a function.
+
+Please make sure to update your code accordingly.
+
 Getting Started
 ^^^^^^^^^^^^^^^
 

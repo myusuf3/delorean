@@ -8,6 +8,12 @@ This release cleans up a lot of older code and makes some small modifications to
 Pythonic. 0.6.0 includes support for humanizing a `Delorean` object, as well as outputing a localized string
 representing the `Delorean` object.
 
+This change introduces the following breaking changes:
+    - `Delorean.epoch` is a property, not a function.
+    - `Delorean.midnight` is a property, not a function.
+    - `Delorean.naive` is a property, not a function.
+    - `Delorean.timezone` is a property, not a function.
+
 - delorean/dates.py
     - `is_datetime_naive()` no longer returns True when dt is None
     - `localize()` works with pytz tzinfo objects
