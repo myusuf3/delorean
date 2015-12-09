@@ -9,10 +9,10 @@ except ImportError:
 from version import __version__
 
 dependencies = [
-    'babel>=2.0',
+    'babel>=2.1.1',
     'humanize>=0.5.1',
     'python-dateutil>=2.4.2',
-    'pytz>=2015.4',
+    'pytz>=2015.7',
     'tzlocal>=1.2']
 
 setup(
