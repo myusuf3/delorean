@@ -6,38 +6,37 @@
 #
 alabaster==0.7.6          # via sphinx
 appnope==0.1.0            # via ipython
-astroid==1.3.8            # via pylint
-babel==2.0                # via sphinx
-click==5.1                # via pip-tools
-coverage==3.7.1
-decorator==4.0.2          # via ipython, traitlets
+astroid==1.4.1            # via pylint
+babel==2.1.1              # via sphinx
+click==6.2                # via pip-tools
+colorama==0.3.3           # via pylint
+coverage==4.0.3
+decorator==4.0.4          # via ipython, traitlets
 docutils==0.12            # via sphinx
 first==2.0.1              # via pip-tools
 funcsigs==0.4             # via mock
 gnureadline==6.3.3        # via ipython
 ipython-genutils==0.1.0   # via traitlets
-ipython==4.0.0
+ipython==4.0.1
 jinja2==2.8               # via sphinx
-logilab-common==1.0.2     # via astroid, pylint
+lazy-object-proxy==1.2.1  # via astroid
 markupsafe==0.23          # via jinja2
 mock==1.3.0
 nose==1.3.7
-path.py==7.6.1            # via pickleshare
-pbr==1.5.0                # via mock
+path.py==8.1.2            # via pickleshare
+pbr==1.8.1                # via mock
 pep8==1.6.2
-pexpect==3.3              # via ipython
+pexpect==4.0.1            # via ipython
 pickleshare==0.5          # via ipython
-pip-tools==1.1.3
+pip-tools==1.3.0
+ptyprocess==0.5           # via pexpect
 pygments==2.0.2           # via sphinx
-pylint==1.4.4
-pytz==2015.4              # via babel
+pylint==1.5.1
+pytz==2015.7              # via babel
 simplegeneric==0.8.1      # via ipython
-six==1.9.0                # via astroid, logilab-common, mock, pip-tools, pylint, sphinx
+six==1.10.0               # via astroid, mock, pip-tools, pylint, sphinx
 snowballstemmer==1.2.0    # via sphinx
-sphinx-rtd-theme==0.1.8   # via sphinx
-sphinx==1.3.1
+sphinx-rtd-theme==0.1.9   # via sphinx
+sphinx==1.3.3
 traitlets==4.0.0          # via ipython
-
-# The following packages are commented out because they are
-# considered to be unsafe in a requirements file:
-# setuptools==18.2          # via logilab-common
+wrapt==1.10.6             # via astroid
