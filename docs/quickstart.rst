@@ -46,7 +46,7 @@ For the purists out there you can do things like so.
 
     >>> d.naive()
     datetime.datetime(2013, 1, 12, 1, 10, 38, 102223)
-    >>> d.epoch()
+    >>> d.epoch
     1357971038.102223
 
 You can also create Delorean object using unix timestamps.
