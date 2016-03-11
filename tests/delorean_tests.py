@@ -773,5 +773,13 @@ class DeloreanTests(unittest.TestCase):
         do = delorean.Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
         self.assertEqual(do.humanize(), 'a day from now')
 
+    def test_replace(self):
+        do = delorean.Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+        self.assertEqual(do.replace(hour=8).datetime.hour, 8)
+        self.assertEqual(do.replace(minute=23).datetime.minute, 23)
+        self.assertEqual(do.replace(second=45).datetime.second, 45)
+
+
+
 if __name__ == '__main__':
     unittest.main()
