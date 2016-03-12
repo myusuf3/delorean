@@ -781,6 +781,11 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(do.replace(minute=23).datetime.minute, 23)
         self.assertEqual(do.replace(second=45).datetime.second, 45)
 
+        # Asserts on datetimes
+        self.assertEqual(do.replace(hour=8).datetime, dt.replace(hour=8))
+        self.assertEqual(do.replace(minute=38).datetime, dt.replace(minute=38))
+        self.assertEqual(do.replace(second=48).datetime, dt.replace(second=48))
+
         # Test that the timezone does not change
         self.assertEqual(do.replace(second=45).timezone, do.timezone)
 
