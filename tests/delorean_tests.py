@@ -35,13 +35,13 @@ class GenericUTC(tzinfo):
     def dst(self, dt):
         return self.ZERO
 
+
 UTC = "UTC"
 generic_utc = GenericUTC()
 est = pytz.timezone("US/Eastern").localize(datetime.utcnow()).tzinfo
 
 
 class DeloreanTests(unittest.TestCase):
-
     def setUp(self):
         self.naive_dt = datetime(2013, 1, 3, 4, 31, 14, 148540)
         self.do = delorean.Delorean(datetime=self.naive_dt, timezone="UTC")
@@ -49,7 +49,6 @@ class DeloreanTests(unittest.TestCase):
     def test_date_failure(self):
         dt = date(2013, 5, 6)
         self.assertRaises(ValueError, delorean.Delorean, dt)
-
 
     def test_initialize_from_datetime_naive(self):
         self.assertRaises(delorean.DeloreanInvalidTimezone, delorean.Delorean, datetime=self.naive_dt)
@@ -82,7 +81,7 @@ class DeloreanTests(unittest.TestCase):
 
         utcoffset = tz.utcoffset(None)
         total_seconds = (
-            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6) / 10**6)
+            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10 ** 6) / 10 ** 6)
         tz = pytz.FixedOffset(total_seconds / 60)
         dt = tz.localize(dt)
         self.assertEqual(do.datetime, dt)
@@ -131,10 +130,10 @@ class DeloreanTests(unittest.TestCase):
     def test_initialize_without_datetime_with_dateutil_timezone(self, mock_datetime_timezone):
         tz = tzoffset(None, -22500)
         dt = datetime(2015, 1, 1, tzinfo=tz)
-        
+
         utcoffset = tz.utcoffset(None)
         total_seconds = (
-            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6) / 10**6)
+            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10 ** 6) / 10 ** 6)
 
         tz = pytz.FixedOffset(total_seconds / 60)
         dt = tz.normalize(dt)
@@ -445,7 +444,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_hour(self):
-        dt_next   = datetime(2013, 1, 3, 5, 31, 14, 148540, tzinfo=pytz.utc)
+        dt_next = datetime(2013, 1, 3, 5, 31, 14, 148540, tzinfo=pytz.utc)
         dt_next_2 = datetime(2013, 1, 3, 6, 31, 14, 148540, tzinfo=pytz.utc)
         dt_last = datetime(2013, 1, 3, 3, 31, 14, 148540, tzinfo=pytz.utc)
         dt_last_2 = datetime(2013, 1, 3, 2, 31, 14, 148540, tzinfo=pytz.utc)
@@ -471,7 +470,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_minute(self):
-        dt_next   = datetime(2013, 1, 3, 4, 32, 14, 148540, tzinfo=pytz.utc)
+        dt_next = datetime(2013, 1, 3, 4, 32, 14, 148540, tzinfo=pytz.utc)
         dt_next_2 = datetime(2013, 1, 3, 4, 33, 14, 148540, tzinfo=pytz.utc)
         dt_last = datetime(2013, 1, 3, 4, 30, 14, 148540, tzinfo=pytz.utc)
         dt_last_2 = datetime(2013, 1, 3, 4, 29, 14, 148540, tzinfo=pytz.utc)
@@ -497,7 +496,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dt_last, d_obj_last)
 
     def test_move_shift_minute(self):
-        dt_next   = datetime(2013, 1, 3, 4, 31, 15, 148540, tzinfo=pytz.utc)
+        dt_next = datetime(2013, 1, 3, 4, 31, 15, 148540, tzinfo=pytz.utc)
         dt_next_2 = datetime(2013, 1, 3, 4, 31, 16, 148540, tzinfo=pytz.utc)
         dt_last = datetime(2013, 1, 3, 4, 31, 13, 148540, tzinfo=pytz.utc)
         dt_last_2 = datetime(2013, 1, 3, 4, 31, 12, 148540, tzinfo=pytz.utc)
@@ -700,7 +699,7 @@ class DeloreanTests(unittest.TestCase):
         d1 = delorean.Delorean()
         d2 = delorean.Delorean(d1.datetime)
 
-        #these deloreans should be the same
+        # these deloreans should be the same
         self.assertEqual(d1.next_day(1), d2.next_day(1))
         self.assertEqual(d2.last_week(), d2.last_week())
         self.assertEqual(d1.timezone, d2.timezone)
@@ -713,7 +712,7 @@ class DeloreanTests(unittest.TestCase):
         d1 = delorean.Delorean(timezone='America/Chicago')
         d2 = delorean.Delorean(d1.datetime)
 
-        #these deloreans should be the same
+        # these deloreans should be the same
         self.assertEqual(d1.next_day(1), d2.next_day(1))
         self.assertEqual(d2.last_week(), d2.last_week())
         self.assertEqual(d1.timezone, d2.timezone)
@@ -775,10 +774,19 @@ class DeloreanTests(unittest.TestCase):
 
     def test_replace(self):
         do = delorean.Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+        dt = do.datetime
+
+        # Check if parts are okay
         self.assertEqual(do.replace(hour=8).datetime.hour, 8)
         self.assertEqual(do.replace(minute=23).datetime.minute, 23)
         self.assertEqual(do.replace(second=45).datetime.second, 45)
 
+        # Test that the timezone does not change
+        self.assertEqual(do.replace(second=45).timezone, do.timezone)
+
+        # Test the datetime
+        eight_hours_late = dt + timedelta(hours=8)
+        self.assertEqual(do.replace(hour=8).datetime, eight_hours_late)
 
 
 if __name__ == '__main__':
