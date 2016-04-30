@@ -87,7 +87,7 @@ def parse(datetime_str, timezone=None, dayfirst=True, yearfirst=True):
         do = Delorean(dt, timezone=tz)
     else:
         dt = pytz.utc.normalize(dt)
-        # makeing dt naive so we can pass it to Delorean
+        # making dt naive so we can pass it to Delorean
         dt = dt.replace(tzinfo=None)
         # if parse string has tzinfo we return a normalized UTC
         # delorean object that represents the time.
