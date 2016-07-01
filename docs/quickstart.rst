@@ -44,9 +44,9 @@ Now that you have successfully shifted the timezone you can easily return a loca
 For the purists out there you can do things like so.
 ::
 
-    >>> d.naive()
+    >>> d.naive
     datetime.datetime(2013, 1, 12, 1, 10, 38, 102223)
-    >>> d.epoch()
+    >>> d.epoch
     1357971038.102223
 
 You can also create Delorean object using unix timestamps.
@@ -133,7 +133,7 @@ Last Tuesday? Two Tuesdays ago at midnight? No problem.
 
     >>> d.last_tuesday()
     Delorean(datetime=datetime.datetime(2013, 1, 15, 19, 41, 6, 207481), timezone='UTC')
-    >>> d.last_tuesday(2).midnight()
+    >>> d.last_tuesday(2).midnight
     datetime.datetime(2013, 1, 8, 0, 0, tzinfo=<UTC>)
 
 Truncation

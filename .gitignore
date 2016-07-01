@@ -30,3 +30,6 @@ pip-log.txt
 
 #docs
 _build
+
+# IDE
+.idea
