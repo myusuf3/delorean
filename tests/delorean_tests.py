@@ -131,7 +131,7 @@ class DeloreanTests(unittest.TestCase):
     def test_initialize_without_datetime_with_dateutil_timezone(self, mock_datetime_timezone):
         tz = tzoffset(None, -22500)
         dt = datetime(2015, 1, 1, tzinfo=tz)
-        
+
         utcoffset = tz.utcoffset(None)
         total_seconds = (
             (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6) / 10**6)
@@ -262,6 +262,11 @@ class DeloreanTests(unittest.TestCase):
         do = delorean.parse('Thu Sep 25 10:36:28 BRST 2003')
         dt1 = pytz.utc.localize(datetime(2003, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
+
+    def test_parse_default(self):
+        do = delorean.parse('2016-07-01T11:00:00+02:00', dayfirst=False)
+        dt1 = delorean.Delorean(datetime=datetime(2016, 7, 1, 11, 0), timezone=pytz.FixedOffset(120))
+        self.assertEqual(do.datetime, dt1.datetime)
 
     def test_parse_with_invalid_datetime_string(self):
         self.assertRaises(ValueError, delorean.parse, 'asd')
