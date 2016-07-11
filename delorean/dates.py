@@ -196,7 +196,7 @@ class Delorean(object):
                     self._tzinfo = self._dt.tzinfo
                 else:
                     #TODO(mlew, 2015-08-09):
-                    # Should we really throw an error here, or should this 
+                    # Should we really throw an error here, or should this
                     # default to UTC?)
                     raise DeloreanInvalidTimezone('Provide a valid timezone')
             else:
@@ -292,7 +292,11 @@ class Delorean(object):
 
         num_shifts = 1
         if len(args) > 0:
-            num_shifts = int(args[0])
+            # dateutils.relativedelta supports fractional amounts for these units:
+            if unit in ['week', 'day', 'hour', 'minute', 'second']:
+                num_shifts = float(args[0])
+            else:
+                num_shifts = int(args[0])
 
         if unit in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday',
                     'saturday', 'sunday']:
