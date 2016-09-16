@@ -136,6 +136,19 @@ Last Tuesday? Two Tuesdays ago at midnight? No problem.
     >>> d.last_tuesday(2).midnight
     datetime.datetime(2013, 1, 8, 0, 0, tzinfo=<UTC>)
 
+
+Replace Parts
+^^^^^^^^^^^^^
+Using the `replace` method on `Delorean` objects, we can replace the `hour`, `minute`, `second`, `year` etc
+like the the `replace` method on `datetime`.
+
+::
+
+    >>> d = Delorean(datetime(2015, 1, 1, 12, 15), timezone='UTC')
+    >>> d.replace(hour=8)
+    Delorean(datetime=datetime.datetime(2015, 1, 1, 8, 15), timezone='UTC')
+
+
 Truncation
 ^^^^^^^^^^
 Often we dont care how many milliseconds or even seconds that are present in our datetime object. For example it is a nuisance to retrieve `datetimes` that occur in the same minute. You would have to go through the annoying process of replacing zero for the units you don't care for before doing a comparison.
