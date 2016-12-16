@@ -34,11 +34,13 @@ def is_datetime_naive(dt):
     else:
         return False
 
+
 def is_datetime_instance(dt):
     if dt is None:
         return
     if not isinstance(dt, datetime):
         raise ValueError('Please provide a datetime instance to Delorean')
+
 
 def _move_datetime(dt, direction, delta):
     """
@@ -116,17 +118,21 @@ def move_datetime_year(dt, direction, num_shifts):
     delta = relativedelta(years=+num_shifts)
     return _move_datetime(dt, direction, delta)
 
+
 def move_datetime_hour(dt, direction, num_shifts):
     delta = relativedelta(hours=+num_shifts)
     return _move_datetime(dt, direction, delta)
+
 
 def move_datetime_minute(dt, direction, num_shifts):
     delta = relativedelta(minutes=+num_shifts)
     return _move_datetime(dt, direction, delta)
 
+
 def move_datetime_second(dt, direction, num_shifts):
     delta = relativedelta(seconds=+num_shifts)
     return _move_datetime(dt, direction, delta)
+
 
 def datetime_timezone(tz):
     """
@@ -173,7 +179,7 @@ class Delorean(object):
     _VALID_SHIFT_DIRECTIONS = ('last', 'next')
     _VALID_SHIFT_UNITS = ('second', 'minute', 'hour', 'day', 'week',
                           'month', 'year', 'monday', 'tuesday', 'wednesday',
-                          'thursday', 'friday', 'saturday','sunday')
+                          'thursday', 'friday', 'saturday', 'sunday')
 
     def __init__(self, datetime=None, timezone=None):
         # maybe set timezone on the way in here. if here set it if not
@@ -186,7 +192,8 @@ class Delorean(object):
                     if isinstance(timezone, tzoffset):
                         utcoffset = timezone.utcoffset(None)
                         total_seconds = (
-                            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6) / 10**6)
+                            (utcoffset.microseconds + (
+                                utcoffset.seconds + utcoffset.days * 24 * 3600) * 10 ** 6) / 10 ** 6)
                         self._tzinfo = pytz.FixedOffset(total_seconds / 60)
                     elif isinstance(timezone, tzinfo):
                         self._tzinfo = timezone
@@ -195,7 +202,7 @@ class Delorean(object):
                     self._dt = localize(datetime, self._tzinfo)
                     self._tzinfo = self._dt.tzinfo
                 else:
-                    #TODO(mlew, 2015-08-09):
+                    # TODO(mlew, 2015-08-09):
                     # Should we really throw an error here, or should this 
                     # default to UTC?)
                     raise DeloreanInvalidTimezone('Provide a valid timezone')
@@ -273,7 +280,7 @@ class Delorean(object):
 
         # is the function we are trying to call valid?
         if (func_parts[0] not in self._VALID_SHIFT_DIRECTIONS or
-                func_parts[1] not in self._VALID_SHIFT_UNITS):
+                    func_parts[1] not in self._VALID_SHIFT_UNITS):
             return AttributeError
 
         # dispatch our function
@@ -436,7 +443,6 @@ class Delorean(object):
         """
         return self.midnight
 
-
     @property
     def end_of_day(self):
         """
@@ -456,7 +462,6 @@ class Delorean(object):
 
         """
         return self._dt.replace(hour=23, minute=59, second=59, microsecond=999999)
-
 
     def shift(self, timezone):
         """
@@ -544,6 +549,25 @@ class Delorean(object):
             datetime.datetime(2015, 1, 1, 12, 15, tzinfo=<UTC>)
         """
         return self._dt
+
+    def replace(self, **kwargs):
+        """
+            Returns a new Delorean object after applying replace on the
+            existing datetime object.
+
+            .. testsetup::
+
+                from datetime import datetime
+                from delorean import Delorean
+
+            .. doctest::
+
+                >>> d = Delorean(datetime(2015, 1, 1, 12, 15), timezone='UTC')
+                >>> d.replace(hour=8)
+                Delorean(datetime=datetime.datetime(2015, 1, 1, 8, 15), timezone='UTC')
+            """
+
+        return Delorean(datetime=self._dt.replace(**kwargs), timezone=self.timezone)
 
     def humanize(self):
         """
