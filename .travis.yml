@@ -4,6 +4,11 @@ python:
   - "2.7"
   - "3.3"
   - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.6-dev"
+  - "3.7-dev"
+  - "nightly"
   - "pypy"
   - "pypy3"
 install: pip install -r requirements.txt &&  python setup.py develop
