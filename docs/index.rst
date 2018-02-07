@@ -24,7 +24,7 @@ Pretty much make you a badass, time traveller.
 
 Interface Update
 ^^^^^^^^^^^^^^^^
-Version 0.6.0 introduces the following breaking changes:
+Version 1.0.0 introduces the following breaking changes:
     - `Delorean.epoch` is a property, not a function.
     - `Delorean.midnight` is a property, not a function.
     - `Delorean.naive` is a property, not a function.

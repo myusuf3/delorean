@@ -1,11 +1,11 @@
 Release History
 ---------------
 
-0.6.0
+1.0.0
 +++++
 
 This release cleans up a lot of older code and makes some small modifications to the `Delorean` API to make it more
-Pythonic. 0.6.0 includes support for humanizing a `Delorean` object, as well as outputing a localized string
+Pythonic. 1.0.0 includes support for humanizing a `Delorean` object, as well as outputing a localized string
 representing the `Delorean` object.
 
 This change introduces the following breaking changes:
