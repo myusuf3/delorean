@@ -182,4 +182,4 @@ def now(timezone=None):
     Return a Delorean object for the current local date and time, setting the timezone to the local timezone of the
     caller by default.
     """
-    return Delorean(timezone= timezone or get_localzone())
+    return Delorean(timezone=timezone or get_localzone())
