@@ -3,7 +3,7 @@ from datetime import datetime
 import pytz
 
 from dateutil.rrule import rrule, DAILY, HOURLY, MONTHLY, YEARLY
-from dateutil.parser import parse as capture
+from dateutil.parser import parse as capture, isoparse as isocapture
 from dateutil.tz import tzlocal
 from dateutil.tz import tzoffset
 from tzlocal import get_localzone
@@ -12,13 +12,14 @@ from .exceptions import DeloreanInvalidDatetime
 from .dates import Delorean, is_datetime_naive, datetime_timezone
 
 
-def parse(datetime_str, timezone=None, dayfirst=True, yearfirst=True):
+def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=True):
     """
     Parses a datetime string and returns a `Delorean` object.
 
     :param datetime_str: The string to be interpreted into a `Delorean` object.
     :param timezone: Pass this parameter and the returned Delorean object will be normalized to this timezone. Any
         offsets passed as part of datetime_str will be ignored.
+    :param isofirst: try to parse string as date in ISO format before everything else.
     :param dayfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the day
         (True) or month (False). If yearfirst is set to True, this distinguishes between YDM and YMD.
     :param yearfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the
@@ -65,7 +66,15 @@ def parse(datetime_str, timezone=None, dayfirst=True, yearfirst=True):
         Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='UTC')
 
     """
-    dt = capture(datetime_str, dayfirst=dayfirst, yearfirst=yearfirst)
+    # parse string to datetime object
+    dt = None
+    if isofirst:
+        try:
+            dt = isocapture(datetime_str)
+        except Exception:
+            pass
+    if dt is None:
+        dt = capture(datetime_str, dayfirst=dayfirst, yearfirst=yearfirst)
 
     if timezone:
         dt = dt.replace(tzinfo=None)

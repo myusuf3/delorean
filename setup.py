@@ -11,7 +11,7 @@ from version import __version__
 dependencies = [
     'babel>=2.1.1',
     'humanize>=0.5.1',
-    'python-dateutil>=2.4.2',
+    'python-dateutil>=2.7.0',
     'pytz>=2015.7',
     'tzlocal>=1.2']
 
@@ -22,12 +22,10 @@ setup(
     url='https://github.com/myusuf3/delorean',
     author='Mahdi Yusuf',
     author_email="yusuf.mahdi@gmail.com",
-    packages=[
-    'delorean',
-    ],
+    packages=['delorean'],
     license='MIT license',
     install_requires=dependencies,
-    test_suite = 'tests.test_data',
+    test_suite='tests.test_data',
     long_description=open('README.rst').read(),
     classifiers=[
         'Development Status :: 4 - Beta',
