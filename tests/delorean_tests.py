@@ -262,6 +262,12 @@ class DeloreanTests(unittest.TestCase):
         dt1 = pytz.utc.localize(datetime(2003, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
+    def test_parse_iso(self):
+        # https://github.com/myusuf3/delorean/issues/101
+        do = delorean.parse('2017-05-02T05:38:49Z')
+        dt1 = pytz.utc.localize(datetime(2017, 5, 2, 5, 38, 49))
+        self.assertEqual(do.datetime, dt1)
+
     def test_parse_default(self):
         do = delorean.parse('2016-07-01T11:00:00+02:00', dayfirst=False)
         dt1 = delorean.Delorean(datetime=datetime(2016, 7, 1, 11, 0), timezone=pytz.FixedOffset(120))
