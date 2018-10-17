@@ -181,5 +181,8 @@ def now(timezone=None):
     """
     Return a Delorean object for the current local date and time, setting the timezone to the local timezone of the
     caller by default.
+
+    :param Optional[datetime.tzinfo] timezone: A custom timezone to use when computing the time.
+    :rtype: delorean.dates.Delorean
     """
     return Delorean(timezone=timezone or get_localzone())
