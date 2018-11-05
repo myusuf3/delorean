@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-babel==2.6.0
+babel==2.5.3
 humanize==0.5.1
 python-dateutil==2.7.5
 pytz==2018.7
