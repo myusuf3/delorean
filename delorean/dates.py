@@ -163,7 +163,7 @@ def normalize(dt, tz):
     normalized to the proper timezone.
 
     This means take the give localized datetime and returns the
-    datetime normalized to match the specificed timezone.
+    datetime normalized to match the specified timezone.
     """
     if not isinstance(tz, tzinfo):
         tz = pytz.timezone(tz)
