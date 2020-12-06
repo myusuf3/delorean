@@ -27,6 +27,7 @@ setup(
     install_requires=dependencies,
     test_suite='tests.test_data',
     long_description=open('README.rst').read(),
+    python_requires='>=2.6, !=3.0.*',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -41,5 +42,8 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
 )
