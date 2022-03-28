@@ -236,7 +236,7 @@ Delorean wouldn't be complete without making a few stop in all the right places.
 
     >>> import delorean
     >>> from delorean import stops
-    >>> for stop in stops(freq=delorean.HOURLY, count=10):    print stop
+    >>> for stop in stops(freq=delorean.HOURLY, count=10):    print(stop)
     ...
     Delorean(datetime=datetime.datetime(2013, 1, 21, 6, 25, 33), timezone='UTC')
     Delorean(datetime=datetime.datetime(2013, 1, 21, 7, 25, 33), timezone='UTC')
@@ -270,8 +270,8 @@ Now that you can do this you can also specify ``timezones`` as well ``start`` an
 Now in the case where you provide `timezone`, `start`, and `stop` all is good in the world!
 ::
 
-    >>> for stop in stops(freq=delorean.DAILY, count=10, timezone="US/Eastern", start=d1, stop=d2):    print stop
-    ...
+    >>> for stop in stops(freq=delorean.DAILY, count=10, timezone="US/Eastern", start=d1, stop=d2):    print(stop)
+    ..
     Delorean(datetime=datetime.datetime(2012, 5, 6), timezone='US/Eastern')
     Delorean(datetime=datetime.datetime(2012, 5, 7), timezone='US/Eastern')
     Delorean(datetime=datetime.datetime(2012, 5, 8), timezone='US/Eastern')
@@ -294,7 +294,7 @@ Now in the case where a naive stop value is provided you can see why the follow 
 .. doctest::
     :options: +SKIP
 
-    >>> for stop in stops(freq=delorean.DAILY, timezone="US/Eastern", stop=d2):    print stop
+    >>> for stop in stops(freq=delorean.DAILY, timezone="US/Eastern", stop=d2):    print(stop)
     ...
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
@@ -308,7 +308,7 @@ You will be better off in scenarios of this nature to skip using either and use 
     :options: +SKIP
 
     >>> from delorean import stops
-    >>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print stop
+    >>> for stop in stops(freq=delorean.DAILY, count=2, timezone="US/Eastern"):    print(stop)
     ...
     Delorean(datetime=datetime.datetime(2013, 1, 22, 0, 10, 10), timezone='US/Eastern')
     Delorean(datetime=datetime.datetime(2013, 1, 23, 0, 10, 10), timezone='US/Eastern')
