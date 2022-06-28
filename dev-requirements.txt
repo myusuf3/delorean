@@ -32,7 +32,7 @@ pip-tools==1.3.0
 ptyprocess==0.5           # via pexpect
 Pygments>=2.7.4           # via sphinx
 pylint==1.5.1
-pytz==2015.7              # via babel
+pytz==2022.1              # via babel
 simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via astroid, mock, pip-tools, pylint, sphinx
 snowballstemmer==1.2.0    # via sphinx
