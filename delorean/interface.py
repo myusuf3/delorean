@@ -56,14 +56,14 @@ def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=T
 
     .. doctest::
 
-        >>> parse('2015-01-01 00:01:02 PST')
-        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='America/Los_Angeles')
+        >>> parse('2015-01-01 00:01:02 -0800')
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-480))
 
     However if the provided timezone is ambiguous, parse will ignore the timezone and return a `Delorean` object in UTC
     time.
 
-        >>> parse('2015-01-01 00:01:02 EST')
-        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='UTC')
+        >>> parse('2015-01-01 00:01:02 -0400')
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-240))
 
     """
     # parse string to datetime object
