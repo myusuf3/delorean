@@ -7,7 +7,7 @@
 alabaster==0.7.6          # via sphinx
 appnope==0.1.0            # via ipython
 astroid==1.4.1            # via pylint
-babel==2.1.1              # via sphinx
+babel>=2.9.1              # via sphinx
 click==6.2                # via pip-tools
 colorama==0.3.3           # via pylint
 coverage==4.0.3
@@ -15,10 +15,10 @@ decorator==4.0.4          # via ipython, traitlets
 docutils==0.12            # via sphinx
 first==2.0.1              # via pip-tools
 funcsigs==0.4             # via mock
-gnureadline==6.3.3        # via ipython
+gnureadline>=6.3.3        # via ipython
 ipython-genutils==0.1.0   # via traitlets
-ipython==4.0.1
-jinja2==2.11.1               # via sphinx
+ipython>=5.11
+jinja2>=2.11.3               # via sphinx
 lazy-object-proxy==1.2.1  # via astroid
 markupsafe==0.23          # via jinja2
 mock==1.3.0
@@ -30,7 +30,7 @@ pexpect==4.0.1            # via ipython
 pickleshare==0.5          # via ipython
 pip-tools==1.3.0
 ptyprocess==0.5           # via pexpect
-pygments==2.0.2           # via sphinx
+Pygments>=2.7.4           # via sphinx
 pylint==1.5.1
 pytz==2015.7              # via babel
 simplegeneric==0.8.1      # via ipython
@@ -38,5 +38,5 @@ six==1.10.0               # via astroid, mock, pip-tools, pylint, sphinx
 snowballstemmer==1.2.0    # via sphinx
 sphinx-rtd-theme==0.1.9   # via sphinx
 sphinx==1.3.3
-traitlets==4.0.0          # via ipython
+traitlets>=4.0.0          # via ipython
 wrapt==1.10.6             # via astroid
