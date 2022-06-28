@@ -601,10 +601,10 @@ class Delorean(object):
 
             >>> d = Delorean(datetime(2015, 1, 1, 12, 30), timezone='US/Pacific')
             >>> d.format_datetime(locale='en_US')
-            u'Jan 1, 2015, 12:30:00 PM'
+            'Jan 1, 2015, 12:30:00 PM'
 
             >>> d.format_datetime(format='long', locale='de_DE')
-            u'1. Januar 2015 12:30:00 -0800'
+            '1. Januar 2015 um 12:30:00 -0800'
 
         :param format: one of "full", "long", "medium", "short", or a custom datetime pattern
         :param locale: a locale identifier
