@@ -335,7 +335,7 @@ class Delorean(object):
 
     def truncate(self, s):
         """
-        Truncate the delorian object to the nearest s
+        Truncate the delorean object to the nearest s
         (second, minute, hour, day, month, year)
 
         This is a destructive method, modifies the internal datetime
@@ -426,7 +426,7 @@ class Delorean(object):
     @property
     def start_of_day(self):
         """
-        Returns the start of the day for datetime assoicated
+        Returns the start of the day for datetime associated
         with the Delorean object, modifying the Delorean object.
 
         .. testsetup::
@@ -447,7 +447,7 @@ class Delorean(object):
     def end_of_day(self):
         """
         Returns the end of the day for the datetime
-        assocaited with the Delorean object, modifying the Delorean object.
+        associated with the Delorean object, modifying the Delorean object.
 
         .. testsetup::
 

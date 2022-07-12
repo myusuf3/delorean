@@ -1,6 +1,6 @@
 Usage
 =====
-`Delorean` aims to provide you with convient ways to get significant dates and times and easy ways to move dates from state to state.
+`Delorean` aims to provide you with convenient ways to get significant dates and times and easy ways to move dates from state to state.
 
 In order to get the most of the documentation we will define some terminology.
 
