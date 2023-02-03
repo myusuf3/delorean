@@ -1,35 +1,35 @@
-*.py[co]
+#  *.py[co]
 
-# Packages
-*.egg
-*.egg-info
-.eggs
-dist
-build
-eggs
-parts
-bin
-var
-sdist
-develop-eggs
-.installed.cfg
+#  Packages
+#  *.egg
+#  *.egg-info
+#  *.eggs
+#  dist
+#  build
+#  *.eggs
+#  parts
+#  bin
+#  var
+#  sdist
+#  #develop-eggs
+#  .installed.cfg
 
-# Installer logs
-pip-log.txt
+#  Installer logs
+#  pip-log.txt
 
-# Unit test / coverage reports
-.coverage
-.tox
+#  Unit test / coverage reports
+#  .coverage
+#  .tox
 
-#Translations
-*.mo
+#  Translations
+*  .mo
 
-#Mr Developer
-.mr.developer.cfg
-.DS_Store
+#  Mr Developer
+#  .mr.developer.cfg
+#  .DS_Store
 
-#docs
-_build
+#  docs
+#  _build
 
-# IDE
-.idea
+#  IDE
+#  .idea
