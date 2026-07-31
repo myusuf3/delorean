@@ -154,6 +154,54 @@ Last Tuesday? Two Tuesdays ago at midnight? No problem.
     datetime.datetime(2013, 1, 8, 0, 0, tzinfo=<UTC>)
 
 
+Daylight Saving Transitions
+"""""""""""""""""""""""""""
+
+Shifting moves the wall clock and then re-localizes the result, so crossing a
+daylight saving boundary keeps the local time you asked for and updates the
+offset to match. Below, 07:00 stays 07:00 and the timezone changes from EST to
+EDT, which means the shift advanced 23 actual hours rather than 24.
+
+.. doctest::
+
+    >>> from pytz import timezone
+    >>> eastern = timezone("US/Eastern")
+    >>> d = Delorean(eastern.localize(datetime(2013, 3, 9, 7, 0)))
+    >>> d.next_day().datetime
+    datetime.datetime(2013, 3, 10, 7, 0, tzinfo=<DstTzInfo 'US/Eastern' EDT-1 day, 20:00:00 DST>)
+
+Two kinds of local time need a tie-breaking rule, and `delorean` resolves both
+of them to **standard** time.
+
+A local time inside the spring-forward gap never happens. On 10 March 2013 the
+Eastern clocks jumped straight from 02:00 EST to 03:00 EDT, so 02:30 has no
+local reading at all. Shifting into it returns 02:30 EST, which is the instant
+07:30 UTC.
+
+.. doctest::
+
+    >>> d = Delorean(eastern.localize(datetime(2013, 3, 9, 2, 30)))
+    >>> d.next_day().datetime
+    datetime.datetime(2013, 3, 10, 2, 30, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
+
+A local time inside the autumn fall-back happens twice. On 3 November 2013,
+01:30 occurs once as EDT and then again an hour later as EST. Shifting into it
+returns the second, post-transition occurrence.
+
+.. doctest::
+
+    >>> d = Delorean(eastern.localize(datetime(2013, 11, 2, 1, 30)))
+    >>> d.next_day().datetime
+    datetime.datetime(2013, 11, 3, 1, 30, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
+
+.. note::
+
+    This rule is not specific to shifting. It applies wherever `delorean`
+    localizes a naive datetime, because it comes from `pytz`'s ``is_dst=False``
+    default. Pass an already-localized datetime if you need to choose the other
+    side of a transition yourself.
+
+
 Replace Parts
 ^^^^^^^^^^^^^
 Using the `replace` method on `Delorean` objects, we can replace the `hour`, `minute`, `second`, `year` etc
