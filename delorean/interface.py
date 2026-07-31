@@ -158,10 +158,9 @@ def stops(
     stop=None,
 ):
     """
-    This will create a list of delorean objects the apply to
-    setting posed in.
+    Yield a Delorean object for each stop matching the settings passed in.
     """
-    # check to see if datetimees passed in are naive if so process them
+    # check to see if datetimes passed in are naive if so process them
     # with given timezone.
     if all(
         [
