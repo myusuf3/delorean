@@ -43,7 +43,7 @@ Here is the world without a flux capacitor at your side.::
     est = pytz.timezone('US/Eastern')
     d = datetime.now(pytz.utc)
     d = est.normalize(d.astimezone(est))
-    return d
+    d
 
 Now lets warm up the `delorean`::
 
@@ -51,7 +51,7 @@ Now lets warm up the `delorean`::
 
     d = Delorean()
     d = d.shift('US/Eastern')
-    return d
+    d
 
 Look at you looking all fly. This was just a test drive checkout out what else
 `delorean` can help with below.

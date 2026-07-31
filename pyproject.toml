@@ -3,9 +3,25 @@ name = "delorean"
 version = "1.0.1"
 description = "library for manipulating datetimes with ease and clarity"
 readme = "README.rst"
-license = { text = "MIT license" }
+license = "MIT"
+license-files = ["LICENSE.txt"]
 authors = [{ name = "Mahdi Yusuf", email = "yusuf.mahdi@gmail.com" }]
 requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
     "babel>=2.10.3",
     "humanize>=4.2.2",
