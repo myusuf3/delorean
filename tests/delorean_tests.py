@@ -8,8 +8,8 @@ Testing for Delorean
 import unittest
 from copy import deepcopy
 from datetime import date, datetime, timedelta, timezone, tzinfo
+from unittest import mock
 
-import mock
 import pytz
 from dateutil.parser import UnknownTimezoneWarning
 from dateutil.tz import tzlocal, tzoffset
