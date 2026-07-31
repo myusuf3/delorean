@@ -35,7 +35,6 @@ Homepage = "https://github.com/myusuf3/delorean"
 [dependency-groups]
 dev = [
     "black",
-    "mock",
     "pytest",
     "ruff",
 ]
