@@ -29,22 +29,26 @@ Now lets create a create `datetime` with the current datetime and UTC timezone
     >>> d  # doctest: +ELLIPSIS
     Delorean(datetime=datetime.datetime(...), timezone='UTC')
 
-Do you want to normalize this timezone to another timezone? Simply do the following
+Do you want to normalize this timezone to another timezone? Simply do the
+following. The rest of this section works from one fixed moment rather than the
+current time, so the values you see below are the ones you would get yourself.
 
 .. doctest::
 
+    >>> from datetime import datetime
+    >>> d = Delorean(datetime(2013, 1, 12, 6, 10, 38, 102223), timezone='UTC')
     >>> d = d.shift("US/Eastern")
-    >>> d  # doctest: +ELLIPSIS
-    Delorean(datetime=datetime.datetime(...), timezone='US/Eastern')
+    >>> d
+    Delorean(datetime=datetime.datetime(2013, 1, 12, 1, 10, 38, 102223), timezone='US/Eastern')
 
 Now that you have successfully shifted the timezone you can easily return a localized datetime object or date with ease.
 
 .. doctest::
 
-    >>> d.datetime  # doctest: +ELLIPSIS
-    datetime.datetime(..., tzinfo=<DstTzInfo 'US/Eastern' ...>)
-    >>> d.date  # doctest: +ELLIPSIS
-    datetime.date(...)
+    >>> d.datetime
+    datetime.datetime(2013, 1, 12, 1, 10, 38, 102223, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
+    >>> d.date
+    datetime.date(2013, 1, 12)
 
 For the purists out there you can do things like so. Note that ``naive``
 converts to UTC before dropping the timezone, so it does not give you back the
@@ -52,10 +56,10 @@ local time shown above.
 
 .. doctest::
 
-    >>> d.naive  # doctest: +ELLIPSIS
-    datetime.datetime(...)
-    >>> d.epoch  # doctest: +ELLIPSIS
-    1...
+    >>> d.naive
+    datetime.datetime(2013, 1, 12, 6, 10, 38, 102223)
+    >>> d.epoch
+    1357971038.102223
 
 You can also create Delorean object using unix timestamps.
 
