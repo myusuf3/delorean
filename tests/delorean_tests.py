@@ -624,6 +624,15 @@ class DeloreanTests(unittest.TestCase):
             delorean.DeloreanInvalidTimezone, self.do.shift, "US/Westerrn"
         )
 
+    def test_invalid_shift_unit_raises(self):
+        self.assertRaises(AttributeError, getattr, self.do, "next_bogus")
+
+    def test_invalid_shift_direction_raises(self):
+        self.assertRaises(AttributeError, getattr, self.do, "sideways_day")
+
+    def test_invalid_shift_name_is_not_reported_by_hasattr(self):
+        self.assertFalse(hasattr(self.do, "next_bogus"))
+
     def test_datetime_localization(self):
         dt1 = self.do.datetime
         dt2 = delorean.Delorean(dt1).datetime

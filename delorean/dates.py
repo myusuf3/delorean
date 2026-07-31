@@ -297,7 +297,7 @@ class Delorean(object):
             func_parts[0] not in self._VALID_SHIFT_DIRECTIONS
             or func_parts[1] not in self._VALID_SHIFT_UNITS
         ):
-            return AttributeError
+            raise AttributeError
 
         # dispatch our function
         func = partial(self._shift_date, func_parts[0], func_parts[1])
