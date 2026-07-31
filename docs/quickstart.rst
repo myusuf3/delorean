@@ -37,7 +37,7 @@ Now that you have successfully shifted the timezone you can easily return a loca
 ::
 
     >>> d.datetime
-    datetime.datetime(2013, 1, 12, 01, 10, 38, 102223, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
+    datetime.datetime(2013, 1, 12, 1, 10, 38, 102223, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
     >>> d.date
     datetime.date(2013, 1, 12)
 
@@ -45,7 +45,7 @@ For the purists out there you can do things like so.
 ::
 
     >>> d.naive
-    datetime.datetime(2013, 1, 12, 1, 10, 38, 102223)
+    datetime.datetime(2013, 1, 12, 6, 10, 38, 102223)
     >>> d.epoch
     1357971038.102223
 
@@ -53,7 +53,7 @@ You can also create Delorean object using unix timestamps.
 
 ::
 
-    from delorean import epoch
+    >>> from delorean import epoch
     >>> epoch(1357971038.102223).shift("US/Eastern")
     Delorean(datetime=datetime.datetime(2013, 1, 12, 1, 10, 38, 102223), timezone='US/Eastern')
 
@@ -168,7 +168,7 @@ Often we dont care how many milliseconds or even seconds that are present in our
 Though it might seem obvious `delorean` also provides truncation to the month and year levels as well.
 ::
 
-    >>> d = Delorean(datetime=datetime(2012, 5, 15, 03, 50, 00, 555555), timezone="US/Eastern")
+    >>> d = Delorean(datetime=datetime(2012, 5, 15, 3, 50, 0, 555555), timezone="US/Eastern")
     >>> d
     Delorean(datetime=datetime.datetime(2012, 5, 15, 3, 50, 0, 555555), timezone='US/Eastern')
     >>> d.truncate('month')
@@ -260,8 +260,8 @@ Now that you can do this you can also specify ``timezones`` as well ``start`` an
     >>> import delorean
     >>> from delorean import stops
     >>> from datetime import datetime
-    >>> d1 = datetime(2012, 5, 06)
-    >>> d2 = datetime(2013, 5, 06)
+    >>> d1 = datetime(2012, 5, 6)
+    >>> d2 = datetime(2013, 5, 6)
 
 .. note::
 

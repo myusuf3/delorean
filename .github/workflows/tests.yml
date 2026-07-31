@@ -14,3 +14,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: uv sync
       - run: uv run pytest
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+      - run: uv run --group docs sphinx-build -b doctest docs docs/_build/doctest
+      - run: uv run --group docs sphinx-build -b html -W docs docs/_build/html
