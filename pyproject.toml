@@ -34,6 +34,7 @@ Homepage = "https://github.com/myusuf3/delorean"
 
 [dependency-groups]
 dev = [
+    "black",
     "mock",
     "pytest",
 ]
@@ -47,6 +48,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["delorean"]
+
+[tool.black]
+# Pin the floor we support; without this black infers the whole open-ended
+# range from requires-python and warns that it cannot verify its own output.
+target-version = ["py310"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
