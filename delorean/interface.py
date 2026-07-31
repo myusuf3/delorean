@@ -1,16 +1,14 @@
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timezone
 
 import pytz
-
-from dateutil.rrule import rrule, DAILY, HOURLY, MONTHLY, YEARLY
-from dateutil.parser import parse as capture, isoparse as isocapture
-from dateutil.tz import tzlocal
-from dateutil.tz import tzoffset
+from dateutil.parser import isoparse as isocapture
+from dateutil.parser import parse as capture
+from dateutil.rrule import DAILY, HOURLY, MONTHLY, YEARLY, rrule
+from dateutil.tz import tzlocal, tzoffset
 from tzlocal import get_localzone
 
+from .dates import Delorean, datetime_timezone, is_datetime_naive
 from .exceptions import DeloreanInvalidDatetime
-from .dates import Delorean, is_datetime_naive, datetime_timezone
 
 
 def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=True):

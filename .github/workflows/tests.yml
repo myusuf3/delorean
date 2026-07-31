@@ -23,6 +23,7 @@ jobs:
         with:
           python-version: "3.13"
       - run: uv run black --check --diff delorean tests docs/conf.py
+      - run: uv run ruff check delorean tests docs/conf.py
 
   docs:
     runs-on: ubuntu-latest

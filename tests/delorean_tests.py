@@ -6,20 +6,13 @@ Testing for Delorean
 """
 
 import unittest
-
 from copy import deepcopy
-from datetime import date
-from datetime import datetime
-from datetime import timedelta
-from datetime import timezone
-from datetime import tzinfo
+from datetime import date, datetime, timedelta, timezone, tzinfo
 
 import mock
 import pytz
-
 from dateutil.parser import UnknownTimezoneWarning
-from dateutil.tz import tzlocal
-from dateutil.tz import tzoffset
+from dateutil.tz import tzlocal, tzoffset
 
 import delorean
 
@@ -697,6 +690,7 @@ class DeloreanTests(unittest.TestCase):
 
     def test_repr_string_timezone(self):
         import datetime
+
         from delorean import Delorean
 
         d1 = Delorean(datetime.datetime(2015, 1, 1), timezone="US/Pacific")
@@ -711,6 +705,7 @@ class DeloreanTests(unittest.TestCase):
 
     def test_repr_pytz_timezone(self):
         import datetime
+
         from delorean import Delorean
 
         d1 = Delorean(datetime.datetime(2015, 1, 1), timezone="US/Pacific")
@@ -722,7 +717,9 @@ class DeloreanTests(unittest.TestCase):
 
     def test_repr_fixed_offset_timezone(self):
         import datetime
-        from delorean import Delorean
+
+        # Resolved by the eval(repr(...)) below, so static analysis sees no use.
+        from delorean import Delorean  # noqa: F401
 
         tz = pytz.timezone("US/Pacific")
         dt = tz.localize(datetime.datetime(2015, 1, 1))

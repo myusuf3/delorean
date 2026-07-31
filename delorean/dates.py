@@ -1,18 +1,12 @@
 import sys
-
-from datetime import datetime
-from datetime import timedelta
-from datetime import timezone
-from datetime import tzinfo
-from functools import partial
-from functools import update_wrapper
+from datetime import datetime, timedelta, timezone, tzinfo
+from functools import partial, update_wrapper
 
 import humanize
 import pytz
-
 from babel.dates import format_datetime
-from dateutil.tz import tzoffset
 from dateutil.relativedelta import relativedelta
+from dateutil.tz import tzoffset
 from tzlocal import get_localzone
 
 from .exceptions import DeloreanInvalidTimezone
