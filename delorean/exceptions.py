@@ -15,6 +15,7 @@ class DeloreanInvalidTimezone(DeloreanError):
     """
     Exception that is raised when an invalid timezone is passed in.
     """
+
     pass
 
 
@@ -23,4 +24,5 @@ class DeloreanInvalidDatetime(DeloreanError):
     Exception that is raised when an improper datetime object is passed
     in.
     """
+
     pass

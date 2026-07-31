@@ -1,0 +1,5 @@
+# Revisions listed here are excluded from `git blame`.
+# Enable with: git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# style: apply black formatting across the codebase
+0fab209eafc1d5a97dc50bf7bec39f455954458e

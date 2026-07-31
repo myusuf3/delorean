@@ -1,16 +1,14 @@
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timezone
 
 import pytz
-
-from dateutil.rrule import rrule, DAILY, HOURLY, MONTHLY, YEARLY
-from dateutil.parser import parse as capture, isoparse as isocapture
-from dateutil.tz import tzlocal
-from dateutil.tz import tzoffset
+from dateutil.parser import isoparse as isocapture
+from dateutil.parser import parse as capture
+from dateutil.rrule import DAILY, HOURLY, MONTHLY, YEARLY, rrule
+from dateutil.tz import tzlocal, tzoffset
 from tzlocal import get_localzone
 
+from .dates import Delorean, datetime_timezone, is_datetime_naive
 from .exceptions import DeloreanInvalidDatetime
-from .dates import Delorean, is_datetime_naive, datetime_timezone
 
 
 def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=True):
@@ -82,11 +80,13 @@ def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=T
         do = Delorean(datetime=dt, timezone=timezone)
     elif dt.tzinfo is None:
         # assuming datetime object passed in is UTC
-        do = Delorean(datetime=dt, timezone='UTC')
+        do = Delorean(datetime=dt, timezone="UTC")
     elif isinstance(dt.tzinfo, tzoffset):
         utcoffset = dt.tzinfo.utcoffset(None)
         total_seconds = (
-            (utcoffset.microseconds + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6) / 10**6)
+            utcoffset.microseconds
+            + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6
+        ) / 10**6
 
         tz = pytz.FixedOffset(total_seconds / 60)
         dt = dt.replace(tzinfo=None)
@@ -101,12 +101,12 @@ def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=T
         dt = dt.replace(tzinfo=None)
         # if parse string has tzinfo we return a normalized UTC
         # delorean object that represents the time.
-        do = Delorean(datetime=dt, timezone='UTC')
+        do = Delorean(datetime=dt, timezone="UTC")
 
     return do
 
 
-def range_daily(start=None, stop=None, timezone='UTC', count=None):
+def range_daily(start=None, stop=None, timezone="UTC", count=None):
     """
     This an alternative way to generating sets of Delorean objects with
     DAILY stops
@@ -114,7 +114,7 @@ def range_daily(start=None, stop=None, timezone='UTC', count=None):
     return stops(start=start, stop=stop, freq=DAILY, timezone=timezone, count=count)
 
 
-def range_hourly(start=None, stop=None, timezone='UTC', count=None):
+def range_hourly(start=None, stop=None, timezone="UTC", count=None):
     """
     This an alternative way to generating sets of Delorean objects with
     HOURLY stops
@@ -122,7 +122,7 @@ def range_hourly(start=None, stop=None, timezone='UTC', count=None):
     return stops(start=start, stop=stop, freq=HOURLY, timezone=timezone, count=count)
 
 
-def range_monthly(start=None, stop=None, timezone='UTC', count=None):
+def range_monthly(start=None, stop=None, timezone="UTC", count=None):
     """
     This an alternative way to generating sets of Delorean objects with
     MONTHLY stops
@@ -130,7 +130,7 @@ def range_monthly(start=None, stop=None, timezone='UTC', count=None):
     return stops(start=start, stop=stop, freq=MONTHLY, timezone=timezone, count=count)
 
 
-def range_yearly(start=None, stop=None, timezone='UTC', count=None):
+def range_yearly(start=None, stop=None, timezone="UTC", count=None):
     """
     This an alternative way to generating sets of Delorean objects with
     YEARLY stops
@@ -138,31 +138,64 @@ def range_yearly(start=None, stop=None, timezone='UTC', count=None):
     return stops(start=start, stop=stop, freq=YEARLY, timezone=timezone, count=count)
 
 
-def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
-          bymonth=None, bymonthday=None, byyearday=None, byeaster=None,
-          byweekno=None, byweekday=None, byhour=None, byminute=None,
-          bysecond=None, timezone='UTC', start=None, stop=None):
+def stops(
+    freq,
+    interval=1,
+    count=None,
+    wkst=None,
+    bysetpos=None,
+    bymonth=None,
+    bymonthday=None,
+    byyearday=None,
+    byeaster=None,
+    byweekno=None,
+    byweekday=None,
+    byhour=None,
+    byminute=None,
+    bysecond=None,
+    timezone="UTC",
+    start=None,
+    stop=None,
+):
     """
     This will create a list of delorean objects the apply to
     setting possed in.
     """
     # check to see if datetimees passed in are naive if so process them
     # with given timezone.
-    if all([(start is None or is_datetime_naive(start)),
-            (stop is None or is_datetime_naive(stop))]):
+    if all(
+        [
+            (start is None or is_datetime_naive(start)),
+            (stop is None or is_datetime_naive(stop)),
+        ]
+    ):
         pass
     else:
-        raise DeloreanInvalidDatetime('Provide a naive datetime object')
+        raise DeloreanInvalidDatetime("Provide a naive datetime object")
 
     # if no datetimes are passed in create a proper datetime object for
     # start default because default in dateutil is datetime.now() :(
     if start is None:
         start = datetime_timezone(timezone)
 
-    for dt in rrule(freq, interval=interval, count=count, wkst=wkst, bysetpos=bysetpos,
-          bymonth=bymonth, bymonthday=bymonthday, byyearday=byyearday, byeaster=byeaster,
-          byweekno=byweekno, byweekday=byweekday, byhour=byhour, byminute=byminute,
-          bysecond=bysecond, until=stop, dtstart=start):
+    for dt in rrule(
+        freq,
+        interval=interval,
+        count=count,
+        wkst=wkst,
+        bysetpos=bysetpos,
+        bymonth=bymonth,
+        bymonthday=bymonthday,
+        byyearday=byyearday,
+        byeaster=byeaster,
+        byweekno=byweekno,
+        byweekday=byweekday,
+        byhour=byhour,
+        byminute=byminute,
+        bysecond=bysecond,
+        until=stop,
+        dtstart=start,
+    ):
         # make the delorean object
         # yield it.
         # doing this to make sure delorean receives a naive datetime.
@@ -173,7 +206,7 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
 
 def epoch(s):
     dt = datetime.fromtimestamp(s, timezone.utc).replace(tzinfo=None)
-    return Delorean(datetime=dt, timezone='UTC')
+    return Delorean(datetime=dt, timezone="UTC")
 
 
 def flux():

@@ -34,8 +34,10 @@ Homepage = "https://github.com/myusuf3/delorean"
 
 [dependency-groups]
 dev = [
+    "black",
     "mock",
     "pytest",
+    "ruff",
 ]
 docs = [
     "sphinx",
@@ -47,6 +49,24 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["delorean"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+# Ruff's documented default (E4/E7/E9 + F) plus import sorting. Pinned explicitly
+# because the implicit default set changes between ruff releases. E501 is left
+# out on purpose: black owns line length.
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+# Re-exports that make up the public API, e.g. delorean.DAILY and delorean.parse.
+"delorean/__init__.py" = ["F401"]
+
+[tool.black]
+# Pin the floor we support; without this black infers the whole open-ended
+# range from requires-python and warns that it cannot verify its own output.
+target-version = ["py310"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
