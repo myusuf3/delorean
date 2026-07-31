@@ -159,7 +159,7 @@ def stops(
 ):
     """
     This will create a list of delorean objects the apply to
-    setting possed in.
+    setting posed in.
     """
     # check to see if datetimees passed in are naive if so process them
     # with given timezone.
