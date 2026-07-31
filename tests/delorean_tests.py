@@ -633,6 +633,42 @@ class DeloreanTests(unittest.TestCase):
     def test_invalid_shift_name_is_not_reported_by_hasattr(self):
         self.assertFalse(hasattr(self.do, "next_bogus"))
 
+    def test_shift_across_dst_keeps_wall_clock(self):
+        eastern = pytz.timezone("US/Eastern")
+        do = delorean.Delorean(eastern.localize(datetime(2013, 3, 9, 7, 0)))
+
+        shifted = do.next_day().datetime
+        self.assertEqual(shifted.strftime("%Y-%m-%d %H:%M"), "2013-03-10 07:00")
+        self.assertEqual(shifted.tzname(), "EDT")
+
+    def test_shift_into_nonexistent_local_time_resolves_to_standard(self):
+        # Eastern clocks jump 02:00 EST -> 03:00 EDT on 2013-03-10, so 02:30
+        # has no local reading at all that day.
+        eastern = pytz.timezone("US/Eastern")
+        do = delorean.Delorean(eastern.localize(datetime(2013, 3, 9, 2, 30)))
+
+        shifted = do.next_day().datetime
+        self.assertEqual(shifted.strftime("%Y-%m-%d %H:%M"), "2013-03-10 02:30")
+        self.assertEqual(shifted.tzname(), "EST")
+        self.assertEqual(shifted.astimezone(pytz.utc).strftime("%H:%M"), "07:30")
+
+    def test_shift_into_ambiguous_local_time_resolves_to_standard(self):
+        # 01:30 happens twice on 2013-11-03, first as EDT and then as EST.
+        eastern = pytz.timezone("US/Eastern")
+        do = delorean.Delorean(eastern.localize(datetime(2013, 11, 2, 1, 30)))
+
+        shifted = do.next_day().datetime
+        self.assertEqual(shifted.strftime("%Y-%m-%d %H:%M"), "2013-11-03 01:30")
+        self.assertEqual(shifted.tzname(), "EST")
+
+    def test_localize_nonexistent_local_time_resolves_to_standard(self):
+        dt = delorean.localize(datetime(2013, 3, 10, 2, 30), "US/Eastern")
+        self.assertEqual(dt.tzname(), "EST")
+
+    def test_localize_ambiguous_local_time_resolves_to_standard(self):
+        dt = delorean.localize(datetime(2013, 11, 3, 1, 30), "US/Eastern")
+        self.assertEqual(dt.tzname(), "EST")
+
     def test_datetime_localization(self):
         dt1 = self.do.datetime
         dt2 = delorean.Delorean(dt1).datetime
