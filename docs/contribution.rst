@@ -40,6 +40,6 @@ We use Sphinx for building our documentation. That can be obtained `here <http:/
 
 Reporting Issues
 ^^^^^^^^^^^^^^^^
-This is most important of all, if there are issues please let us know. So we can improve `delorean`. If you don't report it, we probably wont fix it.
+This is most important of all, if there are issues please let us know. So we can improve `delorean`. If you don't report it, we probably won't fix it.
 
 All issues should be reported on Github `here. <https://github.com/myusuf3/delorean/issues>`_
