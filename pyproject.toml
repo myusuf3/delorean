@@ -22,6 +22,9 @@ dev = [
     "mock",
     "pytest",
 ]
+docs = [
+    "sphinx",
+]
 
 [build-system]
 requires = ["hatchling"]

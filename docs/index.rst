@@ -67,5 +67,4 @@ Guide
     quickstart
     interface
     contribution
-    philosophy
     changelog

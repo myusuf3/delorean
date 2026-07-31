@@ -591,8 +591,11 @@ class Delorean(object):
         return humanize.naturaltime(now - self)
 
     def format_datetime(self, format='medium', locale='en_US'):
-        """
+        r"""
         Return a date string formatted to the given pattern.
+
+        Note that CLDR separates the time from the AM/PM marker with a narrow
+        no-break space (``\u202f``), not a plain space.
 
         .. testsetup::
 
@@ -602,10 +605,10 @@ class Delorean(object):
 
             >>> d = Delorean(datetime(2015, 1, 1, 12, 30), timezone='US/Pacific')
             >>> d.format_datetime(locale='en_US')
-            'Jan 1, 2015, 12:30:00 PM'
+            'Jan 1, 2015, 12:30:00\u202fPM'
 
             >>> d.format_datetime(format='long', locale='de_DE')
-            '1. Januar 2015 um 12:30:00 -0800'
+            '1. Januar 2015, 12:30:00 -0800'
 
         :param format: one of "full", "long", "medium", "short", or a custom datetime pattern
         :param locale: a locale identifier
