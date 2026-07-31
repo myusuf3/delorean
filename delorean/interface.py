@@ -1,4 +1,5 @@
 from datetime import datetime
+from datetime import timezone
 
 import pytz
 
@@ -171,7 +172,7 @@ def stops(freq, interval=1, count=None, wkst=None, bysetpos=None,
 
 
 def epoch(s):
-    dt = datetime.utcfromtimestamp(s)
+    dt = datetime.fromtimestamp(s, timezone.utc).replace(tzinfo=None)
     return Delorean(datetime=dt, timezone='UTC')
 
 
