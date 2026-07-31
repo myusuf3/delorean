@@ -2,6 +2,7 @@ import sys
 
 from datetime import datetime
 from datetime import timedelta
+from datetime import timezone
 from datetime import tzinfo
 from functools import partial
 from functools import update_wrapper
@@ -138,7 +139,7 @@ def datetime_timezone(tz):
     """
     This method given a timezone returns a localized datetime object.
     """
-    utc_datetime_naive = datetime.utcnow()
+    utc_datetime_naive = datetime.now(timezone.utc).replace(tzinfo=None)
     # return a localized datetime to UTC
     utc_localized_datetime = localize(utc_datetime_naive, 'UTC')
     # normalize the datetime to given timezone
@@ -506,7 +507,7 @@ class Delorean(object):
             1420099200.0
 
         """
-        epoch_sec = pytz.utc.localize(datetime.utcfromtimestamp(0))
+        epoch_sec = datetime.fromtimestamp(0, timezone.utc)
         now_sec = pytz.utc.normalize(self._dt)
         delta_sec = now_sec - epoch_sec
         return get_total_second(delta_sec)

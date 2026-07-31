@@ -11,15 +11,21 @@ from copy import deepcopy
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
+from datetime import timezone
 from datetime import tzinfo
 
 import mock
 import pytz
 
+from dateutil.parser import UnknownTimezoneWarning
 from dateutil.tz import tzlocal
 from dateutil.tz import tzoffset
 
 import delorean
+
+
+def naive_utcnow():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class GenericUTC(tzinfo):
@@ -38,7 +44,7 @@ class GenericUTC(tzinfo):
 
 UTC = "UTC"
 generic_utc = GenericUTC()
-est = pytz.timezone("US/Eastern").localize(datetime.utcnow()).tzinfo
+est = pytz.timezone("US/Eastern").localize(naive_utcnow()).tzinfo
 
 
 class DeloreanTests(unittest.TestCase):
@@ -238,7 +244,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertRaises(ValueError, delorean.normalize, naive_datetime, "US/Eastern")
 
     def test_localize_failure(self):
-        dt1 = delorean.localize(datetime.utcnow(), "UTC")
+        dt1 = delorean.localize(naive_utcnow(), "UTC")
         self.assertRaises(ValueError, delorean.localize, dt1, "UTC")
 
     def test_timezone(self):
@@ -258,7 +264,8 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dt1.replace(second=0, microsecond=0), do.datetime)
 
     def test_parse(self):
-        do = delorean.parse('Thu Sep 25 10:36:28 BRST 2003')
+        with self.assertWarns(UnknownTimezoneWarning):
+            do = delorean.parse('Thu Sep 25 10:36:28 BRST 2003')
         dt1 = pytz.utc.localize(datetime(2003, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
@@ -541,7 +548,7 @@ class DeloreanTests(unittest.TestCase):
 
     def test_range_with_start(self):
         dates1 = []
-        for do in delorean.stops(delorean.DAILY, count=5, start=datetime.utcnow()):
+        for do in delorean.stops(delorean.DAILY, count=5, start=naive_utcnow()):
             do.truncate('minute')
             dates1.append(do)
         do = delorean.Delorean().truncate('minute')
@@ -552,8 +559,8 @@ class DeloreanTests(unittest.TestCase):
 
     def test_range_with_start_and_stop(self):
         dates1 = []
-        tomorrow = datetime.utcnow() + timedelta(days=1)
-        for do in delorean.stops(delorean.DAILY, start=datetime.utcnow(), stop=tomorrow):
+        tomorrow = naive_utcnow() + timedelta(days=1)
+        for do in delorean.stops(delorean.DAILY, start=naive_utcnow(), stop=tomorrow):
             do.truncate('minute')
             dates1.append(do)
         do = delorean.Delorean().truncate('minute')
@@ -564,7 +571,7 @@ class DeloreanTests(unittest.TestCase):
 
     def test_range_with_interval(self):
         dates1 = []
-        for do in delorean.stops(delorean.DAILY, interval=2, count=3, start=datetime.utcnow()):
+        for do in delorean.stops(delorean.DAILY, interval=2, count=3, start=naive_utcnow()):
             do.truncate('minute')
             dates1.append(do)
         do = delorean.Delorean().truncate('minute')
@@ -575,14 +582,14 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dates1, dates2)
 
     def test_delorean_with_datetime(self):
-        dt = datetime.utcnow()
+        dt = naive_utcnow()
         d = delorean.Delorean(datetime=dt, timezone=UTC)
         dt = pytz.utc.localize(dt)
         self.assertEqual(dt, d._dt)
         self.assertEqual(pytz.utc, d.timezone)
 
     def test_delorean_with_timezone(self):
-        dt = datetime.utcnow()
+        dt = naive_utcnow()
         d = delorean.Delorean(datetime=dt, timezone=UTC)
         d = d.shift("US/Eastern")
         dt = pytz.utc.localize(dt).astimezone(est)
@@ -591,7 +598,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(est, d.timezone)
 
     def test_delorean_with_only_timezone(self):
-        dt = datetime.utcnow()
+        dt = naive_utcnow()
         dt = pytz.utc.localize(dt)
         dt = est.normalize(dt)
         dt = dt.replace(second=0, microsecond=0)
@@ -609,7 +616,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dt1, dt2)
 
     def test_localize_datetime(self):
-        dt = datetime.utcnow()
+        dt = naive_utcnow()
         tz = pytz.timezone("US/Pacific")
         dt = tz.localize(dt)
         d = delorean.Delorean(dt)
@@ -630,7 +637,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertTrue(dt2 > dt1)
 
     def test_ge(self):
-        dt = datetime.utcnow()
+        dt = naive_utcnow()
         dt1 = delorean.Delorean(dt, timezone="UTC")
         dt2 = delorean.Delorean(dt, timezone="UTC")
         dt3 = self.do
@@ -638,7 +645,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertTrue(dt1 >= dt3)
 
     def test_le(self):
-        dt = datetime.utcnow()
+        dt = naive_utcnow()
         dt1 = delorean.Delorean(dt, timezone="UTC")
         dt2 = delorean.Delorean(dt, timezone="UTC")
         dt3 = self.do

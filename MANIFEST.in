@@ -1,5 +1,0 @@
-include *.txt
-include *.rst
-include version.py
-recursive-include docs *.rst
-recursive-include tests *.py

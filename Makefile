@@ -1,5 +1,5 @@
 test:
-	nosetests --with-coverage --cover-package=delorean
+	uv run pytest
 
 doc:
 	make -C docs clean doctest html
