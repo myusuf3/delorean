@@ -158,7 +158,7 @@ Last Tuesday? Two Tuesdays ago at midnight? No problem.
     >>> d.last_tuesday()
     Delorean(datetime=datetime.datetime(2013, 1, 15, 19, 41, 6, 207481), timezone='UTC')
     >>> d.last_tuesday(2).midnight
-    datetime.datetime(2013, 1, 8, 0, 0, tzinfo=<UTC>)
+    Delorean(datetime=datetime.datetime(2013, 1, 8, 0, 0), timezone='UTC')
 
 
 Daylight Saving Transitions
@@ -207,6 +207,46 @@ returns the second, post-transition occurrence.
     localizes a naive datetime, because it comes from `pytz`'s ``is_dst=False``
     default. Pass an already-localized datetime if you need to choose the other
     side of a transition yourself.
+
+
+Period Boundaries
+^^^^^^^^^^^^^^^^^
+
+`Delorean` objects can give you the first or last moment of the day, month or
+year they fall in. Each returns a new `Delorean` object and leaves the original
+untouched, so they compose with the shift methods above.
+
+.. doctest::
+
+    >>> d = Delorean(datetime(2015, 5, 15, 14, 30), timezone='UTC')
+    >>> d.start_of_day
+    Delorean(datetime=datetime.datetime(2015, 5, 15, 0, 0), timezone='UTC')
+    >>> d.end_of_month
+    Delorean(datetime=datetime.datetime(2015, 5, 31, 23, 59, 59, 999999), timezone='UTC')
+    >>> d.start_of_year
+    Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 0), timezone='UTC')
+
+``end_of_month`` knows how long each month is, including February in a leap
+year.
+
+.. doctest::
+
+    >>> Delorean(datetime(2015, 2, 15), timezone='UTC').end_of_month
+    Delorean(datetime=datetime.datetime(2015, 2, 28, 23, 59, 59, 999999), timezone='UTC')
+    >>> Delorean(datetime(2024, 2, 15), timezone='UTC').end_of_month
+    Delorean(datetime=datetime.datetime(2024, 2, 29, 23, 59, 59, 999999), timezone='UTC')
+
+Because they return `Delorean` objects, they chain. The last day of the previous
+month is:
+
+.. doctest::
+
+    >>> Delorean(datetime(2013, 5, 15), timezone='US/Eastern').last_month().end_of_month
+    Delorean(datetime=datetime.datetime(2013, 4, 30, 23, 59, 59, 999999), timezone='US/Eastern')
+
+The full set is ``start_of_day``, ``end_of_day``, ``start_of_month``,
+``end_of_month``, ``start_of_year`` and ``end_of_year``, plus ``midnight``,
+which is an alias of ``start_of_day``.
 
 
 Replace Parts
