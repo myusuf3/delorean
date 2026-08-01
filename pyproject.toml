@@ -36,6 +36,7 @@ dev = [
     "black",
     "pytest",
     "ruff",
+    "towncrier",
 ]
 docs = [
     "sphinx",
@@ -69,3 +70,37 @@ target-version = ["py310"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["delorean_tests.py", "behavior_tests.py"]
+
+[tool.towncrier]
+directory = "changelog.d"
+filename = "CHANGES.rst"
+package = "delorean"
+start_string = "Release History\n---------------\n"
+title_format = "{version}"
+underlines = ["+", "~", "^"]
+issue_format = "#{issue}"
+
+[[tool.towncrier.type]]
+directory = "breaking"
+name = "Breaking changes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "added"
+name = "Added"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Changed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Fixed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "removed"
+name = "Removed"
+showcontent = true
