@@ -69,4 +69,4 @@ target-version = ["py310"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-python_files = ["delorean_tests.py"]
+python_files = ["delorean_tests.py", "behavior_tests.py"]

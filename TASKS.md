@@ -67,8 +67,9 @@ Needs a changelog line, most significant first:
   for timezone-less strings configurable, or refusable with `None` (#53).
 - Non-pytz zones (`zoneinfo.ZoneInfo`, `datetime.timezone`) now work wherever a
   timezone is accepted. `localize()`/`normalize()` called pytz-only methods, so
-  `now()` raised `AttributeError` under tzlocal 5.x, and `repr()` reported
-  `timezone=None` for a zoneinfo zone.
+  `now()` raised `AttributeError` under tzlocal 5.x, `repr()` reported
+  `timezone=None` for a zoneinfo zone, and `normalize()` rejected any datetime
+  delorean had itself localized with a zoneinfo zone.
 - `DeloreanError` now subclasses `ValueError`, so one `except ValueError`
   covers both delorean's errors and the parser's.
 - Build moved from `setup.py` to `pyproject.toml`/hatchling; version is
