@@ -1,0 +1,24 @@
+# Read the Docs builds the `latest` version from a branch of that name rather
+# than from the default branch, and setting the project's default branch does
+# not re-point it. Keeping `latest` level with `master` is what publishes the
+# documentation on merge; without it the site silently serves an old build.
+name: sync docs branch
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-docs-branch
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fast-forward latest to master
+        run: git push origin ${{ github.sha }}:refs/heads/latest --force
