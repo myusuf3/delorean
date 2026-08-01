@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from dateutil.tz import tzoffset
 from tzlocal import get_localzone
 
-from .exceptions import DeloreanInvalidTimezone
+from .exceptions import DeloreanInvalidDatetime, DeloreanInvalidTimezone
 
 
 def get_total_second(td):
@@ -169,8 +169,12 @@ def normalize(dt, tz):
     if not isinstance(tz, tzinfo):
         tz = pytz.timezone(tz)
 
-    if hasattr(tz, "normalize"):
-        return tz.normalize(dt)
+    # astimezone is the conversion that works for every tzinfo implementation.
+    # pytz's own normalize() reaches into the *incoming* datetime's tzinfo for
+    # pytz internals, so it rejects any datetime delorean localized with a
+    # zoneinfo zone.
+    if dt.tzinfo is None:
+        raise DeloreanInvalidDatetime("normalize requires an aware datetime")
 
     return dt.astimezone(tz)
 
