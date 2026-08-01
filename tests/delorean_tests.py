@@ -594,7 +594,7 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dt_next, d_obj_next)
         self.assertEqual(dt_last, d_obj_last)
 
-    def test_move_shift_minute(self):
+    def test_move_second(self):
         dt_next = datetime(2013, 1, 3, 4, 31, 15, 148540, tzinfo=pytz.utc)
         dt_next_2 = datetime(2013, 1, 3, 4, 31, 16, 148540, tzinfo=pytz.utc)
         dt_last = datetime(2013, 1, 3, 4, 31, 13, 148540, tzinfo=pytz.utc)
@@ -609,6 +609,37 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(dt_last, d_obj_last.datetime)
         self.assertEqual(dt_next_2, d_obj_next_2.datetime)
         self.assertEqual(dt_last_2, d_obj_last_2.datetime)
+
+    def test_move_fractional_seconds(self):
+        expected_datetimes = {
+            ("next_second", 0.5): datetime(
+                2013, 1, 3, 4, 31, 14, 648540, tzinfo=pytz.utc
+            ),
+            ("next_second", 1.5): datetime(
+                2013, 1, 3, 4, 31, 15, 648540, tzinfo=pytz.utc
+            ),
+            ("last_second", 0.5): datetime(
+                2013, 1, 3, 4, 31, 13, 648540, tzinfo=pytz.utc
+            ),
+            ("last_second", 1.5): datetime(
+                2013, 1, 3, 4, 31, 12, 648540, tzinfo=pytz.utc
+            ),
+        }
+
+        for (method_name, seconds), expected in expected_datetimes.items():
+            with self.subTest(method_name=method_name, seconds=seconds):
+                shifted = getattr(self.do, method_name)(seconds)
+                self.assertEqual(expected, shifted.datetime)
+
+    def test_fractional_shifts_are_rejected_for_non_second_units(self):
+        non_second_units = set(self.do._VALID_SHIFT_UNITS) - {"second"}
+
+        for direction in self.do._VALID_SHIFT_DIRECTIONS:
+            for unit in non_second_units:
+                with self.subTest(direction=direction, unit=unit):
+                    shift = getattr(self.do, f"{direction}_{unit}")
+                    with self.assertRaisesRegex(TypeError, "integer"):
+                        shift(0.5)
 
     def test_move_second_function(self):
         dt_next = datetime(2013, 1, 3, 4, 31, 15, 148540, tzinfo=pytz.utc)

@@ -1,6 +1,7 @@
 import sys
 from datetime import datetime, timedelta, timezone, tzinfo
 from functools import partial, update_wrapper
+from operator import index
 
 import humanize
 import pytz
@@ -315,7 +316,13 @@ class Delorean(object):
 
         num_shifts = 1
         if len(args) > 0:
-            num_shifts = int(args[0])
+            if unit == "second":
+                num_shifts = args[0]
+            else:
+                try:
+                    num_shifts = index(args[0])
+                except TypeError:
+                    raise TypeError(f"{unit} shifts require an integer") from None
 
         if unit in [
             "monday",
