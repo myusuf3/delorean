@@ -11,18 +11,38 @@ from .dates import Delorean, datetime_timezone, is_datetime_naive
 from .exceptions import DeloreanInvalidDatetime
 
 
-def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=True):
+def parse(
+    datetime_str,
+    timezone=None,
+    isofirst=True,
+    dayfirst=True,
+    yearfirst=True,
+    *,
+    assume_timezone="UTC",
+):
     """
-    Parses a datetime string and returns a `Delorean` object.
+    Parse a datetime string and return a `Delorean` object.
 
-    :param datetime_str: The string to be interpreted into a `Delorean` object.
-    :param timezone: Pass this parameter and the returned Delorean object will be normalized to this timezone. Any
-        offsets passed as part of datetime_str will be ignored.
-    :param isofirst: try to parse string as date in ISO format before everything else.
-    :param dayfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the day
-        (True) or month (False). If yearfirst is set to True, this distinguishes between YDM and YMD.
-    :param yearfirst: Whether to interpret the first value in an ambiguous 3-integer date (ex. 01/05/09) as the
-        year. If True, the first number is taken to be the year, otherwise the last number is taken to be the year.
+    :param datetime_str: The string to interpret.
+    :param timezone: Force the parsed clock reading into this timezone. Any
+        offset in ``datetime_str`` is discarded. To supply a timezone only
+        when the string has none, use ``assume_timezone`` instead.
+    :param isofirst: Try ISO parsing before the general-purpose parser.
+    :param dayfirst: Interpret the first value in an ambiguous three-integer
+        date (for example, ``01/05/09``) as the day rather than the month.
+        When ``yearfirst`` is true, this distinguishes YDM from YMD.
+    :param yearfirst: Interpret the first value in an ambiguous three-integer
+        date as the year. Otherwise, interpret the last value as the year.
+    :param assume_timezone: A timezone name or object to apply when
+        ``datetime_str`` contains no timezone or UTC offset. It defaults to
+        ``"UTC"`` for compatibility with earlier versions. Pass ``None`` to
+        reject timezone-less input instead.
+    :raises DeloreanInvalidDatetime: If the string contains no timezone and
+        ``assume_timezone`` is ``None``.
+
+    .. versionadded:: 2.0
+        The ``assume_timezone`` parameter makes the existing UTC assumption
+        configurable and allows strict handling of timezone-less input.
 
     .. testsetup::
 
@@ -34,35 +54,49 @@ def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=T
         >>> parse('2015-01-01 00:01:02')
         Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='UTC')
 
-    If a fixed offset is provided in the datetime_str, it will be parsed and the returned `Delorean` object will store a
-    `pytz.FixedOffest` as it's timezone.
+    If the string provides a fixed offset, the returned object keeps that
+    offset. No assumption is necessary.
 
     .. doctest::
 
         >>> parse('2015-01-01 00:01:02 -0800')
         Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-480))
 
-    If the timezone argument is supplied, the returned Delorean object will be in the timezone supplied. Any offsets in
-    the datetime_str will be ignored.
+    A timezone-less string does not identify an instant by itself. For
+    compatibility, `Delorean` assumes UTC by default. Pass a different
+    ``assume_timezone`` when you know which timezone its clock reading uses.
+
+    .. doctest::
+
+        >>> parse('2015-01-01 00:01:02', assume_timezone='America/Toronto')
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='America/Toronto')
+
+    Pass ``None`` when timezone-less input should be treated as an error rather
+    than an assumed UTC value.
+
+    .. doctest::
+
+        >>> parse('2015-01-01 00:01:02', assume_timezone=None)  # doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+        ...
+        DeloreanInvalidDatetime: ...
+
+    ``assume_timezone`` is only a fallback. It has no effect when the string
+    already includes a timezone or offset.
+
+    .. doctest::
+
+        >>> parse('2015-01-01 00:01:02 -0800', assume_timezone='UTC')
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-480))
+
+    The older ``timezone`` argument is a stronger override: it discards any
+    parsed offset and treats the clock reading as local to the requested
+    timezone. When supplied, it takes precedence over ``assume_timezone``.
 
     .. doctest::
 
         >>> parse('2015-01-01 00:01:02 -0500', timezone='US/Pacific')
         Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='US/Pacific')
-
-    If an unambiguous timezone is detected in the datetime string, a Delorean object with that datetime and
-    timezone will be returned.
-
-    .. doctest::
-
-        >>> parse('2015-01-01 00:01:02 -0800')
-        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-480))
-
-    However if the provided timezone is ambiguous, parse will ignore the timezone and return a `Delorean` object in UTC
-    time.
-
-        >>> parse('2015-01-01 00:01:02 -0400')
-        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-240))
 
     """
     # parse string to datetime object
@@ -79,8 +113,12 @@ def parse(datetime_str, timezone=None, isofirst=True, dayfirst=True, yearfirst=T
         dt = dt.replace(tzinfo=None)
         do = Delorean(datetime=dt, timezone=timezone)
     elif dt.tzinfo is None:
-        # assuming datetime object passed in is UTC
-        do = Delorean(datetime=dt, timezone="UTC")
+        if assume_timezone is None:
+            raise DeloreanInvalidDatetime(
+                "Unable to determine timezone; pass assume_timezone for "
+                "timezone-less input"
+            )
+        do = Delorean(datetime=dt, timezone=assume_timezone)
     elif isinstance(dt.tzinfo, tzoffset):
         utcoffset = dt.tzinfo.utcoffset(None)
         total_seconds = (
