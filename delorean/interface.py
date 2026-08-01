@@ -203,9 +203,34 @@ def stops(
         yield d
 
 
-def epoch(s):
+def from_timestamp(s):
+    """
+    Return a `Delorean` object for the given seconds since the Unix epoch.
+
+    .. testsetup::
+
+        from delorean import from_timestamp
+
+    .. doctest::
+
+        >>> from_timestamp(1420099200.0)
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 8, 0), timezone='UTC')
+
+    """
     dt = datetime.fromtimestamp(s, timezone.utc).replace(tzinfo=None)
     return Delorean(datetime=dt, timezone="UTC")
+
+
+def epoch(s):
+    """
+    Alias of :func:`from_timestamp`, kept for backwards compatibility.
+
+    The argument is seconds since the Unix epoch rather than an epoch, so
+    `from_timestamp` is the more accurate name. It also avoids `epoch`
+    meaning two opposite things, since :attr:`Delorean.epoch` converts the
+    other way.
+    """
+    return from_timestamp(s)
 
 
 def flux():

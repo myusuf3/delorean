@@ -516,10 +516,36 @@ class Delorean(object):
         return self
 
     @property
+    def timestamp(self):
+        """
+        Returns the total seconds since the Unix epoch associated with
+        the Delorean object.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 1, 1), timezone='US/Pacific')
+            >>> d.timestamp
+            1420099200.0
+
+        """
+        epoch_sec = datetime.fromtimestamp(0, timezone.utc)
+        now_sec = pytz.utc.normalize(self._dt)
+        delta_sec = now_sec - epoch_sec
+        return get_total_second(delta_sec)
+
+    @property
     def epoch(self):
         """
-        Returns the total seconds since epoch associated with
-        the Delorean object.
+        Alias of :attr:`timestamp`, kept for backwards compatibility.
+
+        The value is seconds since the Unix epoch, so `timestamp` is the
+        more accurate name; the epoch itself is the fixed point the count
+        starts from.
 
         .. testsetup::
 
@@ -533,10 +559,7 @@ class Delorean(object):
             1420099200.0
 
         """
-        epoch_sec = datetime.fromtimestamp(0, timezone.utc)
-        now_sec = pytz.utc.normalize(self._dt)
-        delta_sec = now_sec - epoch_sec
-        return get_total_second(delta_sec)
+        return self.timestamp
 
     @property
     def date(self):

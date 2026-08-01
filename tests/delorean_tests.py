@@ -711,13 +711,27 @@ class DeloreanTests(unittest.TestCase):
         self.assertTrue(dt2 <= dt1)
         self.assertTrue(dt3 <= dt2)
 
-    def test_epoch(self):
-        unix_time = self.do.epoch
-        self.assertEqual(unix_time, 1357187474.148540)
+    def test_timestamp(self):
+        self.assertEqual(self.do.timestamp, 1357187474.148540)
 
-    def test_epoch_creation(self):
-        do = delorean.epoch(1357187474.148540)
+    def test_timestamp_matches_stdlib(self):
+        self.assertEqual(self.do.timestamp, self.do.datetime.timestamp())
+
+    def test_from_timestamp(self):
+        do = delorean.from_timestamp(1357187474.148540)
         self.assertEqual(self.do, do)
+
+    def test_from_timestamp_round_trips(self):
+        self.assertEqual(delorean.from_timestamp(self.do.timestamp), self.do)
+
+    def test_epoch_is_alias_of_timestamp(self):
+        self.assertEqual(self.do.epoch, self.do.timestamp)
+
+    def test_epoch_creation_is_alias_of_from_timestamp(self):
+        self.assertEqual(
+            delorean.epoch(1357187474.148540),
+            delorean.from_timestamp(1357187474.148540),
+        )
 
     def test_not_equal(self):
         d = delorean.Delorean()

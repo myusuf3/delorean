@@ -58,16 +58,23 @@ local time shown above.
 
     >>> d.naive
     datetime.datetime(2013, 1, 12, 6, 10, 38, 102223)
-    >>> d.epoch
+    >>> d.timestamp
     1357971038.102223
 
 You can also create Delorean object using unix timestamps.
 
 .. doctest::
 
-    >>> from delorean import epoch
-    >>> epoch(1357971038.102223).shift("US/Eastern")
+    >>> from delorean import from_timestamp
+    >>> from_timestamp(1357971038.102223).shift("US/Eastern")
     Delorean(datetime=datetime.datetime(2013, 1, 12, 1, 10, 38, 102223), timezone='US/Eastern')
+
+.. note::
+
+    ``timestamp`` and ``from_timestamp`` were previously named ``epoch``. Both
+    old names still work and behave identically, but the new ones say what the
+    value actually is (seconds since the Unix epoch, not the epoch itself) and
+    avoid ``epoch`` meaning two opposite things.
 
 As you can see `delorean` returns a Delorean object which you can shift to the appropriate timezone to get back your original datetime object from above.
 

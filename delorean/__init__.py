@@ -33,6 +33,7 @@ from delorean.exceptions import DeloreanInvalidDatetime, DeloreanInvalidTimezone
 from delorean.interface import (
     epoch,
     flux,
+    from_timestamp,
     now,
     parse,
     range_daily,
