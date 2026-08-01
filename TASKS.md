@@ -63,6 +63,14 @@ Needs a changelog line, most significant first:
   narrows what users can do, so it drives the version number (convention would
   be 1.1.0).
 - Boundary properties now return `Delorean` (breaking, see #139).
+- `parse()` gained a keyword-only `assume_timezone`, making the UTC assumption
+  for timezone-less strings configurable, or refusable with `None` (#53).
+- Non-pytz zones (`zoneinfo.ZoneInfo`, `datetime.timezone`) now work wherever a
+  timezone is accepted. `localize()`/`normalize()` called pytz-only methods, so
+  `now()` raised `AttributeError` under tzlocal 5.x, and `repr()` reported
+  `timezone=None` for a zoneinfo zone.
+- `DeloreanError` now subclasses `ValueError`, so one `except ValueError`
+  covers both delorean's errors and the parser's.
 - Build moved from `setup.py` to `pyproject.toml`/hatchling; version is
   single-sourced in `pyproject.toml`.
 - `Delorean.__getattr__` returned the `AttributeError` class instead of raising
@@ -198,7 +206,9 @@ mean a migration will fail loudly rather than silently changing answers.
   now exist with `epoch` as an alias. Removing the alias needs a
   `DeprecationWarning` first, which commits to a 2.0 timeline.
 - **#53** ISO 8601 strings with no offset are cast to UTC; reporter argues that
-  is wrong.
+  is wrong. Addressed by `parse(..., assume_timezone=...)`, which makes the
+  assumption explicit or refuses it. The issue's other suggestion, a flag on the
+  returned object recording that an assumption was made, was not implemented.
 - **#11** month-end arithmetic: shifting from the 31st into a shorter month
   clamps. Currently `next_month(2)` from Jan 31 gives Mar 31, not Mar 28, because
   the count is applied as a single `relativedelta` rather than iteratively, which

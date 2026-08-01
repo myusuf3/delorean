@@ -33,14 +33,15 @@ def parse(
         When ``yearfirst`` is true, this distinguishes YDM from YMD.
     :param yearfirst: Interpret the first value in an ambiguous three-integer
         date as the year. Otherwise, interpret the last value as the year.
-    :param assume_timezone: A timezone name or object to apply when
+    :param assume_timezone: A timezone name or ``tzinfo`` object to apply when
         ``datetime_str`` contains no timezone or UTC offset. It defaults to
         ``"UTC"`` for compatibility with earlier versions. Pass ``None`` to
-        reject timezone-less input instead.
+        assume nothing, which turns timezone-less input into an error.
     :raises DeloreanInvalidDatetime: If the string contains no timezone and
-        ``assume_timezone`` is ``None``.
+        ``assume_timezone`` is ``None``. `DeloreanInvalidDatetime` is a
+        `ValueError`, as is the error raised for an unreadable string.
 
-    .. versionadded:: 2.0
+    .. versionadded:: 1.1.0
         The ``assume_timezone`` parameter makes the existing UTC assumption
         configurable and allows strict handling of timezone-less input.
 
@@ -115,8 +116,7 @@ def parse(
     elif dt.tzinfo is None:
         if assume_timezone is None:
             raise DeloreanInvalidDatetime(
-                "Unable to determine timezone; pass assume_timezone for "
-                "timezone-less input"
+                "datetime string has no timezone and assume_timezone is None"
             )
         do = Delorean(datetime=dt, timezone=assume_timezone)
     elif isinstance(dt.tzinfo, tzoffset):
