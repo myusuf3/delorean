@@ -57,11 +57,27 @@ Everything from this session is unreleased, and `CHANGES.rst` has no entry for
 any of it. Issue #104 is someone explicitly asking for a release, open since
 2019.
 
+The version is now **2.0.0**: the pytz migration is a breaking interface
+change, which supersedes the 1.1.0 the Python 3.9 drop would have called for.
+
 Needs a changelog line, most significant first:
 
-- Dropped Python 3.9; `requires-python` is now `>=3.10`. The only change that
-  narrows what users can do, so it drives the version number (convention would
-  be 1.1.0).
+- **Timezones are standard library objects** (#79). `Delorean.timezone` returns
+  a `zoneinfo.ZoneInfo` for a named zone or a `datetime.timezone` for a fixed
+  offset, and `pytz` is gone from the dependency list. `delorean.timezone()`
+  and `delorean.utc` are the supported constructors, so callers no longer
+  import a timezone library themselves. Breaking for anyone comparing against
+  `pytz.utc` or catching `pytz.UnknownTimeZoneError`, which is now
+  `DeloreanInvalidTimezone`.
+- **Ambiguous local times resolve to the first occurrence**, following the
+  stdlib's `fold=0`, where 1.x took standard time via pytz's `is_dst=False`.
+  One hour per year, one hour different. Gap behaviour is unchanged.
+- `repr()` prints a fixed offset as `'UTC-08:00'` rather than
+  `pytz.FixedOffset(-480)`, and the constructor accepts that string, so repr
+  output still round-trips through `eval()`.
+- `localize()` now rejects an already-aware datetime rather than silently
+  moving the instant it represents.
+- Dropped Python 3.9; `requires-python` is now `>=3.10`.
 - Boundary properties now return `Delorean` (breaking, see #139).
 - `parse()` gained a keyword-only `assume_timezone`, making the UTC assumption
   for timezone-less strings configurable, or refusable with `None` (#53).
@@ -187,20 +203,25 @@ look and the custom sidebar templates.
 
 These travel together and want deciding as a set rather than one at a time.
 
-### Migrate off pytz to zoneinfo (#79)
+### Migrate off pytz to zoneinfo (#79) — done
 
-The largest and most disruptive item. pytz is maintained but superseded by stdlib
-`zoneinfo`. Delorean's public API is built on pytz semantics: it returns pytz
-timezone objects, exposes `pytz.FixedOffset` in `parse()`, and uses
-`localize()`/`normalize()` throughout. This is a breaking change warranting a
-2.0, not a cleanup.
+Landed for 2.0. The public API is now stdlib types throughout, `pytz` is off
+the dependency list, and `delorean.timezone()`/`delorean.utc` close the
+reporter's original ask.
 
-`tzlocal` 5.x already returns `zoneinfo.ZoneInfo` objects and delorean handles
-that fine, so the two coexist today.
+Worth recording how it went, since the approach transfers:
 
-Note `zoneinfo` resolves DST gaps and ambiguity via the `fold` attribute under
-different rules than pytz's `is_dst=False`. The tests added for that behaviour
-mean a migration will fail loudly rather than silently changing answers.
+- `tests/behavior_tests.py` was written first, describing behaviour in terms of
+  instants, offsets, zone names and types rather than pytz objects. All 82 held
+  through the core rewrite, which is what made the migration verifiable rather
+  than hopeful.
+- That net caught two live bugs before the migration started: `normalize()`
+  rejected any datetime delorean had localized with a zoneinfo zone, and
+  `localize()` silently overwrote the timezone of an already-aware datetime,
+  changing the instant.
+- The `fold` difference was the only genuine semantic break, and it was decided
+  deliberately rather than discovered. Gaps resolve identically; only the
+  duplicated autumn hour moved.
 
 ### Related open issues
 

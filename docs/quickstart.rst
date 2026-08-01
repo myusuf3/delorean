@@ -46,7 +46,7 @@ Now that you have successfully shifted the timezone you can easily return a loca
 .. doctest::
 
     >>> d.datetime
-    datetime.datetime(2013, 1, 12, 1, 10, 38, 102223, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
+    datetime.datetime(2013, 1, 12, 1, 10, 38, 102223, tzinfo=zoneinfo.ZoneInfo(key='US/Eastern'))
     >>> d.date
     datetime.date(2013, 1, 12)
 
@@ -95,17 +95,57 @@ As you can see `delorean` returns a Delorean object which you can shift to the a
 .. doctest::
 
     >>> from datetime import datetime
-    >>> from pytz import timezone
+    >>> from delorean import timezone
     >>> tz = timezone("US/Pacific")
-    >>> dt = tz.localize(datetime(2013, 3, 16, 5, 28, 11, 536818))
+    >>> dt = datetime(2013, 3, 16, 5, 28, 11, 536818, tzinfo=tz)
     >>> dt
-    datetime.datetime(2013, 3, 16, 5, 28, 11, 536818, tzinfo=<DstTzInfo 'US/Pacific' PDT-1 day, 17:00:00 DST>)
+    datetime.datetime(2013, 3, 16, 5, 28, 11, 536818, tzinfo=zoneinfo.ZoneInfo(key='US/Pacific'))
     >>> d = Delorean(datetime=dt)
     >>> d
     Delorean(datetime=datetime.datetime(2013, 3, 16, 5, 28, 11, 536818), timezone='US/Pacific')
     >>> d = Delorean(datetime=dt, timezone="US/Eastern")
     >>> d
     Delorean(datetime=datetime.datetime(2013, 3, 16, 5, 28, 11, 536818), timezone='US/Pacific')
+
+Timezones
+^^^^^^^^^
+
+Every timezone `delorean` hands back is a standard library object, so nothing
+you get from a `Delorean` requires a timezone library of your own. Named zones
+come back as `zoneinfo.ZoneInfo`, and `delorean.timezone` builds them for you.
+
+.. doctest::
+
+    >>> from delorean import timezone, utc
+    >>> timezone("US/Eastern")
+    zoneinfo.ZoneInfo(key='US/Eastern')
+    >>> Delorean(datetime(2015, 1, 1), timezone="UTC").timezone == utc
+    True
+
+A fixed offset is a `datetime.timezone`. Write it the way it prints, and
+`delorean` will read it back:
+
+.. doctest::
+
+    >>> timezone("UTC-08:00").utcoffset(None)
+    datetime.timedelta(days=-1, seconds=57600)
+    >>> Delorean(datetime(2015, 1, 1), timezone="UTC-08:00")
+    Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 0), timezone='UTC-08:00')
+
+A name that identifies no zone raises, rather than returning something
+approximate:
+
+.. doctest::
+
+    >>> timezone("Not/AZone")  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ...
+    DeloreanInvalidTimezone: ...
+
+.. versionadded:: 2.0
+    ``timezone`` and ``utc``. Earlier versions returned `pytz` objects, which
+    meant importing `pytz` yourself to compare or construct a timezone.
+
 
 Time Arithmetic
 ^^^^^^^^^^^^^^^
@@ -171,14 +211,14 @@ EDT, which means the shift advanced 23 actual hours rather than 24.
 
 .. doctest::
 
-    >>> from pytz import timezone
+    >>> from delorean import timezone
     >>> eastern = timezone("US/Eastern")
-    >>> d = Delorean(eastern.localize(datetime(2013, 3, 9, 7, 0)))
-    >>> d.next_day().datetime
-    datetime.datetime(2013, 3, 10, 7, 0, tzinfo=<DstTzInfo 'US/Eastern' EDT-1 day, 20:00:00 DST>)
+    >>> d = Delorean(datetime(2013, 3, 9, 7, 0), timezone=eastern)
+    >>> d.next_day().datetime.strftime("%Y-%m-%d %H:%M %Z")
+    '2013-03-10 07:00 EDT'
 
-Two kinds of local time need a tie-breaking rule, and `delorean` resolves both
-of them to **standard** time.
+Two kinds of local time need a tie-breaking rule, and `delorean` follows the
+standard library: a naive datetime carries ``fold=0``.
 
 A local time inside the spring-forward gap never happens. On 10 March 2013 the
 Eastern clocks jumped straight from 02:00 EST to 03:00 EDT, so 02:30 has no
@@ -187,26 +227,31 @@ local reading at all. Shifting into it returns 02:30 EST, which is the instant
 
 .. doctest::
 
-    >>> d = Delorean(eastern.localize(datetime(2013, 3, 9, 2, 30)))
-    >>> d.next_day().datetime
-    datetime.datetime(2013, 3, 10, 2, 30, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
+    >>> d = Delorean(datetime(2013, 3, 9, 2, 30), timezone=eastern)
+    >>> d.next_day().datetime.strftime("%Y-%m-%d %H:%M %Z")
+    '2013-03-10 02:30 EST'
 
 A local time inside the autumn fall-back happens twice. On 3 November 2013,
 01:30 occurs once as EDT and then again an hour later as EST. Shifting into it
-returns the second, post-transition occurrence.
+returns the **first** of the two, which is the daylight side.
 
 .. doctest::
 
-    >>> d = Delorean(eastern.localize(datetime(2013, 11, 2, 1, 30)))
-    >>> d.next_day().datetime
-    datetime.datetime(2013, 11, 3, 1, 30, tzinfo=<DstTzInfo 'US/Eastern' EST-1 day, 19:00:00 STD>)
+    >>> d = Delorean(datetime(2013, 11, 2, 1, 30), timezone=eastern)
+    >>> d.next_day().datetime.strftime("%Y-%m-%d %H:%M %Z")
+    '2013-11-03 01:30 EDT'
 
 .. note::
 
     This rule is not specific to shifting. It applies wherever `delorean`
-    localizes a naive datetime, because it comes from `pytz`'s ``is_dst=False``
-    default. Pass an already-localized datetime if you need to choose the other
-    side of a transition yourself.
+    localizes a naive datetime, because it comes from the ``fold`` attribute
+    described in :pep:`495`. Pass an already-aware datetime, built with
+    ``fold=1``, when you need the other side of a transition.
+
+.. versionchanged:: 2.0
+    1.x resolved an ambiguous local time to standard time, because `pytz`
+    defaulted to ``is_dst=False``. The same input now resolves to the first
+    occurrence, which is daylight time. Gap behaviour is unchanged.
 
 
 Month-End Shifts
@@ -349,11 +394,11 @@ parse the datetime strings you get from various APIs.
 
     >>> from delorean import parse
     >>> parse("2011/01/01 00:00:00 -0700")
-    Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone=pytz.FixedOffset(-420))
+    Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone='UTC-07:00')
 
 The ``-0700`` suffix tells us how this clock reading relates to UTC, so
 `Delorean` can identify the instant without making an assumption. It keeps the
-offset as a ``pytz.FixedOffset`` timezone.
+offset as a `datetime.timezone`, which prints as ``UTC-07:00``.
 
 Timezone-less strings
 """""""""""""""""""""
@@ -399,7 +444,7 @@ a numeric offset, or another recognized timezone, that information wins and
 .. doctest::
 
     >>> parse("2011/01/01 00:00:00 -0700", assume_timezone="UTC")
-    Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone=pytz.FixedOffset(-420))
+    Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone='UTC-07:00')
 
 This differs from the existing ``timezone`` argument, which deliberately
 overrides timezone data found in the string. When ``timezone`` is supplied, it

@@ -187,10 +187,10 @@ class DaylightSavingTieBreaks(unittest.TestCase):
     """
     How delorean resolves local times that are missing or duplicated.
 
-    These encode the answers the pytz era gives. A timezone migration changes
-    the mechanism (pytz's ``is_dst=False`` versus the stdlib's ``fold``), so
-    these are the tests that must be consciously re-decided rather than
-    quietly updated.
+    2.0 follows the standard library: a naive datetime carries ``fold=0``, so a
+    duplicated local time means the first of its two occurrences, and a missing
+    one is read against the offset in force before the transition. The gap
+    answers match the pytz era exactly; the ambiguous ones deliberately do not.
     """
 
     def test_shifting_across_a_transition_keeps_the_wall_clock(self):
@@ -210,12 +210,12 @@ class DaylightSavingTieBreaks(unittest.TestCase):
             utc_instant(do), datetime(2013, 3, 10, 7, 30, tzinfo=timezone.utc)
         )
 
-    def test_ambiguous_local_time_resolves_to_standard_time(self):
+    def test_ambiguous_local_time_takes_the_first_occurrence(self):
         do = delorean.Delorean(FALL_AMBIGUOUS_NAIVE, timezone=EASTERN)
 
-        self.assertEqual(do.datetime.tzname(), "EST")
+        self.assertEqual(do.datetime.tzname(), "EDT")
         self.assertEqual(
-            utc_instant(do), datetime(2013, 11, 3, 6, 30, tzinfo=timezone.utc)
+            utc_instant(do), datetime(2013, 11, 3, 5, 30, tzinfo=timezone.utc)
         )
 
     def test_parse_resolves_a_nonexistent_local_time_the_same_way(self):
@@ -226,7 +226,7 @@ class DaylightSavingTieBreaks(unittest.TestCase):
     def test_parse_resolves_an_ambiguous_local_time_the_same_way(self):
         do = delorean.parse("2013-11-03T01:30:00", assume_timezone=EASTERN)
 
-        self.assertEqual(do.datetime.tzname(), "EST")
+        self.assertEqual(do.datetime.tzname(), "EDT")
 
 
 class Shifting(unittest.TestCase):
