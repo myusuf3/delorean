@@ -208,6 +208,56 @@ class DeloreanTests(unittest.TestCase):
         # Still a Delorean, so the chain can continue.
         self.assertIsInstance(do.shift("US/Eastern"), delorean.Delorean)
 
+    def test_start_of_month(self):
+        do = delorean.Delorean(datetime(2015, 5, 15, 14, 30), timezone="UTC")
+        self.assertEqual(
+            do.start_of_month.datetime, datetime(2015, 5, 1, tzinfo=pytz.utc)
+        )
+
+    def test_end_of_month(self):
+        do = delorean.Delorean(datetime(2015, 5, 15, 14, 30), timezone="UTC")
+        self.assertEqual(
+            do.end_of_month.datetime,
+            datetime(2015, 5, 31, 23, 59, 59, 999999, tzinfo=pytz.utc),
+        )
+
+    def test_end_of_month_short_month(self):
+        do = delorean.Delorean(datetime(2015, 2, 15), timezone="UTC")
+        self.assertEqual(do.end_of_month.datetime.day, 28)
+
+    def test_end_of_month_leap_year(self):
+        do = delorean.Delorean(datetime(2024, 2, 15), timezone="UTC")
+        self.assertEqual(do.end_of_month.datetime.day, 29)
+
+    def test_start_of_year(self):
+        do = delorean.Delorean(datetime(2015, 5, 15, 14, 30), timezone="UTC")
+        self.assertEqual(
+            do.start_of_year.datetime, datetime(2015, 1, 1, tzinfo=pytz.utc)
+        )
+
+    def test_end_of_year(self):
+        do = delorean.Delorean(datetime(2015, 5, 15, 14, 30), timezone="UTC")
+        self.assertEqual(
+            do.end_of_year.datetime,
+            datetime(2015, 12, 31, 23, 59, 59, 999999, tzinfo=pytz.utc),
+        )
+
+    def test_last_day_of_previous_month(self):
+        # The use case from issue #85.
+        do = delorean.Delorean(datetime(2013, 5, 15, 14, 30), timezone="US/Eastern")
+        end = do.last_month().end_of_month
+        self.assertIsInstance(end, delorean.Delorean)
+        self.assertEqual(end.datetime.month, 4)
+        self.assertEqual(end.datetime.day, 30)
+
+    def test_month_and_year_boundaries_do_not_mutate(self):
+        before = self.do.datetime
+        self.do.start_of_month
+        self.do.end_of_month
+        self.do.start_of_year
+        self.do.end_of_year
+        self.assertEqual(self.do.datetime, before)
+
     def test_day_boundaries_do_not_mutate(self):
         before = self.do.datetime
         self.do.midnight

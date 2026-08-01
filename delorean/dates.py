@@ -498,6 +498,103 @@ class Delorean(object):
             timezone=self.timezone,
         )
 
+    @property
+    def start_of_month(self):
+        """
+        Returns a new `Delorean` object for the first moment of the month
+        associated with this object. This object is left unchanged.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 5, 15, 14, 30), timezone='UTC')
+            >>> d.start_of_month
+            Delorean(datetime=datetime.datetime(2015, 5, 1, 0, 0), timezone='UTC')
+
+        """
+        return Delorean(
+            datetime=self._dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0),
+            timezone=self.timezone,
+        )
+
+    @property
+    def end_of_month(self):
+        """
+        Returns a new `Delorean` object for the last moment of the month
+        associated with this object, accounting for month length and leap
+        years. This object is left unchanged.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 2, 15, 14, 30), timezone='UTC')
+            >>> d.end_of_month
+            Delorean(datetime=datetime.datetime(2015, 2, 28, 23, 59, 59, 999999), timezone='UTC')
+
+        """
+        end = self._dt.replace(
+            hour=23, minute=59, second=59, microsecond=999999
+        ) + relativedelta(day=31)
+        return Delorean(datetime=end, timezone=self.timezone)
+
+    @property
+    def start_of_year(self):
+        """
+        Returns a new `Delorean` object for the first moment of the year
+        associated with this object. This object is left unchanged.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 5, 15, 14, 30), timezone='UTC')
+            >>> d.start_of_year
+            Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 0), timezone='UTC')
+
+        """
+        return Delorean(
+            datetime=self._dt.replace(
+                month=1, day=1, hour=0, minute=0, second=0, microsecond=0
+            ),
+            timezone=self.timezone,
+        )
+
+    @property
+    def end_of_year(self):
+        """
+        Returns a new `Delorean` object for the last moment of the year
+        associated with this object. This object is left unchanged.
+
+        .. testsetup::
+
+            from datetime import datetime
+            from delorean import Delorean
+
+        .. doctest::
+
+            >>> d = Delorean(datetime(2015, 5, 15, 14, 30), timezone='UTC')
+            >>> d.end_of_year
+            Delorean(datetime=datetime.datetime(2015, 12, 31, 23, 59, 59, 999999), timezone='UTC')
+
+        """
+        return Delorean(
+            datetime=self._dt.replace(
+                month=12, day=31, hour=23, minute=59, second=59, microsecond=999999
+            ),
+            timezone=self.timezone,
+        )
+
     def shift(self, timezone):
         """
         Shifts the timezone from the current timezone to the specified timezone associated with the Delorean object,
