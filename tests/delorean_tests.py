@@ -349,7 +349,6 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(do.datetime, dt1)
 
     def test_parse_iso(self):
-        # https://github.com/myusuf3/delorean/issues/101
         do = delorean.parse("2017-05-02T05:38:49Z")
         dt1 = pytz.utc.localize(datetime(2017, 5, 2, 5, 38, 49))
         self.assertEqual(do.datetime, dt1)
@@ -364,13 +363,81 @@ class DeloreanTests(unittest.TestCase):
     def test_parse_with_invalid_datetime_string(self):
         self.assertRaises(ValueError, delorean.parse, "asd")
 
+    def test_parse_timezone_less_string_assumes_utc_by_default(self):
+        do = delorean.parse("2015-02-04T16:33:21.247513")
+
+        self.assertEqual(
+            do.datetime,
+            datetime(2015, 2, 4, 16, 33, 21, 247513, tzinfo=pytz.utc),
+        )
+
+    def test_parse_timezone_less_string_can_require_assumption(self):
+        with self.assertRaisesRegex(
+            delorean.DeloreanInvalidDatetime, "assume_timezone"
+        ):
+            delorean.parse(
+                "2015-02-04T16:33:21.247513",
+                assume_timezone=None,
+            )
+
+    def test_parse_with_assumed_utc_timezone(self):
+        do = delorean.parse("2015-02-04T16:33:21.247513", assume_timezone="UTC")
+
+        self.assertIsInstance(do, delorean.Delorean)
+        self.assertEqual(
+            do.datetime,
+            datetime(2015, 2, 4, 16, 33, 21, 247513, tzinfo=pytz.utc),
+        )
+
+    def test_parse_with_assumed_non_utc_timezone(self):
+        do = delorean.parse(
+            "2015-02-04T16:33:21.247513",
+            assume_timezone="America/Toronto",
+        )
+        expected = pytz.timezone("America/Toronto").localize(
+            datetime(2015, 2, 4, 16, 33, 21, 247513)
+        )
+
+        self.assertIsInstance(do, delorean.Delorean)
+        self.assertEqual(do.datetime, expected)
+
+    def test_parse_with_assumed_timezone_object(self):
+        timezone = pytz.timezone("America/Toronto")
+        do = delorean.parse(
+            "2015-02-04T16:33:21.247513",
+            assume_timezone=timezone,
+        )
+        expected = timezone.localize(datetime(2015, 2, 4, 16, 33, 21, 247513))
+
+        self.assertEqual(do.datetime, expected)
+
+    def test_parse_does_not_apply_assumed_timezone_to_aware_string(self):
+        do = delorean.parse(
+            "2015-02-04T16:33:21.247513-05:00",
+            assume_timezone="US/Pacific",
+        )
+
+        self.assertEqual(do.timezone, pytz.FixedOffset(-300))
+
+    def test_parse_timezone_override_takes_precedence_over_assumption(self):
+        do = delorean.parse(
+            "2015-02-04T16:33:21.247513-05:00",
+            timezone="US/Pacific",
+            assume_timezone="UTC",
+        )
+        expected = pytz.timezone("US/Pacific").localize(
+            datetime(2015, 2, 4, 16, 33, 21, 247513)
+        )
+
+        self.assertEqual(do.datetime, expected)
+
     def test_parse_with_utc_year_fill(self):
         do = delorean.parse("Thu Sep 25 10:36:28")
         dt1 = pytz.utc.localize(datetime(date.today().year, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
 
-    def test_parse_with_timezone_year_fill(self):
-        do = delorean.parse("Thu Sep 25 10:36:28")
+    def test_parse_with_assumed_timezone_year_fill(self):
+        do = delorean.parse("Thu Sep 25 10:36:28", assume_timezone="UTC")
         dt1 = pytz.utc.localize(datetime(date.today().year, 9, 25, 10, 36, 28))
         self.assertEqual(do.datetime, dt1)
         self.assertEqual(do.timezone.tzname(None), "UTC")

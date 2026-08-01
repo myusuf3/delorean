@@ -292,7 +292,8 @@ Though it might seem obvious `delorean` also provides truncation to the month an
 
 Strings and Parsing
 ^^^^^^^^^^^^^^^^^^^
-Another pain is dealing with strings of datetimes. `Delorean` can help you parse all the datetime strings you get from various APIs.
+Another pain is dealing with strings of datetimes. `Delorean` can help you
+parse the datetime strings you get from various APIs.
 
 .. doctest::
 
@@ -300,7 +301,60 @@ Another pain is dealing with strings of datetimes. `Delorean` can help you parse
     >>> parse("2011/01/01 00:00:00 -0700")
     Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone=pytz.FixedOffset(-420))
 
-As shown above if the string passed has offset data `delorean` will keep that offset as a ``pytz.FixedOffset`` timezone, if there is no timezone information passed in UTC is assumed.
+The ``-0700`` suffix tells us how this clock reading relates to UTC, so
+`Delorean` can identify the instant without making an assumption. It keeps the
+offset as a ``pytz.FixedOffset`` timezone.
+
+Timezone-less strings
+"""""""""""""""""""""
+
+Now consider the same clock reading without its offset:
+
+.. code-block:: text
+
+    2011/01/01 00:00:00
+
+This could mean midnight in Toronto, Tokyo, UTC, or somewhere else entirely.
+Those readings represent different instants. For compatibility with earlier
+versions, `Delorean` assumes that a timezone-less string is in UTC:
+
+.. doctest::
+
+    >>> parse("2011/01/01 00:00:00")
+    Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone='UTC')
+
+That default is convenient, but it is still an assumption rather than
+information found in the string. When you know what timezone the source
+intended, state it with ``assume_timezone``:
+
+.. doctest::
+
+    >>> parse("2011/01/01 00:00:00", assume_timezone="America/Toronto")
+    Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone='America/Toronto')
+
+If your application requires every input to provide its own timezone, pass
+``None``. This turns a missing timezone into an error instead of an assumption:
+
+.. doctest::
+
+    >>> parse("2011/01/01 00:00:00", assume_timezone=None)  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+    ...
+    DeloreanInvalidDatetime: ...
+
+This option is deliberately a fallback. If a string already contains ``Z``,
+a numeric offset, or another recognized timezone, that information wins and
+``assume_timezone`` has no effect:
+
+.. doctest::
+
+    >>> parse("2011/01/01 00:00:00 -0700", assume_timezone="UTC")
+    Delorean(datetime=datetime.datetime(2011, 1, 1, 0, 0), timezone=pytz.FixedOffset(-420))
+
+This differs from the existing ``timezone`` argument, which deliberately
+overrides timezone data found in the string. When ``timezone`` is supplied, it
+takes precedence over ``assume_timezone``. In every successful case,
+``parse`` returns a `Delorean` object.
 
 
 Ambiguous cases
@@ -317,7 +371,9 @@ There might be cases where the string passed to parse is a bit ambiguous for exa
     - DD-MM-YY
     - MM-DD-YY
 
-So for example with default parameters `Delorean` will return '2013-05-06' as May 6th, 2013.
+For example, with the default date-order parameters `Delorean` reads
+``2013-05-06`` as May 6th, 2013. Because the string has no timezone, the
+default UTC assumption also applies.
 
 .. doctest::
 
