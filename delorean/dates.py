@@ -433,8 +433,8 @@ class Delorean(object):
     @property
     def midnight(self):
         """
-        Returns midnight for datetime associated with
-        the Delorean object modifying the Delorean object.
+        Returns a new `Delorean` object for midnight of the day associated
+        with this object. This object is left unchanged.
 
         .. testsetup::
 
@@ -445,16 +445,19 @@ class Delorean(object):
 
             >>> d = Delorean(datetime(2015, 1, 1, 12), timezone='UTC')
             >>> d.midnight
-            datetime.datetime(2015, 1, 1, 0, 0, tzinfo=<UTC>)
+            Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 0), timezone='UTC')
 
         """
-        return self._dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        return Delorean(
+            datetime=self._dt.replace(hour=0, minute=0, second=0, microsecond=0),
+            timezone=self.timezone,
+        )
 
     @property
     def start_of_day(self):
         """
-        Returns the start of the day for datetime associated
-        with the Delorean object, modifying the Delorean object.
+        Returns a new `Delorean` object for the start of the day associated
+        with this object. This object is left unchanged.
 
         .. testsetup::
 
@@ -465,7 +468,7 @@ class Delorean(object):
 
             >>> d = Delorean(datetime(2015, 1, 1, 12), timezone='UTC')
             >>> d.start_of_day
-            datetime.datetime(2015, 1, 1, 0, 0, tzinfo=<UTC>)
+            Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 0), timezone='UTC')
 
         """
         return self.midnight
@@ -473,8 +476,8 @@ class Delorean(object):
     @property
     def end_of_day(self):
         """
-        Returns the end of the day for the datetime
-        associated with the Delorean object, modifying the Delorean object.
+        Returns a new `Delorean` object for the end of the day associated
+        with this object. This object is left unchanged.
 
         .. testsetup::
 
@@ -485,10 +488,15 @@ class Delorean(object):
 
             >>> d = Delorean(datetime(2015, 1, 1, 12), timezone='UTC')
             >>> d.end_of_day
-            datetime.datetime(2015, 1, 1, 23, 59, 59, 999999, tzinfo=<UTC>)
+            Delorean(datetime=datetime.datetime(2015, 1, 1, 23, 59, 59, 999999), timezone='UTC')
 
         """
-        return self._dt.replace(hour=23, minute=59, second=59, microsecond=999999)
+        return Delorean(
+            datetime=self._dt.replace(
+                hour=23, minute=59, second=59, microsecond=999999
+            ),
+            timezone=self.timezone,
+        )
 
     def shift(self, timezone):
         """

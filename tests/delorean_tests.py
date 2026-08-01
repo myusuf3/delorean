@@ -183,16 +183,37 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(self.do.naive, datetime(2013, 1, 3, 4, 0))
 
     def test_midnight(self):
-        dt = self.do.midnight
-        self.assertEqual(dt, datetime(2013, 1, 3, 0, 0, 0, tzinfo=pytz.utc))
+        do = self.do.midnight
+        self.assertIsInstance(do, delorean.Delorean)
+        self.assertEqual(do.datetime, datetime(2013, 1, 3, 0, 0, 0, tzinfo=pytz.utc))
 
     def test_start_of_day(self):
-        dt = self.do.start_of_day
-        self.assertEqual(dt, datetime(2013, 1, 3, 0, 0, 0, 0, tzinfo=pytz.utc))
+        do = self.do.start_of_day
+        self.assertIsInstance(do, delorean.Delorean)
+        self.assertEqual(do.datetime, datetime(2013, 1, 3, 0, 0, 0, 0, tzinfo=pytz.utc))
 
     def test_end_of_day(self):
-        dt = self.do.end_of_day
-        self.assertEqual(dt, datetime(2013, 1, 3, 23, 59, 59, 999999, tzinfo=pytz.utc))
+        do = self.do.end_of_day
+        self.assertIsInstance(do, delorean.Delorean)
+        self.assertEqual(
+            do.datetime, datetime(2013, 1, 3, 23, 59, 59, 999999, tzinfo=pytz.utc)
+        )
+
+    def test_day_boundaries_are_chainable(self):
+        do = self.do.last_month().end_of_day
+        self.assertIsInstance(do, delorean.Delorean)
+        self.assertEqual(
+            do.datetime, datetime(2012, 12, 3, 23, 59, 59, 999999, tzinfo=pytz.utc)
+        )
+        # Still a Delorean, so the chain can continue.
+        self.assertIsInstance(do.shift("US/Eastern"), delorean.Delorean)
+
+    def test_day_boundaries_do_not_mutate(self):
+        before = self.do.datetime
+        self.do.midnight
+        self.do.start_of_day
+        self.do.end_of_day
+        self.assertEqual(self.do.datetime, before)
 
     def test_truncation_second(self):
         self.do.truncate("second")

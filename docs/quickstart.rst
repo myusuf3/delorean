@@ -158,7 +158,7 @@ Last Tuesday? Two Tuesdays ago at midnight? No problem.
     >>> d.last_tuesday()
     Delorean(datetime=datetime.datetime(2013, 1, 15, 19, 41, 6, 207481), timezone='UTC')
     >>> d.last_tuesday(2).midnight
-    datetime.datetime(2013, 1, 8, 0, 0, tzinfo=<UTC>)
+    Delorean(datetime=datetime.datetime(2013, 1, 8, 0, 0), timezone='UTC')
 
 
 Daylight Saving Transitions
