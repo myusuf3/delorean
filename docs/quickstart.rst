@@ -209,6 +209,56 @@ returns the second, post-transition occurrence.
     side of a transition yourself.
 
 
+Month-End Shifts
+""""""""""""""""
+
+Not every day of the month exists in every month, so shifting from the 31st
+needs a tie-breaking rule too. `Delorean` clamps to the last day of the target
+month.
+
+.. doctest::
+
+    >>> d = Delorean(datetime(2015, 1, 31), timezone='UTC')
+    >>> d.next_month()
+    Delorean(datetime=datetime.datetime(2015, 2, 28, 0, 0), timezone='UTC')
+
+A count is applied as one shift from the original date rather than as repeated
+one-month shifts, so the clamping does not accumulate. Two months from 31
+January is 31 March, because the shift is measured from 31 January both times.
+
+.. doctest::
+
+    >>> d.next_month(2)
+    Delorean(datetime=datetime.datetime(2015, 3, 31, 0, 0), timezone='UTC')
+
+Shifting one month at a time gives a different answer, because February's
+clamped result becomes the starting point for the second shift.
+
+.. doctest::
+
+    >>> d.next_month().next_month()
+    Delorean(datetime=datetime.datetime(2015, 3, 28, 0, 0), timezone='UTC')
+
+The same rule covers 29 February in a leap year.
+
+.. doctest::
+
+    >>> Delorean(datetime(2024, 2, 29), timezone='UTC').next_year()
+    Delorean(datetime=datetime.datetime(2025, 2, 28, 0, 0), timezone='UTC')
+
+.. note::
+
+    Clamping is a choice, not the only reasonable answer: rolling forward into
+    the first day of the next month is equally defensible. If you want the end
+    of the target month regardless of the day you started on, ask for it
+    explicitly with ``end_of_month`` rather than relying on the shift.
+
+.. doctest::
+
+    >>> d.next_month().end_of_month
+    Delorean(datetime=datetime.datetime(2015, 2, 28, 23, 59, 59, 999999), timezone='UTC')
+
+
 Period Boundaries
 ^^^^^^^^^^^^^^^^^
 
