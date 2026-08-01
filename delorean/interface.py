@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 
-import pytz
 from dateutil.parser import isoparse as isocapture
 from dateutil.parser import parse as capture
 from dateutil.rrule import DAILY, HOURLY, MONTHLY, YEARLY, rrule
@@ -9,6 +8,8 @@ from tzlocal import get_localzone
 
 from .dates import Delorean, datetime_timezone, is_datetime_naive
 from .exceptions import DeloreanInvalidDatetime
+from .timezones import timezone as get_timezone
+from .timezones import utc
 
 
 def parse(
@@ -61,7 +62,7 @@ def parse(
     .. doctest::
 
         >>> parse('2015-01-01 00:01:02 -0800')
-        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-480))
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='UTC-08:00')
 
     A timezone-less string does not identify an instant by itself. For
     compatibility, `Delorean` assumes UTC by default. Pass a different
@@ -88,7 +89,7 @@ def parse(
     .. doctest::
 
         >>> parse('2015-01-01 00:01:02 -0800', assume_timezone='UTC')
-        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone=pytz.FixedOffset(-480))
+        Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 1, 2), timezone='UTC-08:00')
 
     The older ``timezone`` argument is a stronger override: it discards any
     parsed offset and treats the clock reading as local to the requested
@@ -120,13 +121,7 @@ def parse(
             )
         do = Delorean(datetime=dt, timezone=assume_timezone)
     elif isinstance(dt.tzinfo, tzoffset):
-        utcoffset = dt.tzinfo.utcoffset(None)
-        total_seconds = (
-            utcoffset.microseconds
-            + (utcoffset.seconds + utcoffset.days * 24 * 3600) * 10**6
-        ) / 10**6
-
-        tz = pytz.FixedOffset(total_seconds / 60)
+        tz = get_timezone(dt.tzinfo)
         dt = dt.replace(tzinfo=None)
         do = Delorean(dt, timezone=tz)
     elif isinstance(dt.tzinfo, tzlocal):
@@ -134,12 +129,12 @@ def parse(
         dt = dt.replace(tzinfo=None)
         do = Delorean(dt, timezone=tz)
     else:
-        dt = pytz.utc.normalize(dt)
+        dt = dt.astimezone(utc)
         # making dt naive so we can pass it to Delorean
         dt = dt.replace(tzinfo=None)
         # if parse string has tzinfo we return a normalized UTC
         # delorean object that represents the time.
-        do = Delorean(datetime=dt, timezone="UTC")
+        do = Delorean(datetime=dt, timezone=utc)
 
     return do
 

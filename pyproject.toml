@@ -1,6 +1,6 @@
 [project]
 name = "delorean"
-version = "1.0.1"
+version = "2.0.0"
 description = "library for manipulating datetimes with ease and clarity"
 readme = "README.rst"
 license = "MIT"
@@ -25,7 +25,6 @@ dependencies = [
     "babel>=2.10.3",
     "humanize>=4.2.2",
     "python-dateutil>=2.8.2",
-    "pytz>=2022.1",
     "tzlocal>=4.2",
 ]
 

@@ -29,7 +29,11 @@ from delorean.dates import (
     move_datetime_year,
     normalize,
 )
-from delorean.exceptions import DeloreanInvalidDatetime, DeloreanInvalidTimezone
+from delorean.exceptions import (
+    DeloreanError,
+    DeloreanInvalidDatetime,
+    DeloreanInvalidTimezone,
+)
 from delorean.interface import (
     epoch,
     flux,
@@ -43,3 +47,4 @@ from delorean.interface import (
     stops,
     utcnow,
 )
+from delorean.timezones import timezone, utc
