@@ -1,6 +1,10 @@
-class DeloreanError(Exception):
+class DeloreanError(ValueError):
     """
     Base Delorean Exception class
+
+    Subclasses `ValueError` so that a caller handling bad input can catch
+    both these and the `ValueError` the underlying parser raises for
+    unreadable strings.
     """
 
     def __init__(self, msg):

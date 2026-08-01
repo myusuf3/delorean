@@ -9,6 +9,7 @@ import unittest
 from copy import deepcopy
 from datetime import date, datetime, timedelta, timezone, tzinfo
 from unittest import mock
+from zoneinfo import ZoneInfo
 
 import pytz
 from dateutil.parser import UnknownTimezoneWarning
@@ -431,6 +432,46 @@ class DeloreanTests(unittest.TestCase):
 
         self.assertEqual(do.datetime, expected)
 
+    def test_parse_timezone_override_applies_to_timezone_less_string(self):
+        do = delorean.parse(
+            "2015-02-04T16:33:21.247513",
+            timezone="US/Pacific",
+            assume_timezone=None,
+        )
+        expected = pytz.timezone("US/Pacific").localize(
+            datetime(2015, 2, 4, 16, 33, 21, 247513)
+        )
+
+        self.assertEqual(do.datetime, expected)
+
+    def test_parse_does_not_apply_assumed_timezone_to_utc_designator(self):
+        do = delorean.parse("2013-09-30T15:34:00.000Z", assume_timezone="US/Pacific")
+
+        self.assertEqual(do.datetime, pytz.utc.localize(datetime(2013, 9, 30, 15, 34)))
+
+    def test_parse_with_assumed_zoneinfo_timezone(self):
+        tz = ZoneInfo("America/Toronto")
+        do = delorean.parse("2015-02-04T16:33:21.247513", assume_timezone=tz)
+
+        self.assertEqual(
+            do.datetime,
+            datetime(2015, 2, 4, 16, 33, 21, 247513, tzinfo=tz),
+        )
+
+    def test_parse_with_assumed_timezone_resolves_nonexistent_local_time(self):
+        do = delorean.parse("2013-03-10T02:30:00", assume_timezone="US/Eastern")
+
+        self.assertEqual(do.datetime.tzname(), "EST")
+
+    def test_parse_with_assumed_timezone_resolves_ambiguous_local_time(self):
+        do = delorean.parse("2013-11-03T01:30:00", assume_timezone="US/Eastern")
+
+        self.assertEqual(do.datetime.tzname(), "EST")
+
+    def test_parse_strict_error_is_a_value_error(self):
+        with self.assertRaises(ValueError):
+            delorean.parse("2015-02-04T16:33:21.247513", assume_timezone=None)
+
     def test_parse_with_utc_year_fill(self):
         do = delorean.parse("Thu Sep 25 10:36:28")
         dt1 = pytz.utc.localize(datetime(date.today().year, 9, 25, 10, 36, 28))
@@ -838,6 +879,26 @@ class DeloreanTests(unittest.TestCase):
         dt = delorean.localize(datetime(2013, 11, 3, 1, 30), "US/Eastern")
         self.assertEqual(dt.tzname(), "EST")
 
+    def test_localize_with_zoneinfo_timezone(self):
+        tz = ZoneInfo("US/Eastern")
+        dt = delorean.localize(datetime(2013, 1, 1, 12), tz)
+
+        self.assertEqual(dt, datetime(2013, 1, 1, 12, tzinfo=tz))
+
+    def test_normalize_with_zoneinfo_timezone(self):
+        tz = ZoneInfo("US/Eastern")
+        dt = delorean.normalize(pytz.utc.localize(datetime(2013, 1, 1, 12)), tz)
+
+        self.assertEqual(dt, datetime(2013, 1, 1, 7, tzinfo=tz))
+
+    def test_now_with_zoneinfo_local_timezone(self):
+        # tzlocal 5.x hands back a zoneinfo zone rather than a pytz one.
+        tz = ZoneInfo("America/Toronto")
+        with mock.patch("delorean.interface.get_localzone", return_value=tz):
+            do = delorean.now()
+
+        self.assertEqual(do.timezone, tz)
+
     def test_datetime_localization(self):
         dt1 = self.do.datetime
         dt2 = delorean.Delorean(dt1).datetime
@@ -959,6 +1020,17 @@ class DeloreanTests(unittest.TestCase):
         self.assertEqual(d1, d2)
         self.assertEqual(d1.datetime, d2.datetime)
         self.assertEqual(d1.timezone, d2.timezone)
+
+    def test_repr_zoneinfo_timezone(self):
+        d = delorean.Delorean(
+            datetime(2015, 1, 1), timezone=ZoneInfo("America/Toronto")
+        )
+
+        self.assertEqual(
+            repr(d),
+            "Delorean(datetime=datetime.datetime(2015, 1, 1, 0, 0), "
+            "timezone='America/Toronto')",
+        )
 
     def test_timezone_delorean_to_datetime_to_delorean_utc(self):
         d1 = delorean.Delorean()

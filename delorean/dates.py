@@ -150,7 +150,12 @@ def localize(dt, tz):
     if not isinstance(tz, tzinfo):
         tz = pytz.timezone(tz)
 
-    return tz.localize(dt)
+    # pytz zones carry no offset until localized; zoneinfo and stdlib zones
+    # resolve their own offset from the datetime they are attached to.
+    if hasattr(tz, "localize"):
+        return tz.localize(dt)
+
+    return dt.replace(tzinfo=tz)
 
 
 def normalize(dt, tz):
@@ -163,8 +168,11 @@ def normalize(dt, tz):
     """
     if not isinstance(tz, tzinfo):
         tz = pytz.timezone(tz)
-    dt = tz.normalize(dt)
-    return dt
+
+    if hasattr(tz, "normalize"):
+        return tz.normalize(dt)
+
+    return dt.astimezone(tz)
 
 
 class Delorean(object):
@@ -242,7 +250,9 @@ class Delorean(object):
         if isinstance(self.timezone, pytz._FixedOffset):
             tz = self.timezone
         else:
-            tz = self.timezone.tzname(None)
+            # pytz answers tzname(None) with the zone name; zoneinfo answers
+            # None, so fall back to its key.
+            tz = self.timezone.tzname(None) or str(self.timezone)
 
         return "Delorean(datetime=%r, timezone=%r)" % (dt, tz)
 
