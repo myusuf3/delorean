@@ -435,7 +435,7 @@ a:hover tt {
         width: auto;
     }
 
-    .github {
+    .github-link {
         display: none;
     }
 
@@ -526,7 +526,7 @@ a:hover tt {
         width: auto;
     }
 
-    .github {
+    .github-link {
         display: none;
     }
 }
@@ -535,4 +535,31 @@ a:hover tt {
 
 .revsys-inline {
     display: none!important;
+}
+/* GitHub link, rendered as an inline SVG so the page makes no external
+   requests. Replaces the retired s3.amazonaws.com fork ribbon. */
+
+.github-link {
+    position: fixed;
+    /* Clears the Read the Docs addons bar, which pins itself top right. */
+    top: 52px;
+    right: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 6px;
+    color: #999;
+    line-height: 0;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.github-link:hover,
+.github-link:focus-visible {
+    color: #222;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.github-link svg {
+    display: block;
 }
