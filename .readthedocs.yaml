@@ -1,0 +1,18 @@
+version: 2
+
+build:
+  os: ubuntu-24.04
+  tools:
+    python: "3.13"
+  jobs:
+    # docs/conf.py reads the version from the installed package metadata, so the
+    # project itself has to be installed, not just the documentation tools.
+    install:
+      - pip install uv
+      - uv sync --frozen --group docs
+    build:
+      html:
+        - uv run sphinx-build -b html -W docs $READTHEDOCS_OUTPUT/html
+
+sphinx:
+  configuration: docs/conf.py
