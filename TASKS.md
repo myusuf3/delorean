@@ -81,7 +81,8 @@ Needs a changelog line, most significant first:
 - Trove classifiers restored; license switched to PEP 639 format.
 - Documentation corrections: quickstart wrongly claimed `parse()` converts
   offsets to UTC (it stores a `pytz.FixedOffset`) and wrongly documented
-  `.naive`. Documented how DST gaps and ambiguous times resolve.
+  `.naive`. Documented how DST gaps and ambiguous times resolve, and how
+  month-end shifts clamp (#11).
 - Note for #95: `delorean.dates.UTC` (the constant `UTC = "UTC"`) was removed in
   commit `afac86a`, first shipped in 0.6.0, and never documented. Mention it
   here as previously undocumented rather than inventing a retroactive 0.6.0
@@ -210,9 +211,11 @@ mean a migration will fail loudly rather than silently changing answers.
   assumption explicit or refuses it. The issue's other suggestion, a flag on the
   returned object recording that an assumption was made, was not implemented.
 - **#11** month-end arithmetic: shifting from the 31st into a shorter month
-  clamps. Currently `next_month(2)` from Jan 31 gives Mar 31, not Mar 28, because
-  the count is applied as a single `relativedelta` rather than iteratively, which
-  avoids drift.
+  clamps. `next_month(2)` from Jan 31 gives Mar 31, not Mar 28, because the count
+  is applied as a single `relativedelta` rather than iteratively, which avoids
+  drift. Now documented in the quickstart, which was the reporter's stated
+  minimum, and the issue is closed. A user-selectable policy object, his larger
+  ask, remains a 2.0 question if it is ever wanted.
 - **#96** business-day timedelta (feature request).
 - **#68** a 2015 open discussion thread; likely closeable.
 
