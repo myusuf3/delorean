@@ -240,6 +240,10 @@ class Delorean(object):
             return self.epoch == other.epoch
         return False
 
+    def __hash__(self):
+        # Hash on what __eq__ compares, so equal instants hash equal.
+        return hash(self.epoch)
+
     def __lt__(self, other):
         return self.epoch < other.epoch
 

@@ -50,6 +50,20 @@ class DeloreanTests(unittest.TestCase):
         dt = date(2013, 5, 6)
         self.assertRaises(ValueError, delorean.Delorean, dt)
 
+    def test_hashable(self):
+        # Defining __eq__ without __hash__ makes instances unhashable in Python 3.
+        self.assertEqual(hash(self.do), hash(self.do))
+        self.assertIn(self.do, {self.do})
+        mapping = {self.do: "value"}
+        self.assertEqual(mapping[self.do], "value")
+
+    def test_hash_consistent_with_equality(self):
+        # Equal objects (same instant, different timezone) must hash equal.
+        other = self.do.shift("US/Pacific")
+        self.assertEqual(self.do, other)
+        self.assertEqual(hash(self.do), hash(other))
+        self.assertEqual(len({self.do, other}), 1)
+
     def test_initialize_from_datetime_naive(self):
         self.assertRaises(
             delorean.DeloreanInvalidTimezone, delorean.Delorean, datetime=self.naive_dt
